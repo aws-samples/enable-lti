@@ -1,0 +1,13 @@
+{
+  "name": "@enable-lti/launch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "dependencies": {},
+  "scripts": {
+    "build": "tsc -b",
+    "test": "jest --passWithNoTests --all --updateSnapshot",
+    "eslint": "eslint ./src/**/**.ts",
+    "eslint:fix": "eslint ./src/**/**.ts --fix"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "name": "aws-lti-tool-ingress",
+  "version": "1.0.0",
+  "description": "CDK project with code and infrastructure to create and host an LTI Tool application on AWS.",
+  "keywords": [],
+  "private": true,
+  "author": "Amazon Web Services",
+  "license": "Apache-2.0",
+  "scripts": {
+    "watch": "tsc -b -v -w -i",
+    "build": "npm run build -ws",
+    "eslint": "eslint --quiet --ext .ts,.tsx --no-error-on-unmatched-pattern packages",
+    "eslint:fix": "eslint  --quiet --ext .ts,.tsx --fix --no-error-on-unmatched-pattern packages",
+    "start": "npm run start -w packages/examples/client ",
+    "cdk": "npm run cdk -w packages/cdk",
+    "test": "jest --passWithNoTests ---updateSnapshot",
+    "test:ws": "export POWERTOOLS_DEV=true && jest --passWithNoTests ---updateSnapshot --silent --testPathPattern",
+    "test:integration": "export POWERTOOLS_DEV=true && jest --passWithNoTests ---updateSnapshot --testPathPattern=test/integration --silent",
+    "test:setup": "npm run test:setup -w test"
+  },
+  "workspaces": [
+    "packages/cdk",
+    "packages/handlers/contentmarket",
+    "packages/handlers/deepLinkingProxy",
+    "packages/handlers/jwks",
+    "packages/handlers/launch",
+    "packages/handlers/oidc",
+    "packages/handlers/platform",
+    "packages/handlers/tool",
+    "packages/handlers/authorizerProxy",
+    "packages/handlers/tokenProxy",
+    "packages/handlers/scoreSubmission",
+    "packages/layers/util",
+    "packages/examples/client/",
+    "test"
+  ],
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.18.6",
+    "@types/jest": "^29.0.3",
+    "@types/node": "^18.7.23",
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
+    "aws-sdk-client-mock": "^2.1.1",
+    "aws-sdk-client-mock-jest": "^2.1.1",
+    "eslint": "^8.24.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-react": "^7.31.8",
+    "ts-jest": "^29.0.2",
+    "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "typescript": "^4.8.4"
+  }
+}

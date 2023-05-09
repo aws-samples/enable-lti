@@ -1,0 +1,3942 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot 1`] = `
+{
+  "Outputs": {
+    "apiELTIApiEndpoint88D0375C": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "apiELTIApiA792B265",
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region",
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            {
+              "Ref": "apiELTIApiDeploymentStageprod2D274CC9",
+            },
+            "/",
+          ],
+        ],
+      },
+    },
+    "apiELTIConfigApiEndpointEE844320": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "apiELTIConfigApiFA21C666",
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region",
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            {
+              "Ref": "apiELTIConfigApiDeploymentStageprod89685E06",
+            },
+            "/",
+          ],
+        ],
+      },
+    },
+    "apiELTIControlPlaneURI5387E677": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "apiELTIConfigApiFA21C666",
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region",
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            {
+              "Ref": "apiELTIConfigApiDeploymentStageprod89685E06",
+            },
+            "/",
+          ],
+        ],
+      },
+    },
+    "apiELTIURIED391A79": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "apiELTIApiA792B265",
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region",
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            {
+              "Ref": "apiELTIApiDeploymentStageprod2D274CC9",
+            },
+            "/",
+          ],
+        ],
+      },
+    },
+    "keysELTIKeyIdA061D8A3": {
+      "Value": {
+        "Ref": "keysltiAsymmetricKeyFE868879",
+      },
+    },
+    "tablesELTIControlPlaneTable05104AEE": {
+      "Value": {
+        "Ref": "tablescontrolPlaneTable49F703D0",
+      },
+    },
+    "tablesELTIDataTableE568C4E0": {
+      "Value": {
+        "Ref": "tablesdataPlaneTable57BF29C7",
+      },
+    },
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "certificateArn": {
+      "Default": "",
+      "Description": "ACM Certificate Arn",
+      "Type": "String",
+    },
+    "r53HostedZoneId": {
+      "Default": "",
+      "Description": "Route53 hosted zone id",
+      "Type": "String",
+    },
+    "r53HostedZoneName": {
+      "Default": "",
+      "Description": "Route53 hosted zone name",
+      "Type": "String",
+    },
+    "subDomainName": {
+      "Default": "",
+      "Description": "Custom sub-domain name for ELTI APIGW",
+      "Type": "String",
+    },
+  },
+  "Resources": {
+    "EltiConfigWebACLAssociation": {
+      "Properties": {
+        "ResourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":apigateway:",
+              {
+                "Ref": "AWS::Region",
+              },
+              "::/restapis/",
+              {
+                "Ref": "apiELTIConfigApiFA21C666",
+              },
+              "/stages/",
+              {
+                "Ref": "apiELTIConfigApiDeploymentStageprod89685E06",
+              },
+            ],
+          ],
+        },
+        "WebACLArn": {
+          "Fn::GetAtt": [
+            "eltiWafBase",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::WAFv2::WebACLAssociation",
+    },
+    "EltiWebACLAssociation": {
+      "Properties": {
+        "ResourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":apigateway:",
+              {
+                "Ref": "AWS::Region",
+              },
+              "::/restapis/",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/stages/",
+              {
+                "Ref": "apiELTIApiDeploymentStageprod2D274CC9",
+              },
+            ],
+          ],
+        },
+        "WebACLArn": {
+          "Fn::GetAtt": [
+            "eltiWafBase",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::WAFv2::WebACLAssociation",
+    },
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A": {
+      "DependsOn": [
+        "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+        "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "eb5b005c858404ea0c8f68098ed5dcdf5340e02461f149751d10f59c210d5ef8.zip",
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+        "Roles": [
+          {
+            "Ref": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "apiAccessLogsE8DA0A02": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "RetentionInDays": 3653,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "apiELTIApiA792B265": {
+      "Properties": {
+        "Name": "ELTIApi",
+        "Policy": {
+          "Statement": [
+            {
+              "Action": "execute-api:Invoke",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":root",
+                    ],
+                  ],
+                },
+              },
+              "Resource": "execute-api:/*/POST/scoreSubmission",
+            },
+            {
+              "Action": "execute-api:Invoke",
+              "Effect": "Allow",
+              "Principal": "*",
+              "Resource": "execute-api:/*/POST/deepLinkingProxy",
+            },
+            {
+              "Action": "execute-api:Invoke",
+              "Effect": "Allow",
+              "Principal": "*",
+              "Resource": [
+                "execute-api:/*/*/login",
+                "execute-api:/*/*/launch",
+                "execute-api:/*/*/jwks.json",
+              ],
+            },
+            {
+              "Action": "execute-api:Invoke",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "*",
+              },
+              "Resource": [
+                "execute-api:/*/GET/authorizerProxy",
+                "execute-api:/*/POST/tokenProxy",
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::ApiGateway::RestApi",
+    },
+    "apiELTIApiAccount24D4F740": {
+      "DeletionPolicy": "Retain",
+      "DependsOn": [
+        "apiELTIApiA792B265",
+      ],
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": [
+            "apiELTIApiCloudWatchRole15503B4E",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ApiGateway::Account",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "apiELTIApiCloudWatchRole15503B4E": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "apiELTIApiDeploymentE5E04DBAb1aa9e8421bda1e8f6616571e6006aa1": {
+      "DependsOn": [
+        "apiELTIApiauthorizerProxyGETB536CE11",
+        "apiELTIApiauthorizerProxy7A5A1CC9",
+        "apiELTIApideepLinkingProxyPOST0A47F6D2",
+        "apiELTIApideepLinkingProxy3C55EEA9",
+        "apiELTIApijwksjsonGETE757431B",
+        "apiELTIApijwksjson03E9176C",
+        "apiELTIApilaunchGETD62DF8AF",
+        "apiELTIApilaunchPOSTC265D3A3",
+        "apiELTIApilaunch8E6D3031",
+        "apiELTIApiloginGET11FD9B6C",
+        "apiELTIApiloginPOST7A347EDB",
+        "apiELTIApilogin45BDD80F",
+        "apiELTIApiOPTIONS844F69E5",
+        "apiELTIApiscoreSubmissionPOST816C45CF",
+        "apiELTIApiscoreSubmission1718D13B",
+        "apiELTIApitokenProxyPOSTA5640BB9",
+        "apiELTIApitokenProxy8E31FDAF",
+      ],
+      "Properties": {
+        "Description": "Automatically created by the RestApi construct",
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Deployment",
+    },
+    "apiELTIApiDeploymentStageprod2D274CC9": {
+      "DependsOn": [
+        "apiELTIApiAccount24D4F740",
+      ],
+      "Properties": {
+        "AccessLogSetting": {
+          "DestinationArn": {
+            "Fn::GetAtt": [
+              "apiAccessLogsE8DA0A02",
+              "Arn",
+            ],
+          },
+          "Format": "{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","user":"$context.identity.user","caller":"$context.identity.caller","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}",
+        },
+        "DeploymentId": {
+          "Ref": "apiELTIApiDeploymentE5E04DBAb1aa9e8421bda1e8f6616571e6006aa1",
+        },
+        "MethodSettings": [
+          {
+            "DataTraceEnabled": false,
+            "HttpMethod": "*",
+            "LoggingLevel": "INFO",
+            "MetricsEnabled": true,
+            "ResourcePath": "/*",
+          },
+        ],
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+        "StageName": "prod",
+        "TracingEnabled": true,
+      },
+      "Type": "AWS::ApiGateway::Stage",
+    },
+    "apiELTIApiOPTIONS844F69E5": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'GET,PUT'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+              },
+              "StatusCode": "204",
+            },
+          ],
+          "RequestTemplates": {
+            "application/json": "{ statusCode: 200 }",
+          },
+          "Type": "MOCK",
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Origin": true,
+            },
+            "StatusCode": "204",
+          },
+        ],
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "apiELTIApiA792B265",
+            "RootResourceId",
+          ],
+        },
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "apiELTIApiauthorizerProxy7A5A1CC9": {
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "apiELTIApiA792B265",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "authorizerProxy",
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "apiELTIApiauthorizerProxyGETApiPermissionTesttestapiELTIApi6BB5DB92GETauthorizerProxy219971D2": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasauthorizerProxy06FC2F8A",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/test-invoke-stage/GET/authorizerProxy",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApiauthorizerProxyGETApiPermissiontestapiELTIApi6BB5DB92GETauthorizerProxyA1FC7208": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasauthorizerProxy06FC2F8A",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/",
+              {
+                "Ref": "apiELTIApiDeploymentStageprod2D274CC9",
+              },
+              "/GET/authorizerProxy",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApiauthorizerProxyGETB536CE11": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "GET",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "lambdasauthorizerProxy06FC2F8A",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": {
+          "Ref": "apiELTIApiauthorizerProxy7A5A1CC9",
+        },
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "apiELTIApideepLinkingProxy3C55EEA9": {
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "apiELTIApiA792B265",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "deepLinkingProxy",
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "apiELTIApideepLinkingProxyPOST0A47F6D2": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "lambdasdeepLinkingProxy6C034861",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": {
+          "Ref": "apiELTIApideepLinkingProxy3C55EEA9",
+        },
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "apiELTIApideepLinkingProxyPOSTApiPermissionTesttestapiELTIApi6BB5DB92POSTdeepLinkingProxy15A4FD6E": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasdeepLinkingProxy6C034861",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/test-invoke-stage/POST/deepLinkingProxy",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApideepLinkingProxyPOSTApiPermissiontestapiELTIApi6BB5DB92POSTdeepLinkingProxyF4C632C5": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasdeepLinkingProxy6C034861",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/",
+              {
+                "Ref": "apiELTIApiDeploymentStageprod2D274CC9",
+              },
+              "/POST/deepLinkingProxy",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApijwksjson03E9176C": {
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "apiELTIApiA792B265",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "jwks.json",
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "apiELTIApijwksjsonGETApiPermissionTesttestapiELTIApi6BB5DB92GETjwksjsonEF11F1CF": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasltiJwksC1ADFCB8",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/test-invoke-stage/GET/jwks.json",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApijwksjsonGETApiPermissiontestapiELTIApi6BB5DB92GETjwksjson87C3EDAE": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasltiJwksC1ADFCB8",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/",
+              {
+                "Ref": "apiELTIApiDeploymentStageprod2D274CC9",
+              },
+              "/GET/jwks.json",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApijwksjsonGETE757431B": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "GET",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "lambdasltiJwksC1ADFCB8",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": {
+          "Ref": "apiELTIApijwksjson03E9176C",
+        },
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "apiELTIApilaunch8E6D3031": {
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "apiELTIApiA792B265",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "launch",
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "apiELTIApilaunchGETApiPermissionTesttestapiELTIApi6BB5DB92GETlaunchC73BAEEC": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasltiLaunch4A18F0B1",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/test-invoke-stage/GET/launch",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApilaunchGETApiPermissiontestapiELTIApi6BB5DB92GETlaunch2E2CDD8B": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasltiLaunch4A18F0B1",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/",
+              {
+                "Ref": "apiELTIApiDeploymentStageprod2D274CC9",
+              },
+              "/GET/launch",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApilaunchGETD62DF8AF": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "GET",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "lambdasltiLaunch4A18F0B1",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": {
+          "Ref": "apiELTIApilaunch8E6D3031",
+        },
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "apiELTIApilaunchPOSTApiPermissionTesttestapiELTIApi6BB5DB92POSTlaunch0158F349": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasltiLaunch4A18F0B1",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/test-invoke-stage/POST/launch",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApilaunchPOSTApiPermissiontestapiELTIApi6BB5DB92POSTlaunch482E37F3": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasltiLaunch4A18F0B1",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/",
+              {
+                "Ref": "apiELTIApiDeploymentStageprod2D274CC9",
+              },
+              "/POST/launch",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApilaunchPOSTC265D3A3": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "lambdasltiLaunch4A18F0B1",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": {
+          "Ref": "apiELTIApilaunch8E6D3031",
+        },
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "apiELTIApilogin45BDD80F": {
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "apiELTIApiA792B265",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "login",
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "apiELTIApiloginGET11FD9B6C": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "GET",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "lambdasltiOidcFA92D3C4",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": {
+          "Ref": "apiELTIApilogin45BDD80F",
+        },
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "apiELTIApiloginGETApiPermissionTesttestapiELTIApi6BB5DB92GETlogin6A793C7D": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasltiOidcFA92D3C4",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/test-invoke-stage/GET/login",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApiloginGETApiPermissiontestapiELTIApi6BB5DB92GETlogin688A294E": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasltiOidcFA92D3C4",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/",
+              {
+                "Ref": "apiELTIApiDeploymentStageprod2D274CC9",
+              },
+              "/GET/login",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApiloginPOST7A347EDB": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "lambdasltiOidcFA92D3C4",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": {
+          "Ref": "apiELTIApilogin45BDD80F",
+        },
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "apiELTIApiloginPOSTApiPermissionTesttestapiELTIApi6BB5DB92POSTlogin84FB4D4E": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasltiOidcFA92D3C4",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/test-invoke-stage/POST/login",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApiloginPOSTApiPermissiontestapiELTIApi6BB5DB92POSTlogin3B6D1B70": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasltiOidcFA92D3C4",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/",
+              {
+                "Ref": "apiELTIApiDeploymentStageprod2D274CC9",
+              },
+              "/POST/login",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApiscoreSubmission1718D13B": {
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "apiELTIApiA792B265",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "scoreSubmission",
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "apiELTIApiscoreSubmissionPOST816C45CF": {
+      "Properties": {
+        "AuthorizationType": "AWS_IAM",
+        "HttpMethod": "POST",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "lambdasscoreSubmission63FC62E4",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": {
+          "Ref": "apiELTIApiscoreSubmission1718D13B",
+        },
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "apiELTIApiscoreSubmissionPOSTApiPermissionTesttestapiELTIApi6BB5DB92POSTscoreSubmission1D97238C": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasscoreSubmission63FC62E4",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/test-invoke-stage/POST/scoreSubmission",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApiscoreSubmissionPOSTApiPermissiontestapiELTIApi6BB5DB92POSTscoreSubmission546DE201": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasscoreSubmission63FC62E4",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/",
+              {
+                "Ref": "apiELTIApiDeploymentStageprod2D274CC9",
+              },
+              "/POST/scoreSubmission",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApitokenProxy8E31FDAF": {
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "apiELTIApiA792B265",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "tokenProxy",
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "apiELTIApitokenProxyPOSTA5640BB9": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "lambdastokenProxy38E950E5",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": {
+          "Ref": "apiELTIApitokenProxy8E31FDAF",
+        },
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "apiELTIApitokenProxyPOSTApiPermissionTesttestapiELTIApi6BB5DB92POSTtokenProxyCB865F12": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdastokenProxy38E950E5",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/test-invoke-stage/POST/tokenProxy",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApitokenProxyPOSTApiPermissiontestapiELTIApi6BB5DB92POSTtokenProxyF6E5B6F4": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdastokenProxy38E950E5",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/",
+              {
+                "Ref": "apiELTIApiDeploymentStageprod2D274CC9",
+              },
+              "/POST/tokenProxy",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIConfigApiAccount3E94C309": {
+      "DeletionPolicy": "Retain",
+      "DependsOn": [
+        "apiELTIConfigApiFA21C666",
+      ],
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": [
+            "apiELTIConfigApiCloudWatchRole3A6ECB08",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ApiGateway::Account",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "apiELTIConfigApiCloudWatchRole3A6ECB08": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "apiELTIConfigApiDeploymentD7D043C1f7077fc6082304ae93b6729b1fbdc612": {
+      "DependsOn": [
+        "apiELTIConfigApiOPTIONS928634A9",
+        "apiELTIConfigApiplatformPOSTED8FE0A7",
+        "apiELTIConfigApiplatformAB0B3D5F",
+        "apiELTIConfigApitoolPOST623B64FE",
+        "apiELTIConfigApitoolC6EAD11B",
+      ],
+      "Properties": {
+        "Description": "Automatically created by the RestApi construct",
+        "RestApiId": {
+          "Ref": "apiELTIConfigApiFA21C666",
+        },
+      },
+      "Type": "AWS::ApiGateway::Deployment",
+    },
+    "apiELTIConfigApiDeploymentStageprod89685E06": {
+      "DependsOn": [
+        "apiELTIConfigApiAccount3E94C309",
+      ],
+      "Properties": {
+        "AccessLogSetting": {
+          "DestinationArn": {
+            "Fn::GetAtt": [
+              "apiAccessLogsE8DA0A02",
+              "Arn",
+            ],
+          },
+          "Format": "{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","user":"$context.identity.user","caller":"$context.identity.caller","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}",
+        },
+        "DeploymentId": {
+          "Ref": "apiELTIConfigApiDeploymentD7D043C1f7077fc6082304ae93b6729b1fbdc612",
+        },
+        "MethodSettings": [
+          {
+            "DataTraceEnabled": false,
+            "HttpMethod": "*",
+            "LoggingLevel": "INFO",
+            "MetricsEnabled": true,
+            "ResourcePath": "/*",
+          },
+        ],
+        "RestApiId": {
+          "Ref": "apiELTIConfigApiFA21C666",
+        },
+        "StageName": "prod",
+        "TracingEnabled": true,
+      },
+      "Type": "AWS::ApiGateway::Stage",
+    },
+    "apiELTIConfigApiFA21C666": {
+      "Properties": {
+        "Name": "ELTIConfigApi",
+        "Policy": {
+          "Statement": [
+            {
+              "Action": "execute-api:Invoke",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":root",
+                    ],
+                  ],
+                },
+              },
+              "Resource": [
+                "execute-api:/*/*/platform",
+                "execute-api:/*/*/tool",
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::ApiGateway::RestApi",
+    },
+    "apiELTIConfigApiOPTIONS928634A9": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'GET,PUT'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+              },
+              "StatusCode": "204",
+            },
+          ],
+          "RequestTemplates": {
+            "application/json": "{ statusCode: 200 }",
+          },
+          "Type": "MOCK",
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Origin": true,
+            },
+            "StatusCode": "204",
+          },
+        ],
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "apiELTIConfigApiFA21C666",
+            "RootResourceId",
+          ],
+        },
+        "RestApiId": {
+          "Ref": "apiELTIConfigApiFA21C666",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "apiELTIConfigApiplatformAB0B3D5F": {
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "apiELTIConfigApiFA21C666",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "platform",
+        "RestApiId": {
+          "Ref": "apiELTIConfigApiFA21C666",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "apiELTIConfigApiplatformPOSTApiPermissionTesttestapiELTIConfigApi4555AB28POSTplatformCCE1AFAD": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasltiPlatformRegister68BD8997",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIConfigApiFA21C666",
+              },
+              "/test-invoke-stage/POST/platform",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIConfigApiplatformPOSTApiPermissiontestapiELTIConfigApi4555AB28POSTplatformECBF9060": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasltiPlatformRegister68BD8997",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIConfigApiFA21C666",
+              },
+              "/",
+              {
+                "Ref": "apiELTIConfigApiDeploymentStageprod89685E06",
+              },
+              "/POST/platform",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIConfigApiplatformPOSTED8FE0A7": {
+      "Properties": {
+        "AuthorizationType": "AWS_IAM",
+        "HttpMethod": "POST",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "lambdasltiPlatformRegister68BD8997",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": {
+          "Ref": "apiELTIConfigApiplatformAB0B3D5F",
+        },
+        "RestApiId": {
+          "Ref": "apiELTIConfigApiFA21C666",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "apiELTIConfigApitoolC6EAD11B": {
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "apiELTIConfigApiFA21C666",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "tool",
+        "RestApiId": {
+          "Ref": "apiELTIConfigApiFA21C666",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "apiELTIConfigApitoolPOST623B64FE": {
+      "Properties": {
+        "AuthorizationType": "AWS_IAM",
+        "HttpMethod": "POST",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "lambdasltiToolConfigAF290814",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": {
+          "Ref": "apiELTIConfigApitoolC6EAD11B",
+        },
+        "RestApiId": {
+          "Ref": "apiELTIConfigApiFA21C666",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "apiELTIConfigApitoolPOSTApiPermissionTesttestapiELTIConfigApi4555AB28POSTtoolDFAB3C3D": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasltiToolConfigAF290814",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIConfigApiFA21C666",
+              },
+              "/test-invoke-stage/POST/tool",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIConfigApitoolPOSTApiPermissiontestapiELTIConfigApi4555AB28POSTtool894C4B87": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasltiToolConfigAF290814",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIConfigApiFA21C666",
+              },
+              "/",
+              {
+                "Ref": "apiELTIConfigApiDeploymentStageprod89685E06",
+              },
+              "/POST/tool",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "eltiWafBase": {
+      "Properties": {
+        "DefaultAction": {
+          "Allow": {},
+        },
+        "Description": "Basic protection for ELTI APIGW endpoints.",
+        "Rules": [
+          {
+            "Name": "AWSManagedRulesCommonRuleSet",
+            "OverrideAction": {
+              "None": {},
+            },
+            "Priority": 0,
+            "Statement": {
+              "ManagedRuleGroupStatement": {
+                "Name": "AWSManagedRulesCommonRuleSet",
+                "RuleActionOverrides": [
+                  {
+                    "ActionToUse": {
+                      "Allow": {},
+                    },
+                    "Name": "SizeRestrictions_QUERYSTRING",
+                  },
+                  {
+                    "ActionToUse": {
+                      "Allow": {},
+                    },
+                    "Name": "SizeRestrictions_Cookie_HEADER",
+                  },
+                  {
+                    "ActionToUse": {
+                      "Allow": {},
+                    },
+                    "Name": "SizeRestrictions_URIPATH",
+                  },
+                  {
+                    "ActionToUse": {
+                      "Allow": {},
+                    },
+                    "Name": "SizeRestrictions_BODY",
+                  },
+                ],
+                "VendorName": "AWS",
+              },
+            },
+            "VisibilityConfig": {
+              "CloudWatchMetricsEnabled": true,
+              "MetricName": "ELTIAPIWebACL-CRS",
+              "SampledRequestsEnabled": true,
+            },
+          },
+        ],
+        "Scope": "REGIONAL",
+        "VisibilityConfig": {
+          "CloudWatchMetricsEnabled": true,
+          "MetricName": "ELTIAPIWebACL",
+          "SampledRequestsEnabled": true,
+        },
+      },
+      "Type": "AWS::WAFv2::WebACL",
+    },
+    "keysltiAsymmetricKeyAliasEA5232E2": {
+      "Properties": {
+        "AliasName": "alias/ltiAsymmetricKey",
+        "TargetKeyId": {
+          "Fn::GetAtt": [
+            "keysltiAsymmetricKeyFE868879",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::KMS::Alias",
+    },
+    "keysltiAsymmetricKeyFE868879": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "Description": "KMS key for signing and verification of JSON Web Tokens (JWT)",
+        "EnableKeyRotation": false,
+        "KeyPolicy": {
+          "Statement": [
+            {
+              "Action": "kms:*",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":root",
+                    ],
+                  ],
+                },
+              },
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "KeySpec": "RSA_2048",
+        "KeyUsage": "SIGN_VERIFY",
+        "PendingWindowInDays": 7,
+      },
+      "Type": "AWS::KMS::Key",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "lambdasauthorizerProxy06FC2F8A": {
+      "DependsOn": [
+        "lambdasauthorizerProxyServiceRoleDefaultPolicyBC404ED1",
+        "lambdasauthorizerProxyServiceRoleBCFCC158",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "6cbae35bc8fe811a26e4490ea7652a8db844d2bc6965e23b7f2101ec749525e0.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "DATA_PLANE_TABLE_NAME": {
+              "Ref": "tablesdataPlaneTable57BF29C7",
+            },
+            "KMS_KEY_ID": {
+              "Ref": "keysltiAsymmetricKeyFE868879",
+            },
+            "LOG_LEVEL": "debug",
+            "POWERTOOLS_METRICS_NAMESPACE": "lti",
+            "POWERTOOLS_SERVICE_NAME": "authorizerProxy",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Ref": "layerslayerUtil5D96D399",
+          },
+          {
+            "Ref": "layerslayernodeforge929221D0",
+          },
+        ],
+        "MemorySize": 256,
+        "Role": {
+          "Fn::GetAtt": [
+            "lambdasauthorizerProxyServiceRoleBCFCC158",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "lambdasauthorizerProxyLogRetention33D9799B": {
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "lambdasauthorizerProxy06FC2F8A",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 3653,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "lambdasauthorizerProxyServiceRoleBCFCC158": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasauthorizerProxyServiceRoleDefaultPolicyBC404ED1": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "tablesdataPlaneTable57BF29C7",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "lambdasauthorizerProxyServiceRoleDefaultPolicyBC404ED1",
+        "Roles": [
+          {
+            "Ref": "lambdasauthorizerProxyServiceRoleBCFCC158",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "lambdasdeepLinkingProxy6C034861": {
+      "DependsOn": [
+        "lambdasdeepLinkingProxyServiceRoleDefaultPolicyCCBBD94A",
+        "lambdasdeepLinkingProxyServiceRoleE23C6677",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "e1d515f544cefb1c9f9977bba3fdeb504769073ba8b3b2135abe253d4139ecfd.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "CONTROL_PLANE_TABLE_NAME": {
+              "Ref": "tablescontrolPlaneTable49F703D0",
+            },
+            "DATA_PLANE_TABLE_NAME": {
+              "Ref": "tablesdataPlaneTable57BF29C7",
+            },
+            "KMS_KEY_ID": {
+              "Ref": "keysltiAsymmetricKeyFE868879",
+            },
+            "LOG_LEVEL": "debug",
+            "POWERTOOLS_METRICS_NAMESPACE": "lti",
+            "POWERTOOLS_SERVICE_NAME": "deepLinkingProxy",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Ref": "layerslayerUtil5D96D399",
+          },
+          {
+            "Ref": "layerslayernodeforge929221D0",
+          },
+        ],
+        "MemorySize": 256,
+        "Role": {
+          "Fn::GetAtt": [
+            "lambdasdeepLinkingProxyServiceRoleE23C6677",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "lambdasdeepLinkingProxyLogRetention8EF2EEF7": {
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "lambdasdeepLinkingProxy6C034861",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 3653,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "lambdasdeepLinkingProxyServiceRoleDefaultPolicyCCBBD94A": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "tablescontrolPlaneTable49F703D0",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "tablesdataPlaneTable57BF29C7",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+            {
+              "Action": [
+                "kms:Verify",
+                "kms:GetPublicKey",
+                "kms:Sign",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "keysltiAsymmetricKeyFE868879",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "lambdasdeepLinkingProxyServiceRoleDefaultPolicyCCBBD94A",
+        "Roles": [
+          {
+            "Ref": "lambdasdeepLinkingProxyServiceRoleE23C6677",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "lambdasdeepLinkingProxyServiceRoleE23C6677": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasltiJwksC1ADFCB8": {
+      "DependsOn": [
+        "lambdasltiJwksServiceRoleDefaultPolicy993BD5AA",
+        "lambdasltiJwksServiceRole18179ED8",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "b410f4b4d85c6d8613fb35309d976b285a19ba6aabbda3dd32f572e49c38696e.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "CONTROL_PLANE_TABLE_NAME": {
+              "Ref": "tablescontrolPlaneTable49F703D0",
+            },
+            "KMS_KEY_ID": {
+              "Ref": "keysltiAsymmetricKeyFE868879",
+            },
+            "LOG_LEVEL": "debug",
+            "POWERTOOLS_METRICS_NAMESPACE": "lti",
+            "POWERTOOLS_SERVICE_NAME": "jwks",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Ref": "layerslayerUtil5D96D399",
+          },
+          {
+            "Ref": "layerslayernodeforge929221D0",
+          },
+        ],
+        "MemorySize": 256,
+        "Role": {
+          "Fn::GetAtt": [
+            "lambdasltiJwksServiceRole18179ED8",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "lambdasltiJwksLogRetentionEB820CAC": {
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "lambdasltiJwksC1ADFCB8",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 3653,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "lambdasltiJwksServiceRole18179ED8": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasltiJwksServiceRoleDefaultPolicy993BD5AA": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "tablescontrolPlaneTable49F703D0",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+            {
+              "Action": [
+                "kms:Verify",
+                "kms:GetPublicKey",
+                "kms:Sign",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "keysltiAsymmetricKeyFE868879",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "lambdasltiJwksServiceRoleDefaultPolicy993BD5AA",
+        "Roles": [
+          {
+            "Ref": "lambdasltiJwksServiceRole18179ED8",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "lambdasltiLaunch4A18F0B1": {
+      "DependsOn": [
+        "lambdasltiLaunchServiceRoleDefaultPolicyF8003F2F",
+        "lambdasltiLaunchServiceRole86E7794B",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "4e37c3d043f2df6b29dd6c9b5689ae48efd1986109ed1abfd84cc9dc2b3bd66c.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "CONTROL_PLANE_TABLE_NAME": {
+              "Ref": "tablescontrolPlaneTable49F703D0",
+            },
+            "DATA_PLANE_TABLE_NAME": {
+              "Ref": "tablesdataPlaneTable57BF29C7",
+            },
+            "KMS_KEY_ID": {
+              "Ref": "keysltiAsymmetricKeyFE868879",
+            },
+            "LOG_LEVEL": "debug",
+            "POWERTOOLS_METRICS_NAMESPACE": "lti",
+            "POWERTOOLS_SERVICE_NAME": "launch",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Ref": "layerslayerUtil5D96D399",
+          },
+          {
+            "Ref": "layerslayernodeforge929221D0",
+          },
+        ],
+        "MemorySize": 256,
+        "Role": {
+          "Fn::GetAtt": [
+            "lambdasltiLaunchServiceRole86E7794B",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "lambdasltiLaunchLogRetention27246C34": {
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "lambdasltiLaunch4A18F0B1",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 3653,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "lambdasltiLaunchServiceRole86E7794B": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasltiLaunchServiceRoleDefaultPolicyF8003F2F": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "tablescontrolPlaneTable49F703D0",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "tablesdataPlaneTable57BF29C7",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+            {
+              "Action": [
+                "kms:Verify",
+                "kms:GetPublicKey",
+                "kms:Sign",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "keysltiAsymmetricKeyFE868879",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "lambdasltiLaunchServiceRoleDefaultPolicyF8003F2F",
+        "Roles": [
+          {
+            "Ref": "lambdasltiLaunchServiceRole86E7794B",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "lambdasltiOidcFA92D3C4": {
+      "DependsOn": [
+        "lambdasltiOidcServiceRoleDefaultPolicyDF6E47BF",
+        "lambdasltiOidcServiceRole76EBE8FC",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "b369ef6072db9f78ac36692f9726321e758a810bb12cf26391b367bca259f48e.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "CONTROL_PLANE_TABLE_NAME": {
+              "Ref": "tablescontrolPlaneTable49F703D0",
+            },
+            "DATA_PLANE_TABLE_NAME": {
+              "Ref": "tablesdataPlaneTable57BF29C7",
+            },
+            "LOG_LEVEL": "debug",
+            "POWERTOOLS_METRICS_NAMESPACE": "lti",
+            "POWERTOOLS_SERVICE_NAME": "oidc",
+            "STATE_TTL": "7200",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Ref": "layerslayerUtil5D96D399",
+          },
+          {
+            "Ref": "layerslayernodeforge929221D0",
+          },
+        ],
+        "MemorySize": 256,
+        "Role": {
+          "Fn::GetAtt": [
+            "lambdasltiOidcServiceRole76EBE8FC",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "lambdasltiOidcLogRetentionD7D05676": {
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "lambdasltiOidcFA92D3C4",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 3653,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "lambdasltiOidcServiceRole76EBE8FC": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasltiOidcServiceRoleDefaultPolicyDF6E47BF": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "tablescontrolPlaneTable49F703D0",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "tablesdataPlaneTable57BF29C7",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "lambdasltiOidcServiceRoleDefaultPolicyDF6E47BF",
+        "Roles": [
+          {
+            "Ref": "lambdasltiOidcServiceRole76EBE8FC",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "lambdasltiPlatformRegister68BD8997": {
+      "DependsOn": [
+        "lambdasltiPlatformRegisterServiceRoleDefaultPolicyE5435415",
+        "lambdasltiPlatformRegisterServiceRoleD81DBBA8",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "a48426095742151b5fef48c7fa2e38f8de0ab00984de25f15a0b1fff22d74deb.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "CONTROL_PLANE_TABLE_NAME": {
+              "Ref": "tablescontrolPlaneTable49F703D0",
+            },
+            "LOG_LEVEL": "debug",
+            "POWERTOOLS_METRICS_NAMESPACE": "lti",
+            "POWERTOOLS_SERVICE_NAME": "platformRegister",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Ref": "layerslayerUtil5D96D399",
+          },
+          {
+            "Ref": "layerslayernodeforge929221D0",
+          },
+        ],
+        "MemorySize": 256,
+        "Role": {
+          "Fn::GetAtt": [
+            "lambdasltiPlatformRegisterServiceRoleD81DBBA8",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "lambdasltiPlatformRegisterLogRetentionF6EEEEE5": {
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "lambdasltiPlatformRegister68BD8997",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 3653,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "lambdasltiPlatformRegisterServiceRoleD81DBBA8": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasltiPlatformRegisterServiceRoleDefaultPolicyE5435415": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "tablescontrolPlaneTable49F703D0",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "lambdasltiPlatformRegisterServiceRoleDefaultPolicyE5435415",
+        "Roles": [
+          {
+            "Ref": "lambdasltiPlatformRegisterServiceRoleD81DBBA8",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "lambdasltiToolConfigAF290814": {
+      "DependsOn": [
+        "lambdasltiToolConfigServiceRoleDefaultPolicy1E2FDE3B",
+        "lambdasltiToolConfigServiceRoleD9CF37BD",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "bf1d7fdc76516bb6b45b6e245daf2611915225e493e2a4865bedd46070c4b4c3.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "CONTROL_PLANE_TABLE_NAME": {
+              "Ref": "tablescontrolPlaneTable49F703D0",
+            },
+            "LOG_LEVEL": "debug",
+            "POWERTOOLS_METRICS_NAMESPACE": "lti",
+            "POWERTOOLS_SERVICE_NAME": "toolConfig",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Ref": "layerslayerUtil5D96D399",
+          },
+          {
+            "Ref": "layerslayernodeforge929221D0",
+          },
+        ],
+        "MemorySize": 256,
+        "Role": {
+          "Fn::GetAtt": [
+            "lambdasltiToolConfigServiceRoleD9CF37BD",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "lambdasltiToolConfigLogRetention1CF42CE6": {
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "lambdasltiToolConfigAF290814",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 3653,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "lambdasltiToolConfigServiceRoleD9CF37BD": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasltiToolConfigServiceRoleDefaultPolicy1E2FDE3B": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "tablescontrolPlaneTable49F703D0",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "lambdasltiToolConfigServiceRoleDefaultPolicy1E2FDE3B",
+        "Roles": [
+          {
+            "Ref": "lambdasltiToolConfigServiceRoleD9CF37BD",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "lambdasscoreSubmission63FC62E4": {
+      "DependsOn": [
+        "lambdasscoreSubmissionServiceRoleDefaultPolicy1397728F",
+        "lambdasscoreSubmissionServiceRoleA273399D",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "c55a9097d08cc24ebf7a144b822811af735d04704716a161b9d9c7c760f2e629.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "CONTROL_PLANE_TABLE_NAME": {
+              "Ref": "tablescontrolPlaneTable49F703D0",
+            },
+            "DATA_PLANE_TABLE_NAME": {
+              "Ref": "tablesdataPlaneTable57BF29C7",
+            },
+            "KMS_KEY_ID": {
+              "Ref": "keysltiAsymmetricKeyFE868879",
+            },
+            "LOG_LEVEL": "debug",
+            "POWERTOOLS_METRICS_NAMESPACE": "lti",
+            "POWERTOOLS_SERVICE_NAME": "scoreSubmission",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Ref": "layerslayerUtil5D96D399",
+          },
+          {
+            "Ref": "layerslayernodeforge929221D0",
+          },
+        ],
+        "MemorySize": 256,
+        "Role": {
+          "Fn::GetAtt": [
+            "lambdasscoreSubmissionServiceRoleA273399D",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "lambdasscoreSubmissionLogRetentionB8AA2124": {
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "lambdasscoreSubmission63FC62E4",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 3653,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "lambdasscoreSubmissionServiceRoleA273399D": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasscoreSubmissionServiceRoleDefaultPolicy1397728F": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "tablescontrolPlaneTable49F703D0",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "tablesdataPlaneTable57BF29C7",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+            {
+              "Action": [
+                "kms:Verify",
+                "kms:GetPublicKey",
+                "kms:Sign",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "keysltiAsymmetricKeyFE868879",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "lambdasscoreSubmissionServiceRoleDefaultPolicy1397728F",
+        "Roles": [
+          {
+            "Ref": "lambdasscoreSubmissionServiceRoleA273399D",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "lambdastokenProxy38E950E5": {
+      "DependsOn": [
+        "lambdastokenProxyServiceRoleDefaultPolicy04B07CE4",
+        "lambdastokenProxyServiceRoleB30C1A4F",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "3f68cc315721de7c663da8c0d3e3af49f1439f2753253a341c3c68e96526eddd.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "DATA_PLANE_TABLE_NAME": {
+              "Ref": "tablesdataPlaneTable57BF29C7",
+            },
+            "KMS_KEY_ID": {
+              "Ref": "keysltiAsymmetricKeyFE868879",
+            },
+            "LOG_LEVEL": "debug",
+            "POWERTOOLS_METRICS_NAMESPACE": "lti",
+            "POWERTOOLS_SERVICE_NAME": "tokenProxy",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Ref": "layerslayerUtil5D96D399",
+          },
+          {
+            "Ref": "layerslayernodeforge929221D0",
+          },
+        ],
+        "MemorySize": 256,
+        "Role": {
+          "Fn::GetAtt": [
+            "lambdastokenProxyServiceRoleB30C1A4F",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "lambdastokenProxyLogRetention30E38D4B": {
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "lambdastokenProxy38E950E5",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 3653,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "lambdastokenProxyServiceRoleB30C1A4F": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdastokenProxyServiceRoleDefaultPolicy04B07CE4": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "tablesdataPlaneTable57BF29C7",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "lambdastokenProxyServiceRoleDefaultPolicy04B07CE4",
+        "Roles": [
+          {
+            "Ref": "lambdastokenProxyServiceRoleB30C1A4F",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "layerslayerUtil5D96D399": {
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs18.x",
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "0eb0c41dd6c300c01c056ef5b74015d5723071b3fa7a9650c2bd6c1b9fa9c77b.zip",
+        },
+        "Description": "LTI utility functions",
+      },
+      "Type": "AWS::Lambda::LayerVersion",
+    },
+    "layerslayernodeforge929221D0": {
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs18.x",
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "afa90ce10069dd49f5e765703e1a709d735f85692c87c59044f08361a39d471d.zip",
+        },
+        "Description": "Layer for node-forge module",
+      },
+      "Type": "AWS::Lambda::LayerVersion",
+    },
+    "tablescontrolPlaneTable49F703D0": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "PK",
+            "AttributeType": "S",
+          },
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "KeySchema": [
+          {
+            "AttributeName": "PK",
+            "KeyType": "HASH",
+          },
+        ],
+        "PointInTimeRecoverySpecification": {
+          "PointInTimeRecoveryEnabled": true,
+        },
+        "SSESpecification": {
+          "SSEEnabled": true,
+        },
+        "TimeToLiveSpecification": {
+          "AttributeName": "ttl",
+          "Enabled": true,
+        },
+      },
+      "Type": "AWS::DynamoDB::Table",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "tablesdataPlaneTable57BF29C7": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "PK",
+            "AttributeType": "S",
+          },
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "KeySchema": [
+          {
+            "AttributeName": "PK",
+            "KeyType": "HASH",
+          },
+        ],
+        "PointInTimeRecoverySpecification": {
+          "PointInTimeRecoveryEnabled": true,
+        },
+        "SSESpecification": {
+          "SSEEnabled": true,
+        },
+        "TimeToLiveSpecification": {
+          "AttributeName": "ttl",
+          "Enabled": true,
+        },
+      },
+      "Type": "AWS::DynamoDB::Table",
+      "UpdateReplacePolicy": "Retain",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

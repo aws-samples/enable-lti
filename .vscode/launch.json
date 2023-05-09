@@ -1,0 +1,63 @@
+{
+    "configurations": [
+    
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "lambdas:src/lti-launch.handler (nodejs16.x)",
+            "invokeTarget": {
+                "target": "code",
+                "projectRoot": "${workspaceFolder}/lambdas",
+                "lambdaHandler": "src/lti-launch.handler"
+            },
+            "lambda": {
+                "runtime": "nodejs16.x",
+                "payload": {
+                    "path": "${workspaceFolder}/lambdas/payloads/launch.json"
+                },
+                "environmentVariables": {
+                    "TABLE_NAME": "LTIToolCdkStack-ltitableE0BA8EA2-DTWJ84TFS0O2",
+                }
+            }
+        },
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "lambdas:src/lti-platform-register.handler (nodejs16.x)",
+            "invokeTarget": {
+                "target": "code",
+                "projectRoot": "${workspaceFolder}/lambdas",
+                "lambdaHandler": "src/lti-platform-register.handler"
+            },
+            "lambda": {
+                "runtime": "nodejs16.x",
+                "payload": {
+                    "path": "${workspaceFolder}/lambdas/payloads/platform.json"
+                },
+                "environmentVariables": {
+                    "TABLE_NAME": "LTIToolCdkStack-ltitableE0BA8EA2-DTWJ84TFS0O2",
+                }
+            }
+        },
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "lambdas:src/lti-oidc.handler (nodejs16.x)",
+            "invokeTarget": {
+                "target": "code",
+                "projectRoot": "${workspaceFolder}",
+                "lambdaHandler": "packages/oidc/src/index.handler"
+            },
+            "lambda": {
+                "runtime": "nodejs16.x",
+                "payload": {
+                    "path": "${workspaceFolder}/payloads/oidc.json"
+                },
+                "environmentVariables": {
+                    "TABLE_NAME": "LTIToolCdkStack-ltitableE0BA8EA2-DTWJ84TFS0O2",
+                    "STATE_TTL": "7200"
+                }
+            }
+        }
+    ]
+}

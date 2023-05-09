@@ -1,0 +1,19 @@
+{
+  "name": "@enable-lti/cdk",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -b",
+    "test": "jest --passWithNoTests --all --updateSnapshot",
+    "cdk": "cdk --app 'npx ts-node --prefer-ts-exts src/apps/eltiApiApp.ts'"
+  },
+  "devDependencies": {
+    "aws-cdk-lib": "^2.37.1",
+    "cdk-nag": "^2.25.8",
+    "constructs": "^10.1.77",
+    "esbuild": "^0.15.5",
+    "jszip": "^3.10.1",
+    "source-map-support": "^0.5.21",
+    "ts-node": "^10.9.1"
+  }
+}

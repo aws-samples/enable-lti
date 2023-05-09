@@ -1,0 +1,70 @@
+site_name: AWS Samples - Enable LTI (eLTI)
+repo_url: https://github.com/aws-samples/enable-lti
+
+nav:
+  - Homepage: index.md
+  - Architecture: architecture.md
+  - Implementing: implementing.md
+
+theme:
+  name: material
+  logo:
+  favicon:
+  features:
+    - header.autohide
+    - navigation.sections
+    - navigation.expand
+    - navigation.footer
+    - navigation.top
+    - navigation.instant
+    - navigation.indexes
+    - navigation.tracking
+    - content.code.annotate
+    - content.code.copy
+    - toc.follow
+    - toc.integrate
+    - announce.dismiss
+  font:
+    text: Ubuntu
+  palette:
+    - scheme: default
+      media: "(prefers-color-scheme: light)"
+      primary: deep purple
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      media: "(prefers-color-scheme: dark)"
+      primary: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.details
+  - pymdownx.snippets:
+      base_path: "."
+      check_paths: true
+  - meta
+  - toc:
+      permalink: true
+      toc_depth: 4
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format

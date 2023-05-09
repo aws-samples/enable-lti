@@ -1,0 +1,16 @@
+{
+  "name": "@enable-lti/jwks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "tsc -b",
+    "test": "jest --passWithNoTests --all --updateSnapshot",
+    "eslint": "eslint ./src/**/**.ts",
+    "eslint:fix": "eslint ./src/**/**.ts --fix"
+  },
+  "types": "./index.d.ts",
+  "dependencies": {
+    "jose": "4.10.3"
+  }
+}

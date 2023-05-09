@@ -1,0 +1,26 @@
+{
+  "name": "@enable-lti/integ-tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@enable-lti/auth-proxy": "*",
+    "@enable-lti/launch": "*",
+    "@enable-lti/oidc": "*",
+    "@enable-lti/platform": "*",
+    "@enable-lti/token-proxy": "*",
+    "@enable-lti/score-submission": "*",
+    "@enable-lti/util": "*"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": "tsc -b && jest --passWithNoTests --all --updateSnapshot",
+    "test:setup": "ts-node ./scripts/setupEnv.ts && ts-node ./scripts/setupInteg.ts",
+    "jest": "tsc -b && jest",
+    "eslint": "eslint ./src/**/**.ts",
+    "eslint:fix": "eslint ./src/**/**.ts --fix"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.2.3"
+  }
+}

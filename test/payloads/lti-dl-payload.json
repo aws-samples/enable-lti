@@ -1,0 +1,90 @@
+{
+  "aud": "6a90b709-788c-4b83-b7b8-9616a10b8b31",
+  "email": "richard@example.com",
+  "exp": 1664484484,
+  "family_name": "Roe",
+  "given_name": "Richard",
+  "https://blackboard.com/webapps/foundations-connector/foundations-ids": {
+    "tenant-id": "35390367-9ba2-4b0e-9189-1f92e7ef26f7"
+  },
+  "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint": {
+    "lineitems": "https://learn141.anthology.workshops.aws.dev/learn/api/v1/lti/courses/_3_1/lineItems",
+    "scope": [
+      "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
+      "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
+      "https://purl.imsglobal.org/spec/lti-ags/scope/score"
+    ]
+  },
+  "https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings": {
+    "accept_copy_advice": false,
+    "accept_media_types": "*/*",
+    "accept_multiple": true,
+    "accept_presentation_document_targets": [
+      "iframe",
+      "window"
+    ],
+    "accept_types": [
+      "ltiResourceLink",
+      "link"
+    ],
+    "auto_create": true,
+    "data": "_3_1::_13_1::-1::false::true::_3_1::27a227f9f4e340539a2263d7f4145f54::false",
+    "deep_link_return_url": "https://learn141.anthology.workshops.aws.dev/webapps/blackboard/controller/lti/v2/deeplinking"
+  },
+  "https://purl.imsglobal.org/spec/lti-gs/claim/groupsservice": {
+    "context_group_sets_url": "https://learn141.anthology.workshops.aws.dev/learn/api/v1/lti/courses/_3_1/groupsets",
+    "context_groups_url": "https://learn141.anthology.workshops.aws.dev/learn/api/v1/lti/courses/_3_1/groups",
+    "scope": [
+      "https://purl.imsglobal.org/spec/lti-gs/scope/contextgroup.readonly"
+    ],
+    "service_versions": [
+      "1.0"
+    ]
+  },
+  "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice": {
+    "context_memberships_url": "https://learn141.anthology.workshops.aws.dev/learn/api/v1/lti/external/namesandroles/_3_1",
+    "scope": [
+      "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+    ],
+    "service_versions": [
+      "2.0"
+    ]
+  },
+  "https://purl.imsglobal.org/spec/lti/claim/context": {
+    "id": "558c8270d2734da192725b8e1f1b0caf",
+    "label": "AT2022",
+    "title": "aws-lti-workshop",
+    "type": [
+      "http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering"
+    ]
+  },
+  "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "1701f744-eec0-4c32-bc5d-203bf1ec012b",
+  "https://purl.imsglobal.org/spec/lti/claim/lis": {
+    "course_section_sourcedid": "AT2022",
+    "person_sourcedid": "instructor01"
+  },
+  "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiDeepLinkingRequest",
+  "https://purl.imsglobal.org/spec/lti/claim/resource_link": {
+    "id": "_13_1"
+  },
+  "https://purl.imsglobal.org/spec/lti/claim/roles": [
+    "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"
+  ],
+  "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "https://id.execute-api.us-east-1.amazonaws.com/prod/launch",
+  "https://purl.imsglobal.org/spec/lti/claim/tool_platform": {
+    "contact_email": "dev@localhost",
+    "description": "Blackboard, Inc.",
+    "guid": "867f2e7237494860b83177a1fa3a1034",
+    "name": "Blackboard, Inc.",
+    "product_family_code": "BlackboardLearn",
+    "url": "https://learn141.anthology.workshops.aws.dev/",
+    "version": "3900.41.0-rel.16+7c6118d"
+  },
+  "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+  "iat": 1664480884,
+  "iss": "https://blackboard.com",
+  "locale": "en-US",
+  "name": "Richard Roe",
+  "nonce": "b9c75926-99e0-42c8-b59b-40d4f7177686",
+  "sub": "a9331e0b2176402da222fa1ebdfea3d3"
+}

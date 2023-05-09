@@ -1,0 +1,124 @@
+{
+  "resource": "/{proxy+}",
+  "version": "1.0",
+  "path": "/login",
+  "httpMethod": "GET",
+  "headers": {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "en-US,en;q=0.5",
+    "CloudFront-Forwarded-Proto": "https",
+    "CloudFront-Is-Desktop-Viewer": "true",
+    "CloudFront-Is-Mobile-Viewer": "false",
+    "CloudFront-Is-SmartTV-Viewer": "false",
+    "CloudFront-Is-Tablet-Viewer": "false",
+    "CloudFront-Viewer-Country": "US",
+    "Cookie": "AMCV_7742037254C95E840A4C98A6%40AdobeOrg=1585540135%7CMCIDTS%7C19080%7CMCMID%7C85249580962387521971924011482303971049%7CMCAAMLH-1649083931%7C7%7CMCAAMB-1649083931%7C6G1ynYcLPuiQxYZrsz_pkqfLG9yMXBpb2zX5dvJdYQJzPXImdj0y%7CMCOPTOUT-1648486331s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C4.4.0%7CMCSYNCSOP%7C411-18966; s_fid=67F354134850393E-0AA0D258A6294D7A",
+    "Host": "id.execute-api.us-east-2.amazonaws.com",
+    "Referer": "https://learn25.anthology.workshops.aws.dev/",
+    "sec-fetch-dest": "iframe",
+    "sec-fetch-mode": "navigate",
+    "sec-fetch-site": "cross-site",
+    "upgrade-insecure-requests": "1",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0) Gecko/20100101 Firefox/91.0",
+    "Via": "2.0 68d323cfd4a0f1ae252f92c083654190.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Id": "_hg6ZYJfgS7cg-mmnaF7RuvTJhXCjcYhhFAV1XyEW4TuXgbjGNo8Qg==",
+    "X-Amzn-Trace-Id": "Root=1-62aae7ce-74b4cc1f0bf14c665501fb49",
+    "X-Forwarded-For": "72.21.196.67, 130.176.179.86",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
+  },
+  "multiValueHeaders": {
+    "Accept": ["text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"],
+    "Accept-Encoding": ["gzip, deflate, br"],
+    "Accept-Language": ["en-US,en;q=0.5"],
+    "CloudFront-Forwarded-Proto": ["https"],
+    "CloudFront-Is-Desktop-Viewer": ["true"],
+    "CloudFront-Is-Mobile-Viewer": ["false"],
+    "CloudFront-Is-SmartTV-Viewer": ["false"],
+    "CloudFront-Is-Tablet-Viewer": ["false"],
+    "CloudFront-Viewer-Country": ["US"],
+    "Cookie": [
+      "AMCV_7742037254C95E840A4C98A6%40AdobeOrg=1585540135%7CMCIDTS%7C19080%7CMCMID%7C85249580962387521971924011482303971049%7CMCAAMLH-1649083931%7C7%7CMCAAMB-1649083931%7C6G1ynYcLPuiQxYZrsz_pkqfLG9yMXBpb2zX5dvJdYQJzPXImdj0y%7CMCOPTOUT-1648486331s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C4.4.0%7CMCSYNCSOP%7C411-18966; s_fid=67F354134850393E-0AA0D258A6294D7A"
+    ],
+    "Host": ["id.execute-api.us-east-2.amazonaws.com"],
+    "Referer": ["https://learn25.anthology.workshops.aws.dev/"],
+    "sec-fetch-dest": ["iframe"],
+    "sec-fetch-mode": ["navigate"],
+    "sec-fetch-site": ["cross-site"],
+    "upgrade-insecure-requests": ["1"],
+    "User-Agent": ["Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0) Gecko/20100101 Firefox/91.0"],
+    "Via": ["2.0 68d323cfd4a0f1ae252f92c083654190.cloudfront.net (CloudFront)"],
+    "X-Amz-Cf-Id": ["_hg6ZYJfgS7cg-mmnaF7RuvTJhXCjcYhhFAV1XyEW4TuXgbjGNo8Qg=="],
+    "X-Amzn-Trace-Id": ["Root=1-62aae7ce-74b4cc1f0bf14c665501fb49"],
+    "X-Forwarded-For": ["72.21.196.67, 130.176.179.86"],
+    "X-Forwarded-Port": ["443"],
+    "X-Forwarded-Proto": ["https"]
+  },
+  "queryStringParameters": {
+    "client_id": "75363971-2683-4ad9-a31b-93ec41e27772",
+    "lti_deployment_id": "f66151aa-a799-4b22-93ed-81dd16f70a4e",
+    "iss": "https://blackboard.com",
+    "lti_message_hint": "eyJwbGFjZW1lbnRJZCI6Il85XzEiLCJwb3NpdGlvbiI6LTEsIm9wZW5JbkxpZ2h0Qm94IjpmYWxzZSwiZnJvbVVsdHJhIjpmYWxzZSwiaW5saW5lTW9kZSI6ZmFsc2UsInRhcmdldExpbmtVcmwiOiJodHRwczovL3ltaGs5OW5zN2cuZXhlY3V0ZS1hcGkudXMtZWFzdC0yLmFtYXpvbmF3cy5jb20vcHJvZC9pbXMvbGF1bmNoIiwicmVzb3VyY2VMaW5rSWQiOiJfM18xc2lnbi11cC1saXN0IiwiY291cnNlSWQiOiJfM18xIiwiY29udGVudElkIjpudWxsLCJwYXJlbnRDb250ZW50SWQiOiIiLCJjdXN0b21QYXJhbXMiOnt9LCJ0YXJnZXRPdmVycmlkZSI6bnVsbCwiZnJvbUdyYWRlQ2VudGVyIjpmYWxzZSwib3Blbk5ld1dpbmRvdyI6ZmFsc2UsImRlZXBMaW5rTGF1bmNoIjpmYWxzZX0=",
+    "lti_storage_target": "lti_storage_frame",
+    "login_hint": "https%3A%2F%2Flearn25.anthology.workshops.aws.dev%2Fwebapps%2Fblackboard%2Fexecute%2Fblti%2FlaunchPlacement%3Fcmd%3Dauthenticate%26course_id%3D_3_1,10ac1fc7a50c4433ae104c283cc66e47,67934c629a3845f8beb2f71241e3b13f",
+    "target_link_uri": "https://id.execute-api.us-east-2.amazonaws.com/prod/launch"
+  },
+  "multiValueQueryStringParameters": {
+    "client_id": ["75363971-2683-4ad9-a31b-93ec41e27772"],
+    "iss": ["https://blackboard.com"],
+    "login_hint": [
+      "https%3A%2F%2Flearn25.anthology.workshops.aws.dev%2Fwebapps%2Fblackboard%2Fexecute%2Fblti%2FlaunchPlacement%3Fcmd%3Dauthenticate%26course_id%3D_3_1,10ac1fc7a50c4433ae104c283cc66e47,67934c629a3845f8beb2f71241e3b13f"
+    ],
+    "lti_deployment_id": ["f66151aa-a799-4b22-93ed-81dd16f70a4e"],
+    "lti_message_hint": [
+      "eyJwbGFjZW1lbnRJZCI6Il85XzEiLCJwb3NpdGlvbiI6LTEsIm9wZW5JbkxpZ2h0Qm94IjpmYWxzZSwiZnJvbVVsdHJhIjpmYWxzZSwiaW5saW5lTW9kZSI6ZmFsc2UsInRhcmdldExpbmtVcmwiOiJodHRwczovL3ltaGs5OW5zN2cuZXhlY3V0ZS1hcGkudXMtZWFzdC0yLmFtYXpvbmF3cy5jb20vcHJvZC9pbXMvbGF1bmNoIiwicmVzb3VyY2VMaW5rSWQiOiJfM18xc2lnbi11cC1saXN0IiwiY291cnNlSWQiOiJfM18xIiwiY29udGVudElkIjpudWxsLCJwYXJlbnRDb250ZW50SWQiOiIiLCJjdXN0b21QYXJhbXMiOnt9LCJ0YXJnZXRPdmVycmlkZSI6bnVsbCwiZnJvbUdyYWRlQ2VudGVyIjpmYWxzZSwib3Blbk5ld1dpbmRvdyI6ZmFsc2UsImRlZXBMaW5rTGF1bmNoIjpmYWxzZX0="
+    ],
+    "lti_storage_target": ["lti_storage_frame"],
+    "target_link_uri": ["https://id.execute-api.us-east-2.amazonaws.com/prod/launch"]
+  },
+  "requestContext": {
+    "accountId": "123456789012",
+    "apiId": "id",
+    "domainName": "id.execute-api.us-east-1.amazonaws.com",
+    "domainPrefix": "id",
+    "extendedRequestId": "request-id",
+    "httpMethod": "GET",
+    "identity": {
+      "accessKey": null,
+      "accountId": null,
+      "caller": null,
+      "cognitoAuthenticationProvider": null,
+      "cognitoAuthenticationType": null,
+      "cognitoIdentityId": null,
+      "cognitoIdentityPoolId": null,
+      "principalOrgId": null,
+      "sourceIp": "IP",
+      "user": null,
+      "userAgent": "user-agent",
+      "userArn": null,
+      "clientCert": {
+        "clientCertPem": "CERT_CONTENT",
+        "subjectDN": "www.example.com",
+        "issuerDN": "Example issuer",
+        "serialNumber": "a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1",
+        "validity": {
+          "notBefore": "May 28 12:30:02 2019 GMT",
+          "notAfter": "Aug  5 09:36:04 2021 GMT"
+        }
+      }
+    },
+    "path": "/login",
+    "protocol": "HTTP/1.1",
+    "requestId": "id=",
+    "requestTime": "04/Mar/2020:19:15:17 +0000",
+    "requestTimeEpoch": 1583349317135,
+    "resourceId": null,
+    "resourcePath": "/{proxy+}",
+    "stage": "$default"
+  },
+  "pathParameters": { "proxy": "/login" },
+  "stageVariables": null,
+  "body": null,
+  "isBase64Encoded": false
+}

@@ -1,0 +1,6 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/layers/util/nodejs/node_modules/@enable-lti/util",
+  }
+}
