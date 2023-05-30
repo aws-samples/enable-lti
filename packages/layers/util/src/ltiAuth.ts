@@ -320,7 +320,6 @@ export class LtiLaunchAuth {
       } catch (e) {
         return errorResponse(powertools, e as Error, 500, CONFIG_ISSUE);
       }
-      //TODO: must change how we store and retrieve keys
       try {
         kids = await jwks.all();
         kid = kids.keys[0].kid;

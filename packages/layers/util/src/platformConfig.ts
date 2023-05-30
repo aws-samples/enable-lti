@@ -39,7 +39,6 @@ class DynamoDBPlatformConfigRecord implements PlatformConfigRecord {
     );
   }
 
-  //TODO: send into constructor an instance of PlatformConfigRecord
   private constructor(
     clientId: string,
     iss: string,

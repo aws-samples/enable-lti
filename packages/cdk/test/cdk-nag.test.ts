@@ -15,7 +15,6 @@ describe('cdk-nag AwsSolutions Pack', () => {
 
     // WHEN
     Aspects.of(stack).add(new AwsSolutionsChecks());
-    console.log(JSON.stringify(Annotations.fromStack(stack)));
   });
 
   // THEN

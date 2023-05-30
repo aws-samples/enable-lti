@@ -94,7 +94,6 @@ export async function requestBearerClientCredential(
 }
 
 export function abort(statusCode: number, msg: string): APIGatewayProxyResult {
-  console.error(msg);
   return {
     statusCode: statusCode,
     body: JSON.stringify(msg),
@@ -264,7 +263,6 @@ export function requiredValueFromCookies(
  *
  */
 export const getSignedJWT = async (
-  //TODO: can we enforce a type on jwtBody rather than a simple json object?
   jwtBody: {},
   keyDetails: { keyId: string; kid: string }
 ): Promise<string> => {
@@ -282,7 +280,6 @@ export const getSignedJWT = async (
       'base64url'
     );
     const clientAssertion = `${headerJson}.${payloadJson}`;
-    console.debug(`clientAssertion: ${clientAssertion}`);
     const aws = Aws.getInstance();
     const encoded = new nodeUtil.TextEncoder().encode(clientAssertion);
     const signedClientAssertion = await aws.sign(keyDetails.keyId, encoded);
@@ -290,17 +287,13 @@ export const getSignedJWT = async (
       signedClientAssertion!
     ).toString('base64url');
     const token = `${headerJson}.${payloadJson}.${b64urlSignedClientAssertion}`;
-    console.log(`Signed JWT Token: ${token}`);
     return token;
   } catch (e) {
-    //TODO: Any benefits in creating custom JWTSigningError?
     throw e;
   }
 };
 
 /**
- * TODO: think about how we keep updating this method when amplify library version changes
- *
  * This is how aws amplify library encodes the state param,
  * https://github.com/aws-amplify/amplify-js/blob/main/packages/core/src/Util/StringUtils.ts#L1-L11
  * https://github.com/aws-amplify/amplify-js/blob/e1b0b5be3e8ccb3c76e8e2e2f43f910d40d73254/packages/auth/src/OAuth/OAuth.ts#L79

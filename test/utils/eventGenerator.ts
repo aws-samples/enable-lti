@@ -47,7 +47,6 @@ const requestContext = (resourcePath: string) => {
   };
 };
 
-//TODO: there can be a simpler way to send in a object and create appropriate request event instead of having all functions
 export const loginRequestEvent = (): APIGatewayProxyEvent => {
   const request: APIGatewayProxyEvent = {
     resource: '/login',
@@ -132,7 +131,6 @@ export const loginRequestEvent = (): APIGatewayProxyEvent => {
   return request;
 };
 
-//TODO: must create the body in integ test and sent here
 export const launchProxyRequestEvent = (
   idToken: string,
   state: string
