@@ -78,7 +78,7 @@ export async function requestBearerClientCredential(
     const httpClient = axios.default;
     powertools.logger.debug(`POST: ${platform.accessTokenUrl}?${searchParams}`);
     const r = await httpClient.post(platform.accessTokenUrl, searchParams);
-    if (r.status !== 200) {
+    if (r.status !== 200 && r.status !== 201) {
       const msg = `Error retrieving access token from platform ${platform.accessTokenUrl}. ${r.status}: ${r.statusText}`;
       throw Error(msg);
     }
