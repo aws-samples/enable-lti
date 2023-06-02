@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import { ScanCommandOutput, PutItemCommandOutput } from '@aws-sdk/client-dynamodb';
+import { PutItemCommandOutput, GetItemCommandOutput } from '@aws-sdk/client-dynamodb';
 import { GetPublicKeyCommandOutput } from "@aws-sdk/client-kms";
 
 export const jwksEventRequest: APIGatewayProxyEvent = {
@@ -49,11 +49,11 @@ export const jwksEventRequest: APIGatewayProxyEvent = {
     'isBase64Encoded': false
 }
 
-export const jwksValidEntry = (days: number = 30): Partial<ScanCommandOutput> => {
+export const jwksValidEntry = (days: number = 30): Partial<GetItemCommandOutput> => {
     return {
-        Items: [{
+        Item: {
             "PK": {
-                "S": "JWK#f2cafabe-8d1b-423c-9082-53201c279a0a"
+                "S": "4c2ff352-324d-4277-916f-b29e51a3707b"
             },
             "kid": {
                 "S": "f2cafabe-8d1b-423c-9082-53201c279a0a"
@@ -67,7 +67,7 @@ export const jwksValidEntry = (days: number = 30): Partial<ScanCommandOutput> =>
             "ttl": {
                 "N": `${(new Date().getTime() / 1000) + 86400 * days}`
             }
-        }]
+        }
     };
 }
 
@@ -96,11 +96,11 @@ export const jwksGetPublicKey: Partial<GetPublicKeyCommandOutput> = {
     ],
 }
 
-export const jwksRefreshEntry = (days: number = 30): Partial<ScanCommandOutput> => {
+export const jwksRefreshEntry = (days: number = 30): Partial<GetItemCommandOutput> => {
     return {
-        Items: [{
+        Item: {
             "PK": {
-                "S": "JWK#a4c976d4-d70e-4e56-9ad3-2b69bde0e907",
+                "S": "4c2ff352-324d-4277-916f-b29e51a3707b",
             },
             "kid": {
                 "S": "a4c976d4-d70e-4e56-9ad3-2b69bde0e907",
@@ -114,13 +114,12 @@ export const jwksRefreshEntry = (days: number = 30): Partial<ScanCommandOutput> 
             "ttl": {
                 "N": `${(new Date().getTime() / 1000) + 86400 * days}`,
             },
-        }]
+        }
     };
 }
 
 export const jwksPutItem: Partial<PutItemCommandOutput> = {
 }
 
-export const jwksEmptyEntry: Partial<ScanCommandOutput> = {
-    Items: []
+export const jwksEmptyEntry: Partial<GetItemCommandOutput> = {
 }

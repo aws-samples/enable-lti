@@ -5,7 +5,7 @@ import { exportJWK, importSPKI, JSONWebKeySet, JWK } from 'jose';
 import { Aws } from './aws';
 
 export interface Jwks {
-    load(kid: string): Promise<JwkRecord>;
+    load(kmsKeyId: string): Promise<JwkRecord>;
 
     all(): Promise<JSONWebKeySet>
 
@@ -45,7 +45,7 @@ export class DynamoDBJwkRecord implements JwkRecord {
     }
 
     // kid: string = uuidv4(), PK: string = `JWK#${kid}`, kmsKeyId: string, publicKeyPem: string, ttl: number = 0
-    private constructor(kmsKeyId: string, publicKeyPem: string, ttl = 0, kid: string = uuidv4(), PK = `JWK#${kid}`) {
+    private constructor(kmsKeyId: string, publicKeyPem: string, ttl = 0, kid: string = uuidv4(), PK = `${kmsKeyId}`) {
         this.PK = PK;
         this.kid = kid;
         this.kmsKeyId = kmsKeyId;
@@ -89,37 +89,22 @@ export class DynamoDBJwks implements Jwks {
 
     async all(): Promise<JSONWebKeySet> {
         const aws = Aws.getInstance();
-        const records: Record<string, any>[] | undefined = await aws.scan({
+        const record: Record<string, any> | undefined = await aws.getItem({
             TableName: this.tableName,
-            FilterExpression: 'begins_with(PK,:prefix)',
-            ExpressionAttributeValues: {
-                ':prefix': { S: 'JWK#' },
+            Key:{
+                'PK': { S: `${this.kmsKeyId}`}
             },
         });
         const tenDaysFromNow = (new Date().getTime() / 1000) + 864000;
-        const filter = (record: Record<string, any>): boolean => {
-            return record.ttl - tenDaysFromNow > 864000;
-        };
-        if (records === undefined || records.filter(filter).length === 0) {
+        if (record === undefined || record.ttl - tenDaysFromNow <= 864000) {
             const jwkRecord = await DynamoDBJwkRecord.new(this.kmsKeyId);
             await this.save(jwkRecord);
             return await this.all();
 
         } else {
             const keys: JWK[] = [];
-            const sortedRecords = records.sort((a, b) => {
-                const attl = a.ttl as number;
-                const bttl = b.ttl as number;
-                if (bttl > attl) return 1;
-                if (bttl < attl) return -1;
-                return 0;
-            });
-            for (const record of sortedRecords) {
-                if (filter(record)) {
-                    const jwk = await DynamoDBJwkRecord.assign(record).toJWK();
-                    keys.push(jwk);
-                }
-            }
+            const jwk = await DynamoDBJwkRecord.assign(record).toJWK();
+            keys.push(jwk);
             return {
                 keys: keys
             } as JSONWebKeySet;
@@ -138,16 +123,16 @@ export class DynamoDBJwks implements Jwks {
         });
     }
 
-    async load(kid: string): Promise<JwkRecord> {
+    async load(kmsKeyId: string): Promise<JwkRecord> {
         const aws = Aws.getInstance();
         const record: Record<string, any> | undefined = await aws.getItem({
             TableName: this.tableName,
-            Key: { 'PK': { 'S': `JWK#${kid}` } }
+            Key: { 'PK': { 'S': `${kmsKeyId}` } }
         });
         if (record !== undefined) {
             return DynamoDBJwkRecord.assign(record);
         } else {
-            throw Error(`No JwkRecord found for kid ${kid}`);
+            throw Error(`No JwkRecord found for KMS Key ID ${kmsKeyId}`);
         }
     }
 
