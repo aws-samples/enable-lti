@@ -115,7 +115,6 @@ export class LambdaFunction implements LambdaInterface {
           SCORE_SUBMISSION_FAILURE
         );
       }
-      // TODO: need to understand best upper limit for scoreGiven
       if (scoreGiven < 0 || scoreGiven > 100 * scoreMaximum) {
         return errorResponse(
           powertools,
@@ -167,7 +166,6 @@ export class LambdaFunction implements LambdaInterface {
           SCORE_SUBMISSION_FAILURE
         );
       }
-      //TODO: must change how we store and retrieve keys
       try {
         kids = await jwks.all();
         kid = kids.keys[0].kid;

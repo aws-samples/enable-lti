@@ -92,7 +92,6 @@ export class LambdaFunction implements LambdaInterface {
         case LTIMessageTypes.LTIDeepLinkingRequest: {
           try {
             powertools.logger.info('Starting Deeplinking Flow');
-            //TODO: this must come from content service, for now getting it from tool config
             const ltiResourceLinks: ContentItemLTIResourceLink[] =
               tool.data.LTIResourceLinks!.map((item) => {
                 return {

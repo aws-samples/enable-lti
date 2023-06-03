@@ -9,7 +9,6 @@ import {
   DynamoDBJwks,
   APIGatewayProxyEventWithLtiLaunchAuth,
 } from '@enable-lti/util';
-//TODO: below utils can be utilized in unit tests as well so move them to util package
 import {
   loginRequestEvent,
   launchProxyRequestEvent,
@@ -81,7 +80,6 @@ describe('CanvasLMS deep linking flow works', () => {
     const launchEvent = launchProxyRequestEvent(signedJWT, state!);
     const launchRes = await launchAuthHandler(launchEvent as APIGatewayProxyEventWithLtiLaunchAuth);
     expect(launchRes).toBeDefined();
-    console.log(launchRes);
     expect(is200Response(launchRes)).toBe(true);
   });
 });

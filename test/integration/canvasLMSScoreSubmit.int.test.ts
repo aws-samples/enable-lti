@@ -6,15 +6,12 @@ import {
   getSignedJWT,
   DynamoDBJwks,
 } from '@enable-lti/util';
-//TODO: below utils can be utilized in unit tests as well so move them to util package
 import { scoreSubmissionRequestEvent } from '../utils/eventGenerator';
 import {
   platformConfig,
   CLIENT_ID,
   ISS,
   jwtBodyForScoreSubmission,
-  LINE_ITEM_URL,
-  ACCESS_TOKEN_URL,
 } from '../utils/models';
 jest.mock('axios');
 /**
@@ -42,7 +39,6 @@ describe('CanvasLMS login launch flow works', () => {
     } catch {
       platformConfigRecord = await platform.save(platformConfig(JWK_URL));
     }
-    console.log(platformConfigRecord.accessTokenUrl);
   });
 
   test('user launched tool from CanvasLMS, OIDC launch flow', async () => {

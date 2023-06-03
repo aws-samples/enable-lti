@@ -90,7 +90,6 @@ export class LambdaFunction implements LambdaInterface {
         );
       }
 
-      //TODO: must change how we store and retrieve keys
       try {
         kids = await jwks.all();
         kid = kids.keys[0].kid;

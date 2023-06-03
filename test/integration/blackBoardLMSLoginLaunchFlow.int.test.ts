@@ -12,7 +12,6 @@ import {
   PlatformConfigRecord,
   APIGatewayProxyEventWithLtiLaunchAuth,
 } from '@enable-lti/util';
-//TODO: below utils can be utilized in unit tests as well so move them to util package
 import {
   authProxyRequestEvent,
   bbLaunchProxyRequestEvent,

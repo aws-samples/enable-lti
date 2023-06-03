@@ -9,8 +9,6 @@ describe('oidc',()=>{
 
         const value = await handler(mockLoginRequest as any, {} as Context, (error, result) => {/* do nothing */
         });
-        console.log(value);
-
     });
 
 });

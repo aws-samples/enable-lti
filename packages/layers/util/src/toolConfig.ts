@@ -6,7 +6,6 @@ import {
   StoreAccessError,
 } from '@enable-lti/util';
 
-//TODO: Ideally these should come from contentmarket integration but for short-term setting them in toolConfig
 export type titleURLs = {
   title: string;
   url: string;
@@ -110,7 +109,6 @@ class DynamoDBLtiToolConfigRecord implements LtiToolConfigRecord {
    */
   toolOIDCAuthorizeURL(toolURL: string, state?: string, launchUrl?: string): string {
     if (!this.data.OIDC) {
-      // TODO: Redo this launch Url
       return launchUrl ?? toolURL;
     }
     let toolOIDCURL = `${this.data.OIDC.domain}oauth2/authorize?identity_provider=${this.data.OIDC.idpName}&redirect_uri=${toolURL}&response_type=code&client_id=${this.data.OIDC.clientId}&scope=openid`;
@@ -137,7 +135,6 @@ export class DynamoDBLtiToolConfig implements LtiToolConfig {
       if (item !== undefined) {
         return DynamoDBLtiToolConfigRecord.assign(item);
       } else {
-        console.error(`No LtiToolConfig record found for TOOL#${id}.`);
         throw Error(`No LtiToolConfig record found for TOOL#${id}.`);
       }
     } catch (e) {

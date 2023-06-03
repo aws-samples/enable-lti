@@ -115,7 +115,6 @@ export class DynamoDBState implements State {
         const stateRecord = DynamoDBStateRecord.assign(item);
         if (nonce !== undefined) {
           if (stateRecord.nonce !== nonce && stateRecord.nonce_count !== 0) {
-            console.error('Invalid state');
             throw Error('Invalid state');
           } else {
             await aws.updateItem({
