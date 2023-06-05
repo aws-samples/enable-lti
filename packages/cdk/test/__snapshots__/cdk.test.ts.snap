@@ -221,8 +221,8 @@ exports[`Snapshot 1`] = `
     },
     "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A": {
       "DependsOn": [
-        "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
-        "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+        "lambdasltiOidcLogRetentionRoleDefaultPolicy7B838846",
+        "lambdasltiOidcLogRetentionRoleF898250A",
       ],
       "Properties": {
         "Code": {
@@ -234,68 +234,13 @@ exports[`Snapshot 1`] = `
         "Handler": "index.handler",
         "Role": {
           "Fn::GetAtt": [
-            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+            "lambdasltiOidcLogRetentionRoleF898250A",
             "Arn",
           ],
         },
         "Runtime": "nodejs14.x",
       },
       "Type": "AWS::Lambda::Function",
-    },
-    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "logs:PutRetentionPolicy",
-                "logs:DeleteRetentionPolicy",
-              ],
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
-        "Roles": [
-          {
-            "Ref": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
     },
     "apiAccessLogsE8DA0A02": {
       "DeletionPolicy": "Retain",
@@ -306,6 +251,28 @@ exports[`Snapshot 1`] = `
       "UpdateReplacePolicy": "Retain",
     },
     "apiELTIApiA792B265": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Name": "ELTIApi",
         "Policy": {
@@ -371,6 +338,28 @@ exports[`Snapshot 1`] = `
       "DependsOn": [
         "apiELTIApiA792B265",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "CloudWatchRoleArn": {
           "Fn::GetAtt": [
@@ -384,6 +373,28 @@ exports[`Snapshot 1`] = `
     },
     "apiELTIApiCloudWatchRole15503B4E": {
       "DeletionPolicy": "Retain",
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -415,7 +426,7 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "apiELTIApiDeploymentE5E04DBAb1aa9e8421bda1e8f6616571e6006aa1": {
+    "apiELTIApiDeploymentE5E04DBA9ba6b5578e79d92d91aee4126de451ea": {
       "DependsOn": [
         "apiELTIApiauthorizerProxyGETB536CE11",
         "apiELTIApiauthorizerProxy7A5A1CC9",
@@ -435,6 +446,28 @@ exports[`Snapshot 1`] = `
         "apiELTIApitokenProxyPOSTA5640BB9",
         "apiELTIApitokenProxy8E31FDAF",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Description": "Automatically created by the RestApi construct",
         "RestApiId": {
@@ -447,6 +480,28 @@ exports[`Snapshot 1`] = `
       "DependsOn": [
         "apiELTIApiAccount24D4F740",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AccessLogSetting": {
           "DestinationArn": {
@@ -458,7 +513,7 @@ exports[`Snapshot 1`] = `
           "Format": "{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","user":"$context.identity.user","caller":"$context.identity.caller","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}",
         },
         "DeploymentId": {
-          "Ref": "apiELTIApiDeploymentE5E04DBAb1aa9e8421bda1e8f6616571e6006aa1",
+          "Ref": "apiELTIApiDeploymentE5E04DBA9ba6b5578e79d92d91aee4126de451ea",
         },
         "MethodSettings": [
           {
@@ -478,6 +533,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Stage",
     },
     "apiELTIApiOPTIONS844F69E5": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "OPTIONS",
@@ -520,6 +597,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Method",
     },
     "apiELTIApiauthorizerProxy7A5A1CC9": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "ParentId": {
           "Fn::GetAtt": [
@@ -535,6 +634,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Resource",
     },
     "apiELTIApiauthorizerProxyGETApiPermissionTesttestapiELTIApi6BB5DB92GETauthorizerProxy219971D2": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -572,6 +693,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApiauthorizerProxyGETApiPermissiontestapiELTIApi6BB5DB92GETauthorizerProxyA1FC7208": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -613,6 +756,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApiauthorizerProxyGETB536CE11": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "GET",
@@ -653,6 +818,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Method",
     },
     "apiELTIApideepLinkingProxy3C55EEA9": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "ParentId": {
           "Fn::GetAtt": [
@@ -668,6 +855,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Resource",
     },
     "apiELTIApideepLinkingProxyPOST0A47F6D2": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "POST",
@@ -708,6 +917,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Method",
     },
     "apiELTIApideepLinkingProxyPOSTApiPermissionTesttestapiELTIApi6BB5DB92POSTdeepLinkingProxy15A4FD6E": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -745,6 +976,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApideepLinkingProxyPOSTApiPermissiontestapiELTIApi6BB5DB92POSTdeepLinkingProxyF4C632C5": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -786,6 +1039,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApijwksjson03E9176C": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "ParentId": {
           "Fn::GetAtt": [
@@ -801,6 +1076,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Resource",
     },
     "apiELTIApijwksjsonGETApiPermissionTesttestapiELTIApi6BB5DB92GETjwksjsonEF11F1CF": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -838,6 +1135,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApijwksjsonGETApiPermissiontestapiELTIApi6BB5DB92GETjwksjson87C3EDAE": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -879,6 +1198,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApijwksjsonGETE757431B": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "GET",
@@ -919,6 +1260,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Method",
     },
     "apiELTIApilaunch8E6D3031": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "ParentId": {
           "Fn::GetAtt": [
@@ -934,6 +1297,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Resource",
     },
     "apiELTIApilaunchGETApiPermissionTesttestapiELTIApi6BB5DB92GETlaunchC73BAEEC": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -971,6 +1356,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApilaunchGETApiPermissiontestapiELTIApi6BB5DB92GETlaunch2E2CDD8B": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -1012,6 +1419,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApilaunchGETD62DF8AF": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "GET",
@@ -1052,6 +1481,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Method",
     },
     "apiELTIApilaunchPOSTApiPermissionTesttestapiELTIApi6BB5DB92POSTlaunch0158F349": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -1089,6 +1540,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApilaunchPOSTApiPermissiontestapiELTIApi6BB5DB92POSTlaunch482E37F3": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -1130,6 +1603,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApilaunchPOSTC265D3A3": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "POST",
@@ -1170,6 +1665,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Method",
     },
     "apiELTIApilogin45BDD80F": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "ParentId": {
           "Fn::GetAtt": [
@@ -1185,6 +1702,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Resource",
     },
     "apiELTIApiloginGET11FD9B6C": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "GET",
@@ -1225,6 +1764,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Method",
     },
     "apiELTIApiloginGETApiPermissionTesttestapiELTIApi6BB5DB92GETlogin6A793C7D": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -1262,6 +1823,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApiloginGETApiPermissiontestapiELTIApi6BB5DB92GETlogin688A294E": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -1303,6 +1886,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApiloginPOST7A347EDB": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "POST",
@@ -1343,6 +1948,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Method",
     },
     "apiELTIApiloginPOSTApiPermissionTesttestapiELTIApi6BB5DB92POSTlogin84FB4D4E": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -1380,6 +2007,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApiloginPOSTApiPermissiontestapiELTIApi6BB5DB92POSTlogin3B6D1B70": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -1421,6 +2070,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApiscoreSubmission1718D13B": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "ParentId": {
           "Fn::GetAtt": [
@@ -1436,6 +2107,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Resource",
     },
     "apiELTIApiscoreSubmissionPOST816C45CF": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AuthorizationType": "AWS_IAM",
         "HttpMethod": "POST",
@@ -1476,6 +2169,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Method",
     },
     "apiELTIApiscoreSubmissionPOSTApiPermissionTesttestapiELTIApi6BB5DB92POSTscoreSubmission1D97238C": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -1513,6 +2228,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApiscoreSubmissionPOSTApiPermissiontestapiELTIApi6BB5DB92POSTscoreSubmission546DE201": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -1554,6 +2291,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApitokenProxy8E31FDAF": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "ParentId": {
           "Fn::GetAtt": [
@@ -1569,6 +2328,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Resource",
     },
     "apiELTIApitokenProxyPOSTA5640BB9": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "POST",
@@ -1609,6 +2390,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Method",
     },
     "apiELTIApitokenProxyPOSTApiPermissionTesttestapiELTIApi6BB5DB92POSTtokenProxyCB865F12": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -1646,6 +2449,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIApitokenProxyPOSTApiPermissiontestapiELTIApi6BB5DB92POSTtokenProxyF6E5B6F4": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -1691,6 +2516,28 @@ exports[`Snapshot 1`] = `
       "DependsOn": [
         "apiELTIConfigApiFA21C666",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "CloudWatchRoleArn": {
           "Fn::GetAtt": [
@@ -1704,6 +2551,28 @@ exports[`Snapshot 1`] = `
     },
     "apiELTIConfigApiCloudWatchRole3A6ECB08": {
       "DeletionPolicy": "Retain",
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -1735,7 +2604,7 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "apiELTIConfigApiDeploymentD7D043C1f7077fc6082304ae93b6729b1fbdc612": {
+    "apiELTIConfigApiDeploymentD7D043C105fe0cc36587094a438cf68769b29dc0": {
       "DependsOn": [
         "apiELTIConfigApiOPTIONS928634A9",
         "apiELTIConfigApiplatformPOSTED8FE0A7",
@@ -1743,6 +2612,28 @@ exports[`Snapshot 1`] = `
         "apiELTIConfigApitoolPOST623B64FE",
         "apiELTIConfigApitoolC6EAD11B",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Description": "Automatically created by the RestApi construct",
         "RestApiId": {
@@ -1755,6 +2646,28 @@ exports[`Snapshot 1`] = `
       "DependsOn": [
         "apiELTIConfigApiAccount3E94C309",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AccessLogSetting": {
           "DestinationArn": {
@@ -1766,7 +2679,7 @@ exports[`Snapshot 1`] = `
           "Format": "{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","user":"$context.identity.user","caller":"$context.identity.caller","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}",
         },
         "DeploymentId": {
-          "Ref": "apiELTIConfigApiDeploymentD7D043C1f7077fc6082304ae93b6729b1fbdc612",
+          "Ref": "apiELTIConfigApiDeploymentD7D043C105fe0cc36587094a438cf68769b29dc0",
         },
         "MethodSettings": [
           {
@@ -1786,6 +2699,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Stage",
     },
     "apiELTIConfigApiFA21C666": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Name": "ELTIConfigApi",
         "Policy": {
@@ -1823,6 +2758,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::RestApi",
     },
     "apiELTIConfigApiOPTIONS928634A9": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "OPTIONS",
@@ -1865,6 +2822,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Method",
     },
     "apiELTIConfigApiplatformAB0B3D5F": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "ParentId": {
           "Fn::GetAtt": [
@@ -1880,6 +2859,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Resource",
     },
     "apiELTIConfigApiplatformPOSTApiPermissionTesttestapiELTIConfigApi4555AB28POSTplatformCCE1AFAD": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -1917,6 +2918,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIConfigApiplatformPOSTApiPermissiontestapiELTIConfigApi4555AB28POSTplatformECBF9060": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -1958,6 +2981,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIConfigApiplatformPOSTED8FE0A7": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AuthorizationType": "AWS_IAM",
         "HttpMethod": "POST",
@@ -1998,6 +3043,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Method",
     },
     "apiELTIConfigApitoolC6EAD11B": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "ParentId": {
           "Fn::GetAtt": [
@@ -2013,6 +3080,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Resource",
     },
     "apiELTIConfigApitoolPOST623B64FE": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AuthorizationType": "AWS_IAM",
         "HttpMethod": "POST",
@@ -2053,6 +3142,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::ApiGateway::Method",
     },
     "apiELTIConfigApitoolPOSTApiPermissionTesttestapiELTIConfigApi4555AB28POSTtoolDFAB3C3D": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -2090,6 +3201,28 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Permission",
     },
     "apiELTIConfigApitoolPOSTApiPermissiontestapiELTIConfigApi4555AB28POSTtool894C4B87": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
@@ -2245,8 +3378,9 @@ exports[`Snapshot 1`] = `
     },
     "lambdasauthorizerProxy06FC2F8A": {
       "DependsOn": [
-        "lambdasauthorizerProxyServiceRoleDefaultPolicyBC404ED1",
-        "lambdasauthorizerProxyServiceRoleBCFCC158",
+        "lambdasauthorizerProxyLogRetentionPolicyAFCAC745",
+        "lambdasauthorizerProxyRoleDefaultPolicy285BFA17",
+        "lambdasauthorizerProxyRole5A1F7C54",
       ],
       "Properties": {
         "Architectures": [
@@ -2256,7 +3390,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "6cbae35bc8fe811a26e4490ea7652a8db844d2bc6965e23b7f2101ec749525e0.zip",
+          "S3Key": "acebb000645e43a1d1e998a83872773d084c29358c026e47da5d0955738c29f7.zip",
         },
         "Environment": {
           "Variables": {
@@ -2275,16 +3409,13 @@ exports[`Snapshot 1`] = `
         "Handler": "index.handler",
         "Layers": [
           {
-            "Ref": "layerslayerUtil5D96D399",
-          },
-          {
-            "Ref": "layerslayernodeforge929221D0",
+            "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
         "MemorySize": 256,
         "Role": {
           "Fn::GetAtt": [
-            "lambdasauthorizerProxyServiceRoleBCFCC158",
+            "lambdasauthorizerProxyRole5A1F7C54",
             "Arn",
           ],
         },
@@ -2297,6 +3428,9 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Function",
     },
     "lambdasauthorizerProxyLogRetention33D9799B": {
+      "DependsOn": [
+        "lambdasauthorizerProxyLogRetentionPolicyAFCAC745",
+      ],
       "Properties": {
         "LogGroupName": {
           "Fn::Join": [
@@ -2319,7 +3453,72 @@ exports[`Snapshot 1`] = `
       },
       "Type": "Custom::LogRetention",
     },
-    "lambdasauthorizerProxyServiceRoleBCFCC158": {
+    "lambdasauthorizerProxyLogRetentionPolicyAFCAC745": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:/aws/lambda/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasauthorizerProxyLogRetentionRole43E8C095",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasauthorizerProxyLogRetentionRole43E8C095": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -2333,24 +3532,109 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
       },
       "Type": "AWS::IAM::Role",
     },
-    "lambdasauthorizerProxyServiceRoleDefaultPolicyBC404ED1": {
+    "lambdasauthorizerProxyPolicy1FB89040": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:",
+                    {
+                      "Fn::GetAtt": [
+                        "lambdasauthorizerProxyLogRetention33D9799B",
+                        "LogGroupName",
+                      ],
+                    },
+                    ":*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasauthorizerProxyRole5A1F7C54",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasauthorizerProxyRole5A1F7C54": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasauthorizerProxyRoleDefaultPolicy285BFA17": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -2393,10 +3677,10 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "lambdasauthorizerProxyServiceRoleDefaultPolicyBC404ED1",
+        "PolicyName": "lambdasauthorizerProxyRoleDefaultPolicy285BFA17",
         "Roles": [
           {
-            "Ref": "lambdasauthorizerProxyServiceRoleBCFCC158",
+            "Ref": "lambdasauthorizerProxyRole5A1F7C54",
           },
         ],
       },
@@ -2404,8 +3688,9 @@ exports[`Snapshot 1`] = `
     },
     "lambdasdeepLinkingProxy6C034861": {
       "DependsOn": [
-        "lambdasdeepLinkingProxyServiceRoleDefaultPolicyCCBBD94A",
-        "lambdasdeepLinkingProxyServiceRoleE23C6677",
+        "lambdasdeepLinkingProxyLogRetentionPolicyAD1076B6",
+        "lambdasdeepLinkingProxyRoleDefaultPolicyD95D557A",
+        "lambdasdeepLinkingProxyRole73AD3815",
       ],
       "Properties": {
         "Architectures": [
@@ -2415,7 +3700,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "e1d515f544cefb1c9f9977bba3fdeb504769073ba8b3b2135abe253d4139ecfd.zip",
+          "S3Key": "7afaea21f0a09d1bafca680d84bfbc7a12f6a56331e4f2e5388099e4644b1bd6.zip",
         },
         "Environment": {
           "Variables": {
@@ -2437,16 +3722,13 @@ exports[`Snapshot 1`] = `
         "Handler": "index.handler",
         "Layers": [
           {
-            "Ref": "layerslayerUtil5D96D399",
-          },
-          {
-            "Ref": "layerslayernodeforge929221D0",
+            "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
         "MemorySize": 256,
         "Role": {
           "Fn::GetAtt": [
-            "lambdasdeepLinkingProxyServiceRoleE23C6677",
+            "lambdasdeepLinkingProxyRole73AD3815",
             "Arn",
           ],
         },
@@ -2459,6 +3741,9 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Function",
     },
     "lambdasdeepLinkingProxyLogRetention8EF2EEF7": {
+      "DependsOn": [
+        "lambdasdeepLinkingProxyLogRetentionPolicyAD1076B6",
+      ],
       "Properties": {
         "LogGroupName": {
           "Fn::Join": [
@@ -2481,7 +3766,188 @@ exports[`Snapshot 1`] = `
       },
       "Type": "Custom::LogRetention",
     },
-    "lambdasdeepLinkingProxyServiceRoleDefaultPolicyCCBBD94A": {
+    "lambdasdeepLinkingProxyLogRetentionPolicyAD1076B6": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:/aws/lambda/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasdeepLinkingProxyLogRetentionRoleF39563F1",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasdeepLinkingProxyLogRetentionRoleF39563F1": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasdeepLinkingProxyPolicyE30517CC": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:",
+                    {
+                      "Fn::GetAtt": [
+                        "lambdasdeepLinkingProxyLogRetention8EF2EEF7",
+                        "LogGroupName",
+                      ],
+                    },
+                    ":*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasdeepLinkingProxyRole73AD3815",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasdeepLinkingProxyRole73AD3815": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasdeepLinkingProxyRoleDefaultPolicyD95D557A": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -2562,50 +4028,35 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "lambdasdeepLinkingProxyServiceRoleDefaultPolicyCCBBD94A",
+        "PolicyName": "lambdasdeepLinkingProxyRoleDefaultPolicyD95D557A",
         "Roles": [
           {
-            "Ref": "lambdasdeepLinkingProxyServiceRoleE23C6677",
+            "Ref": "lambdasdeepLinkingProxyRole73AD3815",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "lambdasdeepLinkingProxyServiceRoleE23C6677": {
+    "lambdaslayerUtilF24D5864": {
       "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
+        "CompatibleRuntimes": [
+          "nodejs18.x",
         ],
+        "Content": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "e7081ef9ec3b08f8460d230e5f0985acf8ffc59d73f43732aa530f4203ee818a.zip",
+        },
+        "Description": "LTI utility functions",
       },
-      "Type": "AWS::IAM::Role",
+      "Type": "AWS::Lambda::LayerVersion",
     },
     "lambdasltiJwksC1ADFCB8": {
       "DependsOn": [
-        "lambdasltiJwksServiceRoleDefaultPolicy993BD5AA",
-        "lambdasltiJwksServiceRole18179ED8",
+        "lambdasltiJwksLogRetentionPolicy87F4CEDA",
+        "lambdasltiJwksRoleDefaultPolicy4676E133",
+        "lambdasltiJwksRole046B1089",
       ],
       "Properties": {
         "Architectures": [
@@ -2615,7 +4066,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "b410f4b4d85c6d8613fb35309d976b285a19ba6aabbda3dd32f572e49c38696e.zip",
+          "S3Key": "5f6c9c3465ee1d8f44930a9abb343a50836ebb61e79c709a1f868c1e1d0bc594.zip",
         },
         "Environment": {
           "Variables": {
@@ -2634,16 +4085,13 @@ exports[`Snapshot 1`] = `
         "Handler": "index.handler",
         "Layers": [
           {
-            "Ref": "layerslayerUtil5D96D399",
-          },
-          {
-            "Ref": "layerslayernodeforge929221D0",
+            "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
         "MemorySize": 256,
         "Role": {
           "Fn::GetAtt": [
-            "lambdasltiJwksServiceRole18179ED8",
+            "lambdasltiJwksRole046B1089",
             "Arn",
           ],
         },
@@ -2656,6 +4104,9 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Function",
     },
     "lambdasltiJwksLogRetentionEB820CAC": {
+      "DependsOn": [
+        "lambdasltiJwksLogRetentionPolicy87F4CEDA",
+      ],
       "Properties": {
         "LogGroupName": {
           "Fn::Join": [
@@ -2678,7 +4129,72 @@ exports[`Snapshot 1`] = `
       },
       "Type": "Custom::LogRetention",
     },
-    "lambdasltiJwksServiceRole18179ED8": {
+    "lambdasltiJwksLogRetentionPolicy87F4CEDA": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:/aws/lambda/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasltiJwksLogRetentionRole54C054A5",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasltiJwksLogRetentionRole54C054A5": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -2692,24 +4208,109 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
       },
       "Type": "AWS::IAM::Role",
     },
-    "lambdasltiJwksServiceRoleDefaultPolicy993BD5AA": {
+    "lambdasltiJwksPolicyB1C10E03": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:",
+                    {
+                      "Fn::GetAtt": [
+                        "lambdasltiJwksLogRetentionEB820CAC",
+                        "LogGroupName",
+                      ],
+                    },
+                    ":*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasltiJwksRole046B1089",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasltiJwksRole046B1089": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasltiJwksRoleDefaultPolicy4676E133": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -2766,10 +4367,10 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "lambdasltiJwksServiceRoleDefaultPolicy993BD5AA",
+        "PolicyName": "lambdasltiJwksRoleDefaultPolicy4676E133",
         "Roles": [
           {
-            "Ref": "lambdasltiJwksServiceRole18179ED8",
+            "Ref": "lambdasltiJwksRole046B1089",
           },
         ],
       },
@@ -2777,8 +4378,9 @@ exports[`Snapshot 1`] = `
     },
     "lambdasltiLaunch4A18F0B1": {
       "DependsOn": [
-        "lambdasltiLaunchServiceRoleDefaultPolicyF8003F2F",
-        "lambdasltiLaunchServiceRole86E7794B",
+        "lambdasltiLaunchLogRetentionPolicyA91F9783",
+        "lambdasltiLaunchRoleDefaultPolicy09ACD7A4",
+        "lambdasltiLaunchRole34FBA536",
       ],
       "Properties": {
         "Architectures": [
@@ -2788,7 +4390,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "4e37c3d043f2df6b29dd6c9b5689ae48efd1986109ed1abfd84cc9dc2b3bd66c.zip",
+          "S3Key": "11f79f5eaf629412200cdf6824ea458dd964564772f6728307c59fc6034595b6.zip",
         },
         "Environment": {
           "Variables": {
@@ -2810,16 +4412,13 @@ exports[`Snapshot 1`] = `
         "Handler": "index.handler",
         "Layers": [
           {
-            "Ref": "layerslayerUtil5D96D399",
-          },
-          {
-            "Ref": "layerslayernodeforge929221D0",
+            "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
         "MemorySize": 256,
         "Role": {
           "Fn::GetAtt": [
-            "lambdasltiLaunchServiceRole86E7794B",
+            "lambdasltiLaunchRole34FBA536",
             "Arn",
           ],
         },
@@ -2832,6 +4431,9 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Function",
     },
     "lambdasltiLaunchLogRetention27246C34": {
+      "DependsOn": [
+        "lambdasltiLaunchLogRetentionPolicyA91F9783",
+      ],
       "Properties": {
         "LogGroupName": {
           "Fn::Join": [
@@ -2854,7 +4456,72 @@ exports[`Snapshot 1`] = `
       },
       "Type": "Custom::LogRetention",
     },
-    "lambdasltiLaunchServiceRole86E7794B": {
+    "lambdasltiLaunchLogRetentionPolicyA91F9783": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:/aws/lambda/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasltiLaunchLogRetentionRole44DAC9E8",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasltiLaunchLogRetentionRole44DAC9E8": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -2868,24 +4535,109 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
       },
       "Type": "AWS::IAM::Role",
     },
-    "lambdasltiLaunchServiceRoleDefaultPolicyF8003F2F": {
+    "lambdasltiLaunchPolicy8319A15D": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:",
+                    {
+                      "Fn::GetAtt": [
+                        "lambdasltiLaunchLogRetention27246C34",
+                        "LogGroupName",
+                      ],
+                    },
+                    ":*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasltiLaunchRole34FBA536",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasltiLaunchRole34FBA536": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasltiLaunchRoleDefaultPolicy09ACD7A4": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -2970,10 +4722,10 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "lambdasltiLaunchServiceRoleDefaultPolicyF8003F2F",
+        "PolicyName": "lambdasltiLaunchRoleDefaultPolicy09ACD7A4",
         "Roles": [
           {
-            "Ref": "lambdasltiLaunchServiceRole86E7794B",
+            "Ref": "lambdasltiLaunchRole34FBA536",
           },
         ],
       },
@@ -2981,8 +4733,9 @@ exports[`Snapshot 1`] = `
     },
     "lambdasltiOidcFA92D3C4": {
       "DependsOn": [
-        "lambdasltiOidcServiceRoleDefaultPolicyDF6E47BF",
-        "lambdasltiOidcServiceRole76EBE8FC",
+        "lambdasltiOidcLogRetentionPolicy675CD70E",
+        "lambdasltiOidcRoleDefaultPolicyFC31BF66",
+        "lambdasltiOidcRole4647658A",
       ],
       "Properties": {
         "Architectures": [
@@ -2992,7 +4745,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "b369ef6072db9f78ac36692f9726321e758a810bb12cf26391b367bca259f48e.zip",
+          "S3Key": "6d36685fcc07cd7440b8566ac2ab1a30a2e586e61a54b5d96775d1491b661c94.zip",
         },
         "Environment": {
           "Variables": {
@@ -3012,16 +4765,13 @@ exports[`Snapshot 1`] = `
         "Handler": "index.handler",
         "Layers": [
           {
-            "Ref": "layerslayerUtil5D96D399",
-          },
-          {
-            "Ref": "layerslayernodeforge929221D0",
+            "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
         "MemorySize": 256,
         "Role": {
           "Fn::GetAtt": [
-            "lambdasltiOidcServiceRole76EBE8FC",
+            "lambdasltiOidcRole4647658A",
             "Arn",
           ],
         },
@@ -3034,6 +4784,9 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Function",
     },
     "lambdasltiOidcLogRetentionD7D05676": {
+      "DependsOn": [
+        "lambdasltiOidcLogRetentionPolicy675CD70E",
+      ],
       "Properties": {
         "LogGroupName": {
           "Fn::Join": [
@@ -3056,7 +4809,106 @@ exports[`Snapshot 1`] = `
       },
       "Type": "Custom::LogRetention",
     },
-    "lambdasltiOidcServiceRole76EBE8FC": {
+    "lambdasltiOidcLogRetentionPolicy675CD70E": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:/aws/lambda/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasltiOidcLogRetentionRoleF898250A",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasltiOidcLogRetentionRoleDefaultPolicy7B838846": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "lambdasltiOidcLogRetentionRoleDefaultPolicy7B838846",
+        "Roles": [
+          {
+            "Ref": "lambdasltiOidcLogRetentionRoleF898250A",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "lambdasltiOidcLogRetentionRoleF898250A": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -3070,24 +4922,109 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
       },
       "Type": "AWS::IAM::Role",
     },
-    "lambdasltiOidcServiceRoleDefaultPolicyDF6E47BF": {
+    "lambdasltiOidcPolicy6BB27287": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:",
+                    {
+                      "Fn::GetAtt": [
+                        "lambdasltiOidcLogRetentionD7D05676",
+                        "LogGroupName",
+                      ],
+                    },
+                    ":*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasltiOidcRole4647658A",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasltiOidcRole4647658A": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasltiOidcRoleDefaultPolicyFC31BF66": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -3154,10 +5091,10 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "lambdasltiOidcServiceRoleDefaultPolicyDF6E47BF",
+        "PolicyName": "lambdasltiOidcRoleDefaultPolicyFC31BF66",
         "Roles": [
           {
-            "Ref": "lambdasltiOidcServiceRole76EBE8FC",
+            "Ref": "lambdasltiOidcRole4647658A",
           },
         ],
       },
@@ -3165,8 +5102,9 @@ exports[`Snapshot 1`] = `
     },
     "lambdasltiPlatformRegister68BD8997": {
       "DependsOn": [
-        "lambdasltiPlatformRegisterServiceRoleDefaultPolicyE5435415",
-        "lambdasltiPlatformRegisterServiceRoleD81DBBA8",
+        "lambdasltiPlatformRegisterLogRetentionPolicyEBDD566E",
+        "lambdasltiPlatformRegisterRoleDefaultPolicy49692446",
+        "lambdasltiPlatformRegisterRoleF4E57286",
       ],
       "Properties": {
         "Architectures": [
@@ -3176,7 +5114,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "a48426095742151b5fef48c7fa2e38f8de0ab00984de25f15a0b1fff22d74deb.zip",
+          "S3Key": "b90eec1f09fd904728431103e196b240387cdcc588895e21ffce0b81d577adb9.zip",
         },
         "Environment": {
           "Variables": {
@@ -3192,16 +5130,13 @@ exports[`Snapshot 1`] = `
         "Handler": "index.handler",
         "Layers": [
           {
-            "Ref": "layerslayerUtil5D96D399",
-          },
-          {
-            "Ref": "layerslayernodeforge929221D0",
+            "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
         "MemorySize": 256,
         "Role": {
           "Fn::GetAtt": [
-            "lambdasltiPlatformRegisterServiceRoleD81DBBA8",
+            "lambdasltiPlatformRegisterRoleF4E57286",
             "Arn",
           ],
         },
@@ -3214,6 +5149,9 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Function",
     },
     "lambdasltiPlatformRegisterLogRetentionF6EEEEE5": {
+      "DependsOn": [
+        "lambdasltiPlatformRegisterLogRetentionPolicyEBDD566E",
+      ],
       "Properties": {
         "LogGroupName": {
           "Fn::Join": [
@@ -3236,7 +5174,72 @@ exports[`Snapshot 1`] = `
       },
       "Type": "Custom::LogRetention",
     },
-    "lambdasltiPlatformRegisterServiceRoleD81DBBA8": {
+    "lambdasltiPlatformRegisterLogRetentionPolicyEBDD566E": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:/aws/lambda/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasltiPlatformRegisterLogRetentionRole7B395F04",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasltiPlatformRegisterLogRetentionRole7B395F04": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -3250,24 +5253,82 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
       },
       "Type": "AWS::IAM::Role",
     },
-    "lambdasltiPlatformRegisterServiceRoleDefaultPolicyE5435415": {
+    "lambdasltiPlatformRegisterPolicy522AAB89": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:",
+                    {
+                      "Fn::GetAtt": [
+                        "lambdasltiPlatformRegisterLogRetentionF6EEEEE5",
+                        "LogGroupName",
+                      ],
+                    },
+                    ":*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasltiPlatformRegisterRoleF4E57286",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasltiPlatformRegisterRoleDefaultPolicy49692446": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -3303,19 +5364,47 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "lambdasltiPlatformRegisterServiceRoleDefaultPolicyE5435415",
+        "PolicyName": "lambdasltiPlatformRegisterRoleDefaultPolicy49692446",
         "Roles": [
           {
-            "Ref": "lambdasltiPlatformRegisterServiceRoleD81DBBA8",
+            "Ref": "lambdasltiPlatformRegisterRoleF4E57286",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
+    "lambdasltiPlatformRegisterRoleF4E57286": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
     "lambdasltiToolConfigAF290814": {
       "DependsOn": [
-        "lambdasltiToolConfigServiceRoleDefaultPolicy1E2FDE3B",
-        "lambdasltiToolConfigServiceRoleD9CF37BD",
+        "lambdasltiToolConfigLogRetentionPolicy92FC99A7",
+        "lambdasltiToolConfigRoleDefaultPolicy1FA19060",
+        "lambdasltiToolConfigRoleF95D8DE7",
       ],
       "Properties": {
         "Architectures": [
@@ -3325,7 +5414,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "bf1d7fdc76516bb6b45b6e245daf2611915225e493e2a4865bedd46070c4b4c3.zip",
+          "S3Key": "2be39fe7e3afea2bbc9872198fc4b490ace89e51588f907e1b2c3020730d62fc.zip",
         },
         "Environment": {
           "Variables": {
@@ -3341,16 +5430,13 @@ exports[`Snapshot 1`] = `
         "Handler": "index.handler",
         "Layers": [
           {
-            "Ref": "layerslayerUtil5D96D399",
-          },
-          {
-            "Ref": "layerslayernodeforge929221D0",
+            "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
         "MemorySize": 256,
         "Role": {
           "Fn::GetAtt": [
-            "lambdasltiToolConfigServiceRoleD9CF37BD",
+            "lambdasltiToolConfigRoleF95D8DE7",
             "Arn",
           ],
         },
@@ -3363,6 +5449,9 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Function",
     },
     "lambdasltiToolConfigLogRetention1CF42CE6": {
+      "DependsOn": [
+        "lambdasltiToolConfigLogRetentionPolicy92FC99A7",
+      ],
       "Properties": {
         "LogGroupName": {
           "Fn::Join": [
@@ -3385,7 +5474,72 @@ exports[`Snapshot 1`] = `
       },
       "Type": "Custom::LogRetention",
     },
-    "lambdasltiToolConfigServiceRoleD9CF37BD": {
+    "lambdasltiToolConfigLogRetentionPolicy92FC99A7": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:/aws/lambda/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasltiToolConfigLogRetentionRole320F4264",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasltiToolConfigLogRetentionRole320F4264": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -3399,24 +5553,82 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
       },
       "Type": "AWS::IAM::Role",
     },
-    "lambdasltiToolConfigServiceRoleDefaultPolicy1E2FDE3B": {
+    "lambdasltiToolConfigPolicy36AE0028": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:",
+                    {
+                      "Fn::GetAtt": [
+                        "lambdasltiToolConfigLogRetention1CF42CE6",
+                        "LogGroupName",
+                      ],
+                    },
+                    ":*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasltiToolConfigRoleF95D8DE7",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasltiToolConfigRoleDefaultPolicy1FA19060": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -3452,19 +5664,47 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "lambdasltiToolConfigServiceRoleDefaultPolicy1E2FDE3B",
+        "PolicyName": "lambdasltiToolConfigRoleDefaultPolicy1FA19060",
         "Roles": [
           {
-            "Ref": "lambdasltiToolConfigServiceRoleD9CF37BD",
+            "Ref": "lambdasltiToolConfigRoleF95D8DE7",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
+    "lambdasltiToolConfigRoleF95D8DE7": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
     "lambdasscoreSubmission63FC62E4": {
       "DependsOn": [
-        "lambdasscoreSubmissionServiceRoleDefaultPolicy1397728F",
-        "lambdasscoreSubmissionServiceRoleA273399D",
+        "lambdasscoreSubmissionLogRetentionPolicy2BB71258",
+        "lambdasscoreSubmissionRoleDefaultPolicy9C9198AC",
+        "lambdasscoreSubmissionRoleCE1A9D7C",
       ],
       "Properties": {
         "Architectures": [
@@ -3474,7 +5714,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "c55a9097d08cc24ebf7a144b822811af735d04704716a161b9d9c7c760f2e629.zip",
+          "S3Key": "3c62f0cbbb12094f9c2db2e7f9f38227cf2a4f79c9a5942ce45764dd0b680bba.zip",
         },
         "Environment": {
           "Variables": {
@@ -3496,16 +5736,13 @@ exports[`Snapshot 1`] = `
         "Handler": "index.handler",
         "Layers": [
           {
-            "Ref": "layerslayerUtil5D96D399",
-          },
-          {
-            "Ref": "layerslayernodeforge929221D0",
+            "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
         "MemorySize": 256,
         "Role": {
           "Fn::GetAtt": [
-            "lambdasscoreSubmissionServiceRoleA273399D",
+            "lambdasscoreSubmissionRoleCE1A9D7C",
             "Arn",
           ],
         },
@@ -3518,6 +5755,9 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Function",
     },
     "lambdasscoreSubmissionLogRetentionB8AA2124": {
+      "DependsOn": [
+        "lambdasscoreSubmissionLogRetentionPolicy2BB71258",
+      ],
       "Properties": {
         "LogGroupName": {
           "Fn::Join": [
@@ -3540,7 +5780,72 @@ exports[`Snapshot 1`] = `
       },
       "Type": "Custom::LogRetention",
     },
-    "lambdasscoreSubmissionServiceRoleA273399D": {
+    "lambdasscoreSubmissionLogRetentionPolicy2BB71258": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:/aws/lambda/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasscoreSubmissionLogRetentionRole968BE2EA",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasscoreSubmissionLogRetentionRole968BE2EA": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -3554,24 +5859,109 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
       },
       "Type": "AWS::IAM::Role",
     },
-    "lambdasscoreSubmissionServiceRoleDefaultPolicy1397728F": {
+    "lambdasscoreSubmissionPolicyAFDABE08": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:",
+                    {
+                      "Fn::GetAtt": [
+                        "lambdasscoreSubmissionLogRetentionB8AA2124",
+                        "LogGroupName",
+                      ],
+                    },
+                    ":*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasscoreSubmissionRoleCE1A9D7C",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasscoreSubmissionRoleCE1A9D7C": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasscoreSubmissionRoleDefaultPolicy9C9198AC": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -3652,10 +6042,10 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "lambdasscoreSubmissionServiceRoleDefaultPolicy1397728F",
+        "PolicyName": "lambdasscoreSubmissionRoleDefaultPolicy9C9198AC",
         "Roles": [
           {
-            "Ref": "lambdasscoreSubmissionServiceRoleA273399D",
+            "Ref": "lambdasscoreSubmissionRoleCE1A9D7C",
           },
         ],
       },
@@ -3663,8 +6053,9 @@ exports[`Snapshot 1`] = `
     },
     "lambdastokenProxy38E950E5": {
       "DependsOn": [
-        "lambdastokenProxyServiceRoleDefaultPolicy04B07CE4",
-        "lambdastokenProxyServiceRoleB30C1A4F",
+        "lambdastokenProxyLogRetentionPolicy7A964B11",
+        "lambdastokenProxyRoleDefaultPolicyB9910994",
+        "lambdastokenProxyRole47CD04F8",
       ],
       "Properties": {
         "Architectures": [
@@ -3674,7 +6065,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "3f68cc315721de7c663da8c0d3e3af49f1439f2753253a341c3c68e96526eddd.zip",
+          "S3Key": "8a10574186a9176a9649517f8537ce6088d1682e839886778a407c35f7e3a9ac.zip",
         },
         "Environment": {
           "Variables": {
@@ -3693,16 +6084,13 @@ exports[`Snapshot 1`] = `
         "Handler": "index.handler",
         "Layers": [
           {
-            "Ref": "layerslayerUtil5D96D399",
-          },
-          {
-            "Ref": "layerslayernodeforge929221D0",
+            "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
         "MemorySize": 256,
         "Role": {
           "Fn::GetAtt": [
-            "lambdastokenProxyServiceRoleB30C1A4F",
+            "lambdastokenProxyRole47CD04F8",
             "Arn",
           ],
         },
@@ -3715,6 +6103,9 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::Lambda::Function",
     },
     "lambdastokenProxyLogRetention30E38D4B": {
+      "DependsOn": [
+        "lambdastokenProxyLogRetentionPolicy7A964B11",
+      ],
       "Properties": {
         "LogGroupName": {
           "Fn::Join": [
@@ -3737,7 +6128,72 @@ exports[`Snapshot 1`] = `
       },
       "Type": "Custom::LogRetention",
     },
-    "lambdastokenProxyServiceRoleB30C1A4F": {
+    "lambdastokenProxyLogRetentionPolicy7A964B11": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:/aws/lambda/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdastokenProxyLogRetentionRoleA7CDDCE4",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdastokenProxyLogRetentionRoleA7CDDCE4": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -3751,24 +6207,109 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
       },
       "Type": "AWS::IAM::Role",
     },
-    "lambdastokenProxyServiceRoleDefaultPolicy04B07CE4": {
+    "lambdastokenProxyPolicy41CD7244": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:",
+                    {
+                      "Fn::GetAtt": [
+                        "lambdastokenProxyLogRetention30E38D4B",
+                        "LogGroupName",
+                      ],
+                    },
+                    ":*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdastokenProxyRole47CD04F8",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdastokenProxyRole47CD04F8": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdastokenProxyRoleDefaultPolicyB9910994": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -3811,44 +6352,14 @@ exports[`Snapshot 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "lambdastokenProxyServiceRoleDefaultPolicy04B07CE4",
+        "PolicyName": "lambdastokenProxyRoleDefaultPolicyB9910994",
         "Roles": [
           {
-            "Ref": "lambdastokenProxyServiceRoleB30C1A4F",
+            "Ref": "lambdastokenProxyRole47CD04F8",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
-    },
-    "layerslayerUtil5D96D399": {
-      "Properties": {
-        "CompatibleRuntimes": [
-          "nodejs18.x",
-        ],
-        "Content": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-          },
-          "S3Key": "0eb0c41dd6c300c01c056ef5b74015d5723071b3fa7a9650c2bd6c1b9fa9c77b.zip",
-        },
-        "Description": "LTI utility functions",
-      },
-      "Type": "AWS::Lambda::LayerVersion",
-    },
-    "layerslayernodeforge929221D0": {
-      "Properties": {
-        "CompatibleRuntimes": [
-          "nodejs18.x",
-        ],
-        "Content": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-          },
-          "S3Key": "afa90ce10069dd49f5e765703e1a709d735f85692c87c59044f08361a39d471d.zip",
-        },
-        "Description": "Layer for node-forge module",
-      },
-      "Type": "AWS::Lambda::LayerVersion",
     },
     "tablescontrolPlaneTable49F703D0": {
       "DeletionPolicy": "Retain",

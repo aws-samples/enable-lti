@@ -109,7 +109,6 @@ export class Aws {
     if (response.Item !== undefined) {
       return unmarshall(response.Item);
     } else {
-      console.warn(`No item found for input ${JSON.stringify(input)}`);
       return undefined;
     }
   }
@@ -127,7 +126,6 @@ export class Aws {
         return unmarshall(item);
       });
     } else {
-      console.warn(`No items found for input ${JSON.stringify(input)}`);
       return undefined;
     }
   }

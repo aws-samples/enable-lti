@@ -1,6 +1,5 @@
-import { Aws } from './aws';
 import { v4 as uuidv4 } from 'uuid';
-import { LTIMessageTypes, getSignedJWT } from './index';
+import { LTIJwtPayload, LTIMessageTypes, getSignedJWT } from './index';
 
 export type ContentItem =
   | ContentItemLink
@@ -135,13 +134,12 @@ export type ContentItemImage = {
 
 //https://www.imsglobal.org/spec/lti-dl/v2p0#deep-linking-response-message
 export const createDeepLinkingMessage = async (
-  receivedToken: { aud: string; iss: string; deploymentId: string },
+  receivedToken: { aud: string | string[]; iss: string; deploymentId: string },
   contentItems: ContentItemLTIResourceLink[],
   options: { message: string; deepLinkingSettingsData: string },
   keyDetails: { keyId: string; kid: string }
 ) => {
   try {
-    console.log('Starting deep linking process');
     const iat = Math.floor(Date.now() / 1000);
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -149,7 +147,7 @@ export const createDeepLinkingMessage = async (
     const jwtBody = {
       iat,
       exp,
-      iss: receivedToken.aud,
+      iss: LTIJwtPayload.getAud(receivedToken.aud),
       aud: receivedToken.iss,
       nonce: uuidv4(),
       'https://purl.imsglobal.org/spec/lti/claim/deployment_id':
