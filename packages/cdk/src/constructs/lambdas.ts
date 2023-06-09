@@ -103,6 +103,7 @@ export class Lambdas extends Construct {
   readonly tokenProxy: NodejsFunction;
   readonly scoreSubmission: NodejsFunction;
   readonly deepLinkingProxy: NodejsFunction;
+  readonly rosterRetrieval: NodejsFunction;
 
   constructor(scope: Construct, id: string, config: LambdasConfig) {
     super(scope, id);
@@ -204,6 +205,25 @@ export class Lambdas extends Construct {
     config.tables.controlPlaneTable.grantReadData(this.scoreSubmission);
     config.tables.dataPlaneTable.grantReadWriteData(this.scoreSubmission);
 
+    this.rosterRetrieval = ltiNodejsFunction(this, 'rosterRetrieval', {
+      entry: path.join(
+        __dirname,
+        '../../../handlers/rosterRetrieval/src/index.ts'
+      ),
+      environment: {
+        /* eslint-disable @typescript-eslint/naming-convention */
+        DATA_PLANE_TABLE_NAME: config.tables.dataPlaneTable.tableName,
+        CONTROL_PLANE_TABLE_NAME: config.tables.controlPlaneTable.tableName,
+        KMS_KEY_ID: config.keys.asymmetricKey.keyId,
+        POWERTOOLS_SERVICE_NAME: 'rosterRetrieval',
+        POWERTOOLS_METRICS_NAMESPACE: 'lti',
+        LOG_LEVEL,
+        /* eslint-enable */
+      },
+      layers: [utilLayer],
+    });
+    config.tables.controlPlaneTable.grantReadWriteData(this.rosterRetrieval);
+
     this.deepLinkingProxy = ltiNodejsFunction(this, 'deepLinkingProxy', {
       entry: path.join(
         __dirname,
@@ -276,5 +296,8 @@ export class Lambdas extends Construct {
     this.launch.grantPrincipal.addToPrincipalPolicy(asymmetricKeyGrant);
     this.deepLinkingProxy.grantPrincipal.addToPrincipalPolicy(asymmetricKeyGrant);
     this.scoreSubmission.grantPrincipal.addToPrincipalPolicy(asymmetricKeyGrant);
+    this.rosterRetrieval.grantPrincipal.addToPrincipalPolicy(
+      asymmetricKeyGrant
+    );
   }
 }

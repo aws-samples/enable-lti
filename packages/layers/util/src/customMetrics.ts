@@ -13,3 +13,7 @@ export const JWT_VALIDATION_FAILURE = 'JWTValidationFailure';
 export const LAUNCH_AUTH_FAILURE = 'LaunchAuthFailure';
 export const DEEP_LINK_PROXY_FAILURE = 'DeepLinkProxyFailure';
 export const DEEP_LINK_PROXY_SUCCESS = 'DeepLinkProxySuccess';
+export const ROSTER_RETRIEVAL_FAILURE = 'RosterRetrievalFailure';
+export const ROSTER_RETRIEVAL_SUCCESS = 'RosterRetrievalSuccess';
+export const ROSTER_RETRIEVAL_WITH_ID_TOKEN = 'RosterRetrievalWithIdToken';
+export const ROSTER_RETRIEVAL_WITH_PARAMETER = 'RosterRetrievalWithParameter';

@@ -129,3 +129,32 @@ Deep Linking workflow steps:
 _References:_
 
 - [LTI 1.3 - Deep Linking Workflow](https://www.imsglobal.org/spec/lti-dl/v2p0#workflow){:target="\_blank"}
+
+### Names and Role Provisioning Services (NRPS) workflow
+
+The following component flow diagram shows how eLTI enables a Tool to integrate the NRPS workflow.
+
+```mermaid
+graph LR
+    subgraph LT["Learning Tool"]
+        eLTI
+        Tool
+    end
+    subgraph IT["Institution"]
+        LMS
+    Tool --1--> eLTI
+    eLTI --2--> LMS
+    eLTI --3--> LMS
+    eLTI --4--> Tool
+```
+
+NRPS workflow steps:
+
+1. Tool calls eLTI's `/rosterRetrieval` endpoint with `id_token`, `issuer`, `client_id`, `deployment_id` and `context_memberships_url`.  `context_memberships_url` specifies the customer LMS's NRPS endpoint for a specific course. 
+2. eLTI's Lambda function for the `/rosterRetrieval` endpoint retrieves the platform configuration, which contains client ID, access token URL, and key ID (kid) for the LMS associated with the combination of `client_id`, `deployment_id`, and `issuer`.  It then generates the JWT token from the platform configuration value and request access token from the LMS's access token URL.  
+3. Once a new access token is retrieved, it then submit `GET` request to `context_memberships_url` to retrieve the student roster from LMS. 
+4. When the LMS returns the response to the eLTI, eLTI forwards the response to Tool.
+
+_References:_
+
+- [LTI 1.3 - Name and Role Provisioning Services Specification](https://www.imsglobal.org/spec/lti-nrps/v2p0){:target="\_blank"}

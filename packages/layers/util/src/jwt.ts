@@ -138,6 +138,14 @@ export class LTIJwtPayload {
     return claim;
   }
 
+  public getTruthyClaim(...keys: string[]): string {
+    const claim = this.getClaim(...keys);
+    if (!claim) {
+      throw Error('Claim not found');
+    }
+    return claim;
+  }
+
   get contextId(): string | undefined {
     return this.getClaim(
       'https://purl.imsglobal.org/spec/lti/claim/context',

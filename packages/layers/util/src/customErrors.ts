@@ -32,7 +32,7 @@ export class SessionNotFound extends Error {
 export const errorResponse = (
   pt: Powertools,
   err: Error,
-  statusCode: 500 | 400 | 401,
+  statusCode: number,
   metricString: string,
   businessMetric?: string
 ) => {

@@ -130,7 +130,7 @@ export function valueFromRequest(
   }
 
   if (req?.headers?.Cookie) {
-    value = valueFromCookies(req.headers, key)
+    value = valueFromCookies(req.headers, key);
      if (value  !== undefined) return value;
   }
 
