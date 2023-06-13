@@ -80,7 +80,10 @@ export class Apis extends Construct {
             principals: [
               new AccountRootPrincipal(), // Allow calls from same a/c. ELTI is being deployed along with EHSW.
             ],
-            resources: ['execute-api:/*/POST/scoreSubmission'],
+            resources: [
+              'execute-api:/*/POST/scoreSubmission',
+              'execute-api:/*/POST/rosterRetrieval',
+            ],
           }),
           new PolicyStatement({
             effect: Effect.ALLOW,
@@ -180,6 +183,16 @@ export class Apis extends Construct {
       config.lambdas.scoreSubmission
     );
     scoreSubmissionResource.addMethod('POST', scoreSubmissionIntegration);
+
+    const rosterRetrievalResource = apiLTI.root.addResource('rosterRetrieval', {
+      defaultMethodOptions: {
+        authorizationType: AuthorizationType.IAM,
+      },
+    });
+    const rosterRetrievalIntegration = new LambdaIntegration(
+      config.lambdas.rosterRetrieval
+    );
+    rosterRetrievalResource.addMethod('POST', rosterRetrievalIntegration);
 
     const jwksResource = apiLTI.root.addResource('jwks.json');
     const jwksIntegration = new LambdaIntegration(config.lambdas.jwks);

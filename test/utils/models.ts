@@ -12,6 +12,7 @@ export const ACCESS_TOKEN_URL =
   'https://lms-integ-test.com/api/lti/access-token';
 export const AUTH_TOKEN_URL =
   'https://lms-integ-test.com/api/lti/authorize_redirect';
+export const COURSE_ID = '85';
 export const AUTH_LOGIN_URL = 'https://lms-integ-test.com/api/lti/authorize';
 export const TOOL_OIDC_DOMAIN = 'https://integ-tool-oidc.domain.com';
 export const USER_EMAIL = 'integ@tester.com';
@@ -24,7 +25,8 @@ export const PLATFORM_EXTERNAL_TOOL_DIALOG_URL = `${ISS}/courses/813/external_co
 export const PLATFORM_DEEP_LINKING_URL = `${ISS}/courses/813/deep_linking_response`;
 export const PLATFORM_LINE_ITEMS_URL = `${ISS}/api/lti/courses/820/line_items`;
 export const PLATFORM_LINE_ITEM_URL = `${PLATFORM_LINE_ITEMS_URL}/116`;
-export const PLATFORM_MODULE_URL = `${ISS}/courses/816/modules`
+export const PLATFORM_MODULE_URL = `${ISS}/courses/816/modules`;
+export const PLATFORM_NAMES_AND_ROLE_URL = `${ISS}/api/lti/courses/820/names_and_roles`;
 
 export const platformConfig = (keySetUrl: string, ltiDeploymentId?: string) => {
   return {
@@ -285,5 +287,35 @@ export const jwtBodyForScoreSubmission = () => {
     name: 'Some Name',
     hat_id: 'f57223eb-18d4-4219-b5fd-f6bee804fdc1',
     family_name: 'Student',
+  };
+};
+
+export const jwtBodyForRosterRetrieval = () => {
+  return {
+    at_hash: 'e6tEIp2YmAD10v4d7q3sXg',
+    sub: '0a59538d-c06b-4869-8385-e78ede51aa47',
+    'custom:LMS:ClientId': CLIENT_ID,
+    'custom:LMS:DeploymentId': DEPLOYMENT_ID,
+    iss: ISS,
+    acl_email_allowed: 'true',
+    vibe_user_id: 'a9a7f65a-e872-40b6-9e77-ea39043d4148',
+    'custom:LMS:Issuer': ISS,
+    identities: [
+      {
+        userId: '3898ba10-1eca-4558-a722-a3a48308a456',
+        providerName: 'CCTPLMS',
+        providerType: 'OIDC',
+        issuer: null,
+        primary: 'true',
+        dateCreated: '1673283674394',
+      },
+    ],
+    'custom:LMS:CustomClaims': `{"course_id": "${COURSE_ID}"}`,
+    'custom:LMS:NamesRoleService': `{"context_memberships_url": "${PLATFORM_NAMES_AND_ROLE_URL}", "service_versions": ["2.0"]}`,
+    auth_time: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + 3600,
+    iat: Math.floor(Date.now() / 1000),
+    jti: 'b69b663f-f219-4b32-85b7-284f664c7b7e',
+    email: 'test@amazon.com',
   };
 };

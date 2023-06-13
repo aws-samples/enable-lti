@@ -10,6 +10,7 @@
     "@enable-lti/platform": "*",
     "@enable-lti/token-proxy": "*",
     "@enable-lti/score-submission": "*",
+    "@enable-lti/roster-retrieval": "*",
     "@enable-lti/util": "*"
   },
   "scripts": {

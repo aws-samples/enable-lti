@@ -630,3 +630,80 @@ export const scoreSubmissionRequestEvent = (
   };
   return request;
 };
+
+
+// Roster retrieval request object from LXP
+export const rosterRetrievalRequestEvent = (
+  idToken: string,
+  reqJSON: string
+): APIGatewayProxyEvent => {
+  const request: APIGatewayProxyEvent = {
+    resource: '/rosterRetrieval',
+    path: '/rosterRetrieval',
+    httpMethod: 'POST',
+    headers: {
+      Accept: 'application/json, text/plain, */*',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Accept-Language': 'en-US,en;q=0.5',
+      'CloudFront-Forwarded-Proto': 'https',
+      'CloudFront-Is-Desktop-Viewer': 'true',
+      'CloudFront-Is-Mobile-Viewer': 'false',
+      'CloudFront-Is-SmartTV-Viewer': 'false',
+      'CloudFront-Is-Tablet-Viewer': 'false',
+      'CloudFront-Viewer-ASN': '16509',
+      'CloudFront-Viewer-Country': 'US',
+      'content-type': 'application/json;charset=utf-8',
+      Host: 'cofwx6v92e.execute-api.us-east-1.amazonaws.com',
+      origin: 'https://akaza.test.events.training.aws.a2z.com',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'cross-site',
+      'User-Agent':
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0) Gecko/20100101 Firefox/108.0',
+      Via: '2.0 68a3b1d5c75429221abc685a453afb60.cloudfront.net (CloudFront)',
+      'X-Amz-Cf-Id': 'FIQ8LBpy_3djv-Pyvu-PviOAQeC1D0FGinbwws8KheKMtmi8OYVqLw==',
+      'X-Amzn-Trace-Id': 'Root=1-63d816c7-544adfae4a0fa3482d39c4f8',
+      'X-Forwarded-For': '52.94.133.136, 15.158.50.140',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https',
+      Authorization: `Bearer ${idToken}`
+    },
+    multiValueHeaders: {
+      Accept: ['application/json, text/plain, */*'],
+      'Accept-Encoding': ['gzip, deflate, br'],
+      'Accept-Language': ['en-US,en;q=0.5'],
+      'CloudFront-Forwarded-Proto': ['https'],
+      'CloudFront-Is-Desktop-Viewer': ['true'],
+      'CloudFront-Is-Mobile-Viewer': ['false'],
+      'CloudFront-Is-SmartTV-Viewer': ['false'],
+      'CloudFront-Is-Tablet-Viewer': ['false'],
+      'CloudFront-Viewer-ASN': ['16509'],
+      'CloudFront-Viewer-Country': ['US'],
+      'content-type': ['application/json;charset=utf-8'],
+      Host: ['cofwx6v92e.execute-api.us-east-1.amazonaws.com'],
+      origin: ['https://akaza.test.events.training.aws.a2z.com'],
+      'sec-fetch-dest': ['empty'],
+      'sec-fetch-mode': ['cors'],
+      'sec-fetch-site': ['cross-site'],
+      'User-Agent': [
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0) Gecko/20100101 Firefox/108.0',
+      ],
+      Via: ['2.0 68a3b1d5c75429221abc685a453afb60.cloudfront.net (CloudFront)'],
+      'X-Amz-Cf-Id': [
+        'FIQ8LBpy_3djv-Pyvu-PviOAQeC1D0FGinbwws8KheKMtmi8OYVqLw==',
+      ],
+      'X-Amzn-Trace-Id': ['Root=1-63d816c7-544adfae4a0fa3482d39c4f8'],
+      'X-Forwarded-For': ['52.94.133.136, 15.158.50.140'],
+      'X-Forwarded-Port': ['443'],
+      'X-Forwarded-Proto': ['https'],
+    },
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
+    body: reqJSON,
+    pathParameters: null,
+    stageVariables: null,
+    requestContext: requestContext('/rosterRetrieval'),
+    isBase64Encoded: false,
+  };
+  return request;
+};

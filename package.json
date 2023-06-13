@@ -30,6 +30,7 @@
     "packages/handlers/authorizerProxy",
     "packages/handlers/tokenProxy",
     "packages/handlers/scoreSubmission",
+    "packages/handlers/rosterRetrieval",
     "packages/layers/util",
     "packages/examples/client/",
     "test"
