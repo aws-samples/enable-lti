@@ -8,7 +8,7 @@
     "cdk": "cdk --app 'npx ts-node --prefer-ts-exts src/apps/eltiApiApp.ts'"
   },
   "devDependencies": {
-    "aws-cdk-lib": "^2.37.1",
+    "aws-cdk-lib": "^2.80.0",
     "cdk-nag": "^2.25.8",
     "constructs": "^10.1.77",
     "esbuild": "^0.15.5",
