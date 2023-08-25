@@ -69,31 +69,42 @@ describe('CanvasLMS login launch flow works', () => {
     expect(loginRes).toBeDefined();
     expect(isRedirectResponse(loginRes, AUTH_TOKEN_URL)).toBe(true);
     const params = new URLSearchParams(loginRes.headers!.Location as string);
-    const state = params.get('state');
-    const nonce = params.get('nonce');
+    let eLTIState = params.get('state');
+    let eLTINonce = params.get('nonce');
+
     //ELTI has redirected to CanvasLMS auth token url above
     //-------------------------------------------------------
     //now simulating canvasLMS calling back ELTI with token
-    expect(state).toBeDefined();
-    expect(nonce).toBeDefined();
-    const signedJWT = await getSignedJWT(jwtBodyForLaunch(nonce!), {
+    expect(eLTIState).toBeDefined();
+    expect(eLTINonce).toBeDefined();
+    const signedJWT = await getSignedJWT(jwtBodyForLaunch(eLTINonce!), {
       keyId: KMS_KEY_ID,
       kid: KID!,
     });
-    const launchEvent = launchProxyRequestEvent(signedJWT, state!);
-    const launchRes = await launchAuthHandler(launchEvent as APIGatewayProxyEventWithLtiLaunchAuth);
+    const launchEvent = launchProxyRequestEvent(signedJWT, eLTIState!);
+    const launchRes = await launchAuthHandler(
+      launchEvent as APIGatewayProxyEventWithLtiLaunchAuth
+    );
     expect(launchRes).toBeDefined();
     expect(isRedirectResponse(launchRes, TOOL_OIDC_DOMAIN)).toBe(true);
     const badState = 'badStatebadStatebadState';
     const launchEventBadState = launchProxyRequestEvent(signedJWT, badState);
-    const launchResBadResponse = await launchAuthHandler(launchEventBadState as APIGatewayProxyEventWithLtiLaunchAuth);
+    const launchResBadResponse = await launchAuthHandler(
+      launchEventBadState as APIGatewayProxyEventWithLtiLaunchAuth
+    );
     expect(launchResBadResponse).toBeDefined();
     expect(is401Response(launchResBadResponse)).toBe(true);
     //ELTI has verified the token and redirected to Tool OIDC above
     //---------------------------------------------------------
     //now simulating Tool OIDC calling ELTI for authorization, we create a code and send
     //https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowSteps
-    const authProxyEvent = authProxyRequestEvent(state!, nonce!);
+    const cookieArr = launchRes.multiValueHeaders![
+      'Set-Cookie'
+    ] as Array<string>;
+    console.log(launchRes);
+    eLTIState = cookieArr[0].split('=')[1];
+    eLTINonce = cookieArr[1].split('=')[1];
+    const authProxyEvent = authProxyRequestEvent(eLTIState!, eLTINonce!);
     const authRes = await authProxyHandler(authProxyEvent);
     expect(authRes).toBeDefined();
     expect(isRedirectResponse(authRes)).toBe(true);
@@ -105,7 +116,7 @@ describe('CanvasLMS login launch flow works', () => {
     );
     const toolOIDCState = toolOIDCAuthFlowParams.get('state');
     expect(authCode).toBeDefined();
-    //ELTI has send a code to Tool OIDCabove
+    //ELTI has sent a code to Tool OIDCabove
     //--------------------------------------------------
     //now simulating Tool OIDC calling for authentication where ELTI will give the token from canvas LMS
     const tokenProxyEvent = tokenProxyRequestEvent(authCode!);

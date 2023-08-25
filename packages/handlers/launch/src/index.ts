@@ -29,6 +29,7 @@ import {
   injectPowertools,
 } from '@enable-lti/util';
 import { MetricUnits } from '@aws-lambda-powertools/metrics';
+import { v4 as uuidv4 } from 'uuid';
 
 const CONTROL_PLANE_TABLE_NAME = process.env.CONTROL_PLANE_TABLE_NAME || '';
 const DATA_PLANE_TABLE_NAME = process.env.DATA_PLANE_TABLE_NAME || '';
@@ -36,13 +37,17 @@ const KMS_KEY_ID = process.env.KMS_KEY_ID || '';
 
 const powertools = Powertools.getInstance();
 const ltiLaunchAuth = new LtiLaunchAuth({ powertools });
+const state = new DynamoDBState(DATA_PLANE_TABLE_NAME);
+const platform = new DynamoDBPlatformConfig(CONTROL_PLANE_TABLE_NAME);
+const tool = new DynamoDBLtiToolConfig(CONTROL_PLANE_TABLE_NAME);
+const jwks = new DynamoDBJwks(CONTROL_PLANE_TABLE_NAME, KMS_KEY_ID);
 
 export class LambdaFunction implements LambdaInterface {
   @ltiLaunchAuth.launchAuthHandler({
-    platform: new DynamoDBPlatformConfig(CONTROL_PLANE_TABLE_NAME),
-    state: new DynamoDBState(DATA_PLANE_TABLE_NAME),
-    tool: new DynamoDBLtiToolConfig(CONTROL_PLANE_TABLE_NAME),
-    jwks: new DynamoDBJwks(CONTROL_PLANE_TABLE_NAME, KMS_KEY_ID),
+    platform,
+    state,
+    tool,
+    jwks,
     kmsKeyId: KMS_KEY_ID,
   })
   @injectPowertools(powertools)
@@ -53,7 +58,7 @@ export class LambdaFunction implements LambdaInterface {
   ): Promise<APIGatewayProxyResult> {
     try {
       const tool = event.toolRecord;
-      const state = event.stateRecord;
+      const stateRecord = event.stateRecord;
       const payload = event.payload;
       const kid = event.kid;
       switch (payload.messageType as LTIMessageTypes) {
@@ -71,21 +76,42 @@ export class LambdaFunction implements LambdaInterface {
               TOOL_REDIRECT_FAILURE
             );
           }
-          const toolOIDCURL = tool.toolOIDCAuthorizeURL(tool.url, targetPath, payload.targetLinkUri);
+          const toolOIDCURL = tool.toolOIDCAuthorizeURL(
+            tool.url,
+            targetPath,
+            payload.targetLinkUri,
+            stateRecord.nonce
+          );
           powertools.logger.info(toolOIDCURL);
           powertools.metrics.addMetric(
             TOOL_REDIRECT_SUCCESS,
             MetricUnits.Count,
             1
           );
+          stateRecord.nonce = uuidv4();
+          stateRecord.nonce_count = 0;
+          try {
+            await state.save(stateRecord);
+          } catch (e) {
+            return errorResponse(
+              powertools,
+              e as Error,
+              500,
+              INTERNAL_ERROR,
+              TOOL_REDIRECT_FAILURE
+            );
+          }
           return {
             statusCode: 302,
             body: '',
             multiValueHeaders: {
-              'Set-Cookie': [`state=${state.id}; nonce=${state.nonce};`],
+              'Set-Cookie': [
+                `state=${stateRecord.id}`,
+                `nonce=${stateRecord.nonce}`,
+              ],
             },
             headers: {
-              Location: `${toolOIDCURL}?id_token=${state.id_token}`,
+              Location: `${toolOIDCURL}?id_token=${stateRecord.id_token}`,
             },
           };
         }
@@ -136,8 +162,7 @@ export class LambdaFunction implements LambdaInterface {
                 body: formHtml,
                 headers: { 'Content-type': 'text/html' },
               };
-            }
-            else {
+            } else {
               const targetPath = awsAmplifyUrlSafeEncode(
                 `/${payload.targetLinkUri!.split(tool.url)[1]}`
               );
@@ -147,10 +172,14 @@ export class LambdaFunction implements LambdaInterface {
                   new Error('Issue with TargetLinkUrl'),
                   400,
                   REQUEST_ERROR,
-                  TOOL_REDIRECT_FAILURE
+                  DEEP_LINK_FAILURE
                 );
               }
-              const toolOIDCURL = tool.toolOIDCAuthorizeURL(tool.url, targetPath, payload.targetLinkUri);
+              const toolOIDCURL = tool.toolOIDCAuthorizeURL(
+                tool.url,
+                targetPath,
+                payload.targetLinkUri
+              );
               powertools.metrics.addMetric(
                 DEEP_LINK_SUCCESS,
                 MetricUnits.Count,
@@ -160,12 +189,15 @@ export class LambdaFunction implements LambdaInterface {
                 statusCode: 302,
                 body: '',
                 multiValueHeaders: {
-                  'Set-Cookie': [`state=${state.id}; nonce=${state.nonce};`],
+                  'Set-Cookie': [
+                    `state=${stateRecord.id}`,
+                    `nonce=${stateRecord.nonce}`,
+                  ],
                 },
                 headers: {
-                  Location: `${toolOIDCURL}?id_token=${state.id_token}`,
+                  Location: `${toolOIDCURL}?id_token=${stateRecord.id_token}`,
                 },
-              }
+              };
             }
           } catch (e: any) {
             return errorResponse(

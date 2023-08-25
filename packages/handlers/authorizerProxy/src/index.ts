@@ -6,6 +6,7 @@ import {
 } from 'aws-lambda';
 import {
   DynamoDBState,
+  DynamoDBStateRecord,
   LambdaInterface,
   StateRecord,
   requiredValueFromCookies,
@@ -23,6 +24,7 @@ import { MetricUnits } from '@aws-lambda-powertools/metrics';
 
 const DATA_PLANE_TABLE_NAME = process.env.DATA_PLANE_TABLE_NAME || '';
 const powertools = Powertools.getInstance();
+const dbState = new DynamoDBState(DATA_PLANE_TABLE_NAME);
 
 export class LambdaFunction implements LambdaInterface {
   @injectPowertools(powertools)
@@ -32,11 +34,12 @@ export class LambdaFunction implements LambdaInterface {
     callback?: Callback<APIGatewayProxyResult>
   ): Promise<APIGatewayProxyResult> {
     try {
-      let state: string | undefined = undefined;
-      let dbState: DynamoDBState | undefined = undefined;
+      let eLTIState: string | undefined = undefined;
+      let eLTINonce: string | undefined = undefined;
       let stateRecord: StateRecord | undefined = undefined;
       try {
-        state = requiredValueFromCookies(event.headers, 'state');
+        eLTIState = requiredValueFromCookies(event.headers, 'state');
+        eLTINonce = requiredValueFromCookies(event.headers, 'nonce');
       } catch (e) {
         const error = e as Error;
         return errorResponse(
@@ -47,8 +50,7 @@ export class LambdaFunction implements LambdaInterface {
         );
       }
       try {
-        dbState = new DynamoDBState(DATA_PLANE_TABLE_NAME);
-        stateRecord = await dbState.load(state!, undefined);
+        stateRecord = await dbState.load(eLTIState!, eLTINonce!);
       } catch (e) {
         const error = e as Error;
         if (error instanceof SessionNotFound) {
@@ -59,9 +61,7 @@ export class LambdaFunction implements LambdaInterface {
         }
       }
       const code = uuidv4();
-      stateRecord!.id = code;
-      stateRecord!.PK = `STATE#${code}`;
-      powertools.logger.debug(JSON.stringify(stateRecord));
+      stateRecord = DynamoDBStateRecord.cloneWithNewId(stateRecord!, code);
       try {
         await dbState!.save(stateRecord);
       } catch (e) {
@@ -76,13 +76,6 @@ export class LambdaFunction implements LambdaInterface {
           Location: redirectURL,
         },
         body: '',
-        multiValueHeaders: {
-          'Set-Cookie': [
-            `state=${stateRecord!.id}; nonce=${
-              stateRecord!.nonce
-            }; SameSite=None; Secure; HttpOnly`,
-          ],
-        },
       };
       powertools.metrics.addMetric(SUCCESS, MetricUnits.Count, 1);
       return response;
