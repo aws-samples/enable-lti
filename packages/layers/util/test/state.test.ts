@@ -1,6 +1,5 @@
 import { mockClient } from 'aws-sdk-client-mock';
 import 'aws-sdk-client-mock-jest';
-import { sampleStateGetItem } from '../../../../test/utils/data';
 import { DynamoDBState, DynamoDBStateRecord, makeStatePK } from '../src/state';
 import { marshall } from '@aws-sdk/util-dynamodb';
 import {
@@ -14,6 +13,38 @@ const ddbMock = mockClient(DynamoDBClient);
 const TEST_TABLE = 'test_table';
 const TEST_STATE_ID = 'test_state_id';
 const TEST_NONCE_ID = 'test_nonce_id';
+
+export const sampleStateGetItem = (
+  state: string,
+  nonce: string,
+  nonceCount: string
+) => {
+  return {
+    Item: {
+      PK: {
+        S: `STATE#${state}`,
+      },
+      id: {
+        S: state,
+      },
+      id_token: {
+        S: 'id_token',
+      },
+      nonce: {
+        S: nonce,
+      },
+      nonce_count: {
+        N: nonceCount,
+      },
+      platform_lti_token: {
+        S: 'ACCESS_TOKEN',
+      },
+      ttl: {
+        N: '1692642318',
+      },
+    },
+  };
+};
 
 beforeEach(() => {
   ddbMock.reset();
