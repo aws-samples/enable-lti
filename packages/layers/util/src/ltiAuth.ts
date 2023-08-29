@@ -305,7 +305,6 @@ export class LtiLaunchAuth {
     const kmsKeyId = options.kmsKeyId;
     try {
       let requestPostState: string | undefined = undefined;
-      let cookieState: string | undefined = undefined;
       let idToken: string | undefined = undefined;
       let ltiJwtPayload: LTIJwtPayload | undefined = undefined;
       let stateRecord: StateRecord | undefined = undefined;
@@ -314,7 +313,6 @@ export class LtiLaunchAuth {
       let kid: string | undefined = undefined;
       try {
         requestPostState = requiredValueFromRequest(event, 'state');
-        cookieState = requiredValueFromCookies(event.headers, 'state');
         idToken = requiredTruthyValueFromRequest(event, 'id_token');
       } catch (e) {
         return errorResponse(
@@ -338,11 +336,6 @@ export class LtiLaunchAuth {
       }
       try {
         stateRecord = await state.load(requestPostState!, ltiJwtPayload.nonce!);
-        // Not sure how state in cookie is more secure than that in request payload but doing below check to confirm to spec described
-        // https://www.imsglobal.org/spec/security/v1p0/#step-4-resource-is-displayed
-        if (cookieState !== requestPostState) {
-          throw new Error('Cookie State is not matching Request State');
-        }
       } catch (e) {
         return errorResponse(
           powertools,
