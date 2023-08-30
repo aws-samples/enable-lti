@@ -1,10 +1,25 @@
 import { ArnFormat, Duration, Stack } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs';
-import { Architecture, AssetCode, LayerVersion, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
+import {
+  NodejsFunction,
+  NodejsFunctionProps,
+} from 'aws-cdk-lib/aws-lambda-nodejs';
+import {
+  Architecture,
+  AssetCode,
+  LayerVersion,
+  Runtime,
+  Tracing,
+} from 'aws-cdk-lib/aws-lambda';
 import path from 'path';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
-import { Effect, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
+import {
+  Effect,
+  ManagedPolicy,
+  PolicyStatement,
+  Role,
+  ServicePrincipal,
+} from 'aws-cdk-lib/aws-iam';
 import { Keys } from './keys';
 import { Tables } from './tables';
 import { NagSuppressions } from 'cdk-nag';
@@ -16,7 +31,11 @@ export interface LambdasConfig {
 
 const LOG_LEVEL = 'debug';
 
-const ltiNodejsFunction = (scope: Construct, id: string, props?: NodejsFunctionProps): NodejsFunction => {
+const ltiNodejsFunction = (
+  scope: Construct,
+  id: string,
+  props?: NodejsFunctionProps
+): NodejsFunction => {
   const role = new Role(scope, `${id}Role`, {
     assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
   });
@@ -27,7 +46,7 @@ const ltiNodejsFunction = (scope: Construct, id: string, props?: NodejsFunctionP
   });
 
   const nodejsFunction = new NodejsFunction(scope, id, {
-    memorySize: 256,
+    memorySize: 1536,
     architecture: Architecture.ARM_64,
     timeout: Duration.seconds(30),
     runtime: Runtime.NODEJS_18_X,
@@ -57,25 +76,31 @@ const ltiNodejsFunction = (scope: Construct, id: string, props?: NodejsFunctionP
   });
 
   // tslint:disable-next-line
-  const logRetentionRolePolicy = new ManagedPolicy(scope, `${id}LogRetentionPolicy`, {
-    statements: [
-      new PolicyStatement({
-        effect: Effect.ALLOW,
-        actions: [
-          'logs:CreateLogGroup',
-          'logs:PutRetentionPolicy',
-          'logs:DeleteRetentionPolicy',
-        ],
-        resources: [Stack.of(nodejsFunction).formatArn({
-          service: 'logs',
-          resource: 'log-group',
-          arnFormat: ArnFormat.COLON_RESOURCE_NAME,
-          resourceName: '/aws/lambda/*',
-        })],
-      }),
-    ],
-    roles: [logRetentionRole],
-  });
+  const logRetentionRolePolicy = new ManagedPolicy(
+    scope,
+    `${id}LogRetentionPolicy`,
+    {
+      statements: [
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: [
+            'logs:CreateLogGroup',
+            'logs:PutRetentionPolicy',
+            'logs:DeleteRetentionPolicy',
+          ],
+          resources: [
+            Stack.of(nodejsFunction).formatArn({
+              service: 'logs',
+              resource: 'log-group',
+              arnFormat: ArnFormat.COLON_RESOURCE_NAME,
+              resourceName: '/aws/lambda/*',
+            }),
+          ],
+        }),
+      ],
+      roles: [logRetentionRole],
+    }
+  );
   nodejsFunction.node.addDependency(logRetentionRolePolicy);
 
   NagSuppressions.addResourceSuppressions(
@@ -83,15 +108,15 @@ const ltiNodejsFunction = (scope: Construct, id: string, props?: NodejsFunctionP
     [
       {
         id: 'AwsSolutions-IAM5',
-        reason: 'Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.',
+        reason:
+          'Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.',
       },
     ],
     true
   );
 
   return nodejsFunction;
-}
-
+};
 
 export class Lambdas extends Construct {
   readonly oidc: NodejsFunction;
@@ -109,7 +134,9 @@ export class Lambdas extends Construct {
     super(scope, id);
 
     const utilLayer = new LayerVersion(this, 'layerUtil', {
-      code: AssetCode.fromAsset(path.join(__dirname, '../../../../dist/layers/util')),
+      code: AssetCode.fromAsset(
+        path.join(__dirname, '../../../../dist/layers/util')
+      ),
       compatibleRuntimes: [Runtime.NODEJS_18_X],
       description: 'LTI utility functions',
     });
@@ -294,8 +321,12 @@ export class Lambdas extends Construct {
     });
     this.jwks.grantPrincipal.addToPrincipalPolicy(asymmetricKeyGrant);
     this.launch.grantPrincipal.addToPrincipalPolicy(asymmetricKeyGrant);
-    this.deepLinkingProxy.grantPrincipal.addToPrincipalPolicy(asymmetricKeyGrant);
-    this.scoreSubmission.grantPrincipal.addToPrincipalPolicy(asymmetricKeyGrant);
+    this.deepLinkingProxy.grantPrincipal.addToPrincipalPolicy(
+      asymmetricKeyGrant
+    );
+    this.scoreSubmission.grantPrincipal.addToPrincipalPolicy(
+      asymmetricKeyGrant
+    );
     this.rosterRetrieval.grantPrincipal.addToPrincipalPolicy(
       asymmetricKeyGrant
     );
