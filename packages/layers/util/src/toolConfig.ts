@@ -40,7 +40,12 @@ export interface LtiToolConfigRecord {
   issuer: string;
   url: string;
   data: toolConfigData;
-  toolOIDCAuthorizeURL(toolURL: string, state?: string, launchUrl?: string): string;
+  toolOIDCAuthorizeURL(
+    toolURL: string,
+    state?: string,
+    launchUrl?: string,
+    nonce?: string
+  ): string;
   authUrl(): string;
   jwksUrl(): string;
 }
@@ -104,16 +109,27 @@ class DynamoDBLtiToolConfigRecord implements LtiToolConfigRecord {
    *
    * @param toolURL the url user must be redirected to after Authentication
    * @param state an optional state parameter to be added
+   * @param launchUrl an optional launch url to launch if there is no OIDC configuration
+   * @param nonce an optional nonce to be added for tool oidc flow
+   *
    * @returns the oauth2/authorize endpoint of tool's OIDC provider with toolURL as redirect_uri
    * Please note that this will return the toolURL back if there is no OIDC configured
    */
-  toolOIDCAuthorizeURL(toolURL: string, state?: string, launchUrl?: string): string {
+  toolOIDCAuthorizeURL(
+    toolURL: string,
+    state?: string,
+    launchUrl?: string,
+    nonce?: string
+  ): string {
     if (!this.data.OIDC) {
       return launchUrl ?? toolURL;
     }
     let toolOIDCURL = `${this.data.OIDC.domain}oauth2/authorize?identity_provider=${this.data.OIDC.idpName}&redirect_uri=${toolURL}&response_type=code&client_id=${this.data.OIDC.clientId}&scope=openid`;
     if (state) {
       toolOIDCURL = `${toolOIDCURL}&state=${state}`;
+    }
+    if (nonce) {
+      toolOIDCURL = `${toolOIDCURL}&nonce=${nonce}`;
     }
     return toolOIDCURL;
   }

@@ -73,6 +73,35 @@ describe('BlackBoardLMS login launch flow works', () => {
     jest.setTimeout(30000);
   });
 
+  test('user launched tool from BlackBoardLMS, fail at bearer token', async () => {
+    const loginEvent = bbLoginRequestEvent();
+    const loginRes = await loginHandler(loginEvent);
+    expect(loginRes).toBeDefined();
+    expect(isRedirectResponse(loginRes, AUTH_TOKEN_URL)).toBe(true);
+    const params = new URLSearchParams(loginRes.headers!.Location as string);
+    let eLTIState = params.get('state');
+    let eLTINonce = params.get('nonce');
+    //ELTI has redirected to CanvasLMS auth token url above
+    //-------------------------------------------------------
+    //now simulating canvasLMS calling back ELTI with token
+    expect(eLTIState).toBeDefined();
+    expect(eLTINonce).toBeDefined();
+    const signedJWT = await getSignedJWT(jwtBodyForLaunch(eLTINonce!), {
+      keyId: KMS_KEY_ID,
+      kid: KID!,
+    });
+    (axios.post as jest.Mock).mockRejectedValueOnce(
+      new Error('BB failed to give Bearer Token')
+    );
+    const launchEvent = bbLaunchProxyRequestEvent(signedJWT, eLTIState!);
+    const launchResNoAuthToken = await launchAuthHandler(
+      launchEvent as APIGatewayProxyEventWithLtiLaunchAuth
+    );
+    console.log(launchResNoAuthToken);
+    expect(is500Response(launchResNoAuthToken)).toBe(true);
+    jest.clearAllMocks();
+  });
+
   test('user launched tool from BlackBoardLMS, OIDC launch flow', async () => {
     //Simulating CanvasLMS calling ELTI for 3rd party login launch flow
     const loginEvent = bbLoginRequestEvent();
@@ -80,14 +109,14 @@ describe('BlackBoardLMS login launch flow works', () => {
     expect(loginRes).toBeDefined();
     expect(isRedirectResponse(loginRes, AUTH_TOKEN_URL)).toBe(true);
     const params = new URLSearchParams(loginRes.headers!.Location as string);
-    const state = params.get('state');
-    const nonce = params.get('nonce');
+    let eLTIState = params.get('state');
+    let eLTINonce = params.get('nonce');
     //ELTI has redirected to CanvasLMS auth token url above
     //-------------------------------------------------------
     //now simulating canvasLMS calling back ELTI with token
-    expect(state).toBeDefined();
-    expect(nonce).toBeDefined();
-    const signedJWT = await getSignedJWT(jwtBodyForLaunch(nonce!), {
+    expect(eLTIState).toBeDefined();
+    expect(eLTINonce).toBeDefined();
+    const signedJWT = await getSignedJWT(jwtBodyForLaunch(eLTINonce!), {
       keyId: KMS_KEY_ID,
       kid: KID!,
     });
@@ -95,30 +124,27 @@ describe('BlackBoardLMS login launch flow works', () => {
       status: 200,
       data: { access_token: 'ACCESS_TOKEN' },
     });
-    const launchEvent = bbLaunchProxyRequestEvent(signedJWT, state!);
-    const launchRes = await launchAuthHandler(launchEvent as APIGatewayProxyEventWithLtiLaunchAuth);
+    const launchEvent = bbLaunchProxyRequestEvent(signedJWT, eLTIState!);
+    const launchRes = await launchAuthHandler(
+      launchEvent as APIGatewayProxyEventWithLtiLaunchAuth
+    );
     expect(launchRes).toBeDefined();
     expect(axios.post).toHaveBeenCalledWith(
       ACCESS_TOKEN_URL,
       expect.anything()
     );
     expect(isRedirectResponse(launchRes, TOOL_OIDC_DOMAIN)).toBe(true);
-    const badState = 'badStatebadStatebadState';
-    const launchEventBadState = bbLaunchProxyRequestEvent(signedJWT, badState);
-    const launchResBadResponse = await launchAuthHandler(launchEventBadState as APIGatewayProxyEventWithLtiLaunchAuth);
-    expect(launchResBadResponse).toBeDefined();
-    expect(is401Response(launchResBadResponse)).toBe(true);
-    (axios.post as jest.Mock).mockRejectedValueOnce(
-      new Error('BB failed to give Bearer Token')
-    );
-    const launchResNoAuthToken = await launchAuthHandler(launchEvent as APIGatewayProxyEventWithLtiLaunchAuth);
-    expect(is500Response(launchResNoAuthToken)).toBe(true);
     jest.clearAllMocks();
     //ELTI has verified the token and redirected to Tool OIDC above
     //---------------------------------------------------------
     //now simulating Tool OIDC calling ELTI for authorization, we create a code and send
     //https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowSteps
-    const authProxyEvent = authProxyRequestEvent(state!, nonce!);
+    const cookieArr = launchRes.multiValueHeaders![
+      'Set-Cookie'
+    ] as Array<string>;
+    eLTIState = cookieArr[0].split('=')[1];
+    eLTINonce = cookieArr[1].split('=')[1];
+    const authProxyEvent = authProxyRequestEvent(eLTIState!, eLTINonce!);
     const authRes = await authProxyHandler(authProxyEvent);
     expect(authRes).toBeDefined();
     expect(isRedirectResponse(authRes)).toBe(true);
@@ -130,6 +156,13 @@ describe('BlackBoardLMS login launch flow works', () => {
     );
     const toolOIDCState = toolOIDCAuthFlowParams.get('state');
     expect(authCode).toBeDefined();
+
+    // Negative case: nonce is already used so re-playing should error
+    const rePlayAuthProxyEvent = authProxyRequestEvent(eLTIState!, eLTINonce!);
+    const replayAuthProxyRes = await authProxyHandler(rePlayAuthProxyEvent);
+    expect(replayAuthProxyRes).toBeDefined();
+    expect(replayAuthProxyRes.statusCode).toEqual(500);
+
     //ELTI has send a code to Tool OIDCabove
     //--------------------------------------------------
     //now simulating Tool OIDC calling for authentication where ELTI will give the token from canvas LMS
@@ -137,6 +170,11 @@ describe('BlackBoardLMS login launch flow works', () => {
     const tokenRes = await tokenProxyHandler(tokenProxyEvent);
     expect(tokenRes).toBeDefined();
     expect(tokenRes.statusCode).toEqual(200);
+
+    //Negative test re-using the authCode
+    const replayTokenRes = await tokenProxyHandler(tokenProxyEvent);
+    expect(replayTokenRes).toBeDefined();
+    expect(replayTokenRes.statusCode).toEqual(500);
   });
   jest.resetAllMocks();
 });

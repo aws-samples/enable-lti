@@ -21,8 +21,8 @@ import {
 import { MetricUnits } from '@aws-lambda-powertools/metrics';
 
 const DATA_PLANE_TABLE_NAME = process.env.DATA_PLANE_TABLE_NAME || '';
-
 const powertools = Powertools.getInstance();
+const dbState = new DynamoDBState(DATA_PLANE_TABLE_NAME);
 
 export class LambdaFunction implements LambdaInterface {
   @injectPowertools(powertools)
@@ -34,7 +34,6 @@ export class LambdaFunction implements LambdaInterface {
     try {
       powertools.logger.info(JSON.stringify(event.headers));
       let code: string | undefined = undefined;
-      let dbState: DynamoDBState | undefined = undefined;
       let stateRecord: StateRecord | undefined = undefined;
       try {
         code = requiredValueFromRequest(event, 'code');
@@ -42,8 +41,7 @@ export class LambdaFunction implements LambdaInterface {
         return errorResponse(powertools, e as Error, 400, REQUEST_ERROR);
       }
       try {
-        dbState = new DynamoDBState(DATA_PLANE_TABLE_NAME);
-        stateRecord = await dbState.load(code!, undefined);
+        stateRecord = await dbState.load(code!);
       } catch (e) {
         const error = e as Error;
         if (error instanceof SessionNotFound) {

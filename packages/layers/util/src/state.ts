@@ -18,11 +18,15 @@ export interface StateRecord {
 }
 
 export interface State {
-  load(id: string, nonce: string | undefined): Promise<StateRecord | undefined>;
+  load(id: string, nonce: string): Promise<StateRecord | undefined>;
   save(record: StateRecord | undefined): Promise<StateRecord>;
 }
 
-class DynamoDBStateRecord implements StateRecord {
+export const makeStatePK = (stateId: string) => {
+  return `STATE#${stateId}`;
+};
+
+export class DynamoDBStateRecord implements StateRecord {
   /* eslint-disable */
   readonly PK: string;
   readonly id: string;
@@ -48,7 +52,7 @@ class DynamoDBStateRecord implements StateRecord {
 
   private constructor(
     id: string = uuidv4(),
-    PK = `STATE#${id}`,
+    PK = makeStatePK(id),
     nonce: string = uuidv4(),
     nonceCount = 0,
     ttl = 0,
@@ -78,9 +82,9 @@ class DynamoDBStateRecord implements StateRecord {
   ): DynamoDBStateRecord {
     return new DynamoDBStateRecord(
       id,
-      `STATE#${id}`,
-      sourceStateRecord.nonce,
-      sourceStateRecord.nonce_count,
+      makeStatePK(id),
+      id,
+      0,
       sourceStateRecord.ttl,
       sourceStateRecord.id_token,
       sourceStateRecord.platform_lti_token,
@@ -88,57 +92,67 @@ class DynamoDBStateRecord implements StateRecord {
     );
   }
 }
-1;
 export class DynamoDBState implements State {
   private readonly tableName: string;
   private readonly ttlSeconds: number;
 
   constructor(tableName: string, ttlSeconds = 7200) {
     this.tableName = tableName;
-    this.ttlSeconds = ttlSeconds;
+    if (typeof ttlSeconds !== 'number') {
+      this.ttlSeconds = 7200;
+    } else {
+      this.ttlSeconds = ttlSeconds;
+    }
   }
 
   /**
    * Hydrates the instance from state provided and validates that it has the same nonce, and the nonce has only been used once *Trust On First Use (TOFU)*.
    * @param id state value from the authentication request
-   * @param nonce nonce value from the id_token
+   * @param nonce nonce value from the id_token, if it is not provided then id is re-used for nonce
    * @returns boolean value indicating if the state has been validated.
    */
-  async load(id: String, nonce: string | undefined): Promise<StateRecord> {
+  async load(id: string, nonce?: string): Promise<StateRecord> {
     const aws = Aws.getInstance();
     try {
       const item = await aws.getItem({
         TableName: this.tableName,
         Key: { PK: { S: `STATE#${id}` } },
+        ConsistentRead: true,
       });
       if (item !== undefined) {
+        // In one case, we are using the state record and mechanism to limit to single use for single id, below condition is to accommodate for that case
+        if (!nonce) {
+          nonce = id;
+        }
         const stateRecord = DynamoDBStateRecord.assign(item);
-        if (nonce !== undefined) {
-          if (stateRecord.nonce !== nonce && stateRecord.nonce_count !== 0) {
-            throw Error('Invalid state');
-          } else {
-            await aws.updateItem({
-              TableName: this.tableName,
-              Key: { PK: { S: stateRecord.PK } },
-              UpdateExpression: 'ADD nonce_count :inc',
-              ConditionExpression:
-                'nonce = :nonce AND nonce_count = :nonce_count',
-              ExpressionAttributeValues: {
-                ':inc': { N: '1' },
-                ':nonce': { S: stateRecord.nonce },
-                ':nonce_count': { N: '0' },
-              },
-            });
-          }
+        if (stateRecord.nonce !== nonce || stateRecord.nonce_count !== 0) {
+          throw Error('Invalid state');
+        } else {
+          await aws.updateItem({
+            TableName: this.tableName,
+            Key: { PK: { S: stateRecord.PK } },
+            UpdateExpression: 'ADD nonce_count :inc',
+            ConditionExpression:
+              'nonce = :nonce AND nonce_count = :nonce_count',
+            ExpressionAttributeValues: {
+              ':inc': { N: '1' },
+              ':nonce': { S: stateRecord.nonce },
+              ':nonce_count': { N: '0' },
+            },
+          });
         }
         return stateRecord;
       } else {
-        throw new SessionNotFound(`No State record found for STATE${id}.`);
+        throw new SessionNotFound(
+          `No State record found for ${makeStatePK(id)}.`
+        );
       }
     } catch (e) {
       const error = e as Error;
       throw new StoreAccessError(
-        `Error retrieving State for STATE#${id}. ${error.name} - ${error.message}`
+        `Error retrieving State for ${makeStatePK(id)}. ${error.name} - ${
+          error.message
+        }`
       );
     }
   }

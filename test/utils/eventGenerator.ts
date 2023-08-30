@@ -236,7 +236,7 @@ export const authProxyRequestEvent = (
       'CloudFront-Is-Tablet-Viewer': 'false',
       'CloudFront-Viewer-ASN': '16509',
       'CloudFront-Viewer-Country': 'US',
-      Cookie: `state=${state}`,
+      Cookie: `state=${state};nonce=${nonce}`,
       Host: 'id.execute-api.us-east-1.amazonaws.com',
       Referer: `${ISS}/api/lti/authorize?client_id=${CLIENT_ID}&login_hint=b0be1d1d0a2f64749cc50020c0493674dcf6b49c&lti_message_hint=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJpZmllciI6ImY4NGM2MDk0YzgwMGRiNDk0NjNiODI5YzIxMjZmNTQyZjZkZGFhMDM1MWQxOTI5NDhhOGVmYTg4NzgyZGE5M2FlZDUyZWZiNWE5YmFjMzMzYzBkNzU1M2YyNWFiZmZmODZlYzc2ZDhhZTU4MTBhMGY5NGQ2NjllZDc5OTZkM2U3IiwiY2FudmFzX2RvbWFpbiI6ImVkdWNhdGV0ZXN0Lmluc3RydWN0dXJlLmNvbSIsImNvbnRleHRfdHlwZSI6IkNvdXJzZSIsImNvbnRleHRfaWQiOjk2OTUwMDAwMDAwMDAwODE2LCJjYW52YXNfbG9jYWxlIjoiZW4iLCJleHAiOjE2NjkyNDU4NTB9.ayR3aXTtwIcred2z6nrf1V2o85COcEC523s49oZRjlU&nonce=${nonce}&prompt=none&redirect_uri=https%3A%2F%2Fid.execute-api.us-east-1.amazonaws.com%2Fprod%2Flaunch&response_mode=form_post&response_type=id_token&scope=openid&state=${state}`,
       'sec-fetch-dest': 'document',
@@ -265,7 +265,7 @@ export const authProxyRequestEvent = (
       'CloudFront-Is-Tablet-Viewer': ['false'],
       'CloudFront-Viewer-ASN': ['16509'],
       'CloudFront-Viewer-Country': ['US'],
-      Cookie: [`state=${state}`],
+      Cookie: [`state=${state}`, `nonce=${nonce}`],
       Host: ['id.execute-api.us-east-1.amazonaws.com'],
       Referer: [
         `${ISS}/api/lti/authorize?client_id=${CLIENT_ID}&login_hint=b0be1d1d0a2f64749cc50020c0493674dcf6b49c&lti_message_hint=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJpZmllciI6ImY4NGM2MDk0YzgwMGRiNDk0NjNiODI5YzIxMjZmNTQyZjZkZGFhMDM1MWQxOTI5NDhhOGVmYTg4NzgyZGE5M2FlZDUyZWZiNWE5YmFjMzMzYzBkNzU1M2YyNWFiZmZmODZlYzc2ZDhhZTU4MTBhMGY5NGQ2NjllZDc5OTZkM2U3IiwiY2FudmFzX2RvbWFpbiI6ImVkdWNhdGV0ZXN0Lmluc3RydWN0dXJlLmNvbSIsImNvbnRleHRfdHlwZSI6IkNvdXJzZSIsImNvbnRleHRfaWQiOjk2OTUwMDAwMDAwMDAwODE2LCJjYW52YXNfbG9jYWxlIjoiZW4iLCJleHAiOjE2NjkyNDU4NTB9.ayR3aXTtwIcred2z6nrf1V2o85COcEC523s49oZRjlU&nonce=${nonce}&prompt=none&redirect_uri=https%3A%2F%2Fid.execute-api.us-east-1.amazonaws.com%2Fprod%2Flaunch&response_mode=form_post&response_type=id_token&scope=openid&state=${state}`,
@@ -631,7 +631,6 @@ export const scoreSubmissionRequestEvent = (
   return request;
 };
 
-
 // Roster retrieval request object from LXP
 export const rosterRetrievalRequestEvent = (
   idToken: string,
@@ -666,7 +665,7 @@ export const rosterRetrievalRequestEvent = (
       'X-Forwarded-For': '52.94.133.136, 15.158.50.140',
       'X-Forwarded-Port': '443',
       'X-Forwarded-Proto': 'https',
-      Authorization: `Bearer ${idToken}`
+      Authorization: `Bearer ${idToken}`,
     },
     multiValueHeaders: {
       Accept: ['application/json, text/plain, */*'],

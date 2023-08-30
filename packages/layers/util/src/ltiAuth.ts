@@ -17,6 +17,7 @@ import {
   requestBearerClientCredential,
   REQUEST_ERROR,
   requiredValueFromRequest,
+  requiredValueFromCookies,
   SESSION_NOT_FOUND,
   LAUNCH_AUTH_FAILURE,
   State,
@@ -34,7 +35,7 @@ const LOGIN_END_POINT = 'login';
 const LAUNCH_END_POINT = 'launch';
 
 export type LtiLoginOidcOptions = {
-  powertools?: Powertools
+  powertools?: Powertools;
 };
 
 export type LtiLoginOidcHandlerOptions = {
@@ -66,7 +67,11 @@ export class LtiLoginOidc {
     return this;
   }
 
-  public async login(options: LtiLoginOidcHandlerOptions, event: APIGatewayProxyEvent, context?: Context): Promise<APIGatewayProxyResult | undefined> {
+  public async login(
+    options: LtiLoginOidcHandlerOptions,
+    event: APIGatewayProxyEvent,
+    context?: Context
+  ): Promise<APIGatewayProxyResult | undefined> {
     const powertools = this.powertools!;
     try {
       let platform: PlatformConfig = options.platform;
@@ -91,11 +96,7 @@ export class LtiLoginOidc {
       powertools.metrics.addMetadata('iss', iss!);
       powertools.metrics.addMetadata('lti_deployment_id', ltiDeploymentId!);
       try {
-        platformConfig = await platform.load(
-          clientId!,
-          iss!,
-          ltiDeploymentId
-        );
+        platformConfig = await platform.load(clientId!, iss!, ltiDeploymentId);
       } catch (e) {
         return errorResponse(powertools, e as Error, 400, CONFIG_ISSUE);
       }
@@ -162,7 +163,9 @@ export class LtiLoginOidc {
    * @see https://www.typescriptlang.org/docs/handbook/decorators.html#method-decorators
    * @returns {HandlerMethodDecorator}
    */
-  public loginHandler(options: LtiLoginOidcHandlerOptions): HandlerMethodDecorator {
+  public loginHandler(
+    options: LtiLoginOidcHandlerOptions
+  ): HandlerMethodDecorator {
     return (_target, _propertyKey, descriptor) => {
       /**
        * The descriptor.value is the method this decorator decorates, it cannot be undefined.
@@ -174,15 +177,31 @@ export class LtiLoginOidc {
       const ltiLoginOidcRef = this;
       // Use a function() {} instead of an () => {} arrow function so that we can
       // access `myClass` as `this` in a decorated `myClass.myMethod()`.
-      descriptor.value = (async function (this: LambdaInterface, event, context, callback) {
-
-        LtiLoginOidc.loginHandlerBefore(ltiLoginOidcRef, event, context, options);
+      descriptor.value = async function (
+        this: LambdaInterface,
+        event,
+        context,
+        callback
+      ) {
+        LtiLoginOidc.loginHandlerBefore(
+          ltiLoginOidcRef,
+          event,
+          context,
+          options
+        );
 
         let preResult: APIGatewayProxyResult | undefined;
         let result: unknown;
         try {
-          preResult = await LtiLoginOidc.loginHandlerRun(ltiLoginOidcRef, event, context, options);
-          result = preResult || await originalMethod.apply(this, [event, context, callback]);
+          preResult = await LtiLoginOidc.loginHandlerRun(
+            ltiLoginOidcRef,
+            event,
+            context,
+            options
+          );
+          result =
+            preResult ||
+            (await originalMethod.apply(this, [event, context, callback]));
         } catch (error) {
           throw error;
         } finally {
@@ -190,19 +209,32 @@ export class LtiLoginOidc {
         }
 
         return result;
-      });
+      };
     };
   }
 
-  public static loginHandlerBefore(ltiLoginOidc: LtiLoginOidc, event: APIGatewayProxyEvent, context: Context, options: LtiLoginOidcHandlerOptions): void {
+  public static loginHandlerBefore(
+    ltiLoginOidc: LtiLoginOidc,
+    event: APIGatewayProxyEvent,
+    context: Context,
+    options: LtiLoginOidcHandlerOptions
+  ): void {
     // PLACEHOLDER: Before
   }
 
-  public static async loginHandlerRun(ltiLoginOidc: LtiLoginOidc, event: APIGatewayProxyEvent, context: Context, options: LtiLoginOidcHandlerOptions): Promise<APIGatewayProxyResult | undefined> {
+  public static async loginHandlerRun(
+    ltiLoginOidc: LtiLoginOidc,
+    event: APIGatewayProxyEvent,
+    context: Context,
+    options: LtiLoginOidcHandlerOptions
+  ): Promise<APIGatewayProxyResult | undefined> {
     return ltiLoginOidc.login(options, event, context);
   }
 
-  public static loginHandlerAfterOrOnError(ltiLoginOidc: LtiLoginOidc, options: LtiLoginOidcHandlerOptions): void {
+  public static loginHandlerAfterOrOnError(
+    ltiLoginOidc: LtiLoginOidc,
+    options: LtiLoginOidcHandlerOptions
+  ): void {
     // PLACEHOLDER: AfterOrOnError
   }
 }
@@ -213,16 +245,19 @@ export type LtiLaunchAuthEvent = {
   toolRecord: LtiToolConfigRecord;
   payload: LTIJwtPayload;
   kid: string;
-}
+};
 
-export type APIGatewayProxyEventWithLtiLaunchAuth = APIGatewayProxyEvent & LtiLaunchAuthEvent;
+export type APIGatewayProxyEventWithLtiLaunchAuth = APIGatewayProxyEvent &
+  LtiLaunchAuthEvent;
 
-function isLtiLaunchAuthEvent(value: APIGatewayProxyResult | LtiLaunchAuthEvent): value is LtiLaunchAuthEvent {
+function isLtiLaunchAuthEvent(
+  value: APIGatewayProxyResult | LtiLaunchAuthEvent
+): value is LtiLaunchAuthEvent {
   return value.hasOwnProperty('platformRecord');
 }
 
 export type LtiLaunchAuthOptions = {
-  powertools?: Powertools
+  powertools?: Powertools;
 };
 
 export type LtiLaunchAuthHandlerOptions = {
@@ -257,7 +292,11 @@ export class LtiLaunchAuth {
     return this;
   }
 
-  public async launchAuth(options: LtiLaunchAuthHandlerOptions, event: APIGatewayProxyEvent, context?: Context): Promise<APIGatewayProxyResult | LtiLaunchAuthEvent> {
+  public async launchAuth(
+    options: LtiLaunchAuthHandlerOptions,
+    event: APIGatewayProxyEvent,
+    context?: Context
+  ): Promise<APIGatewayProxyResult | LtiLaunchAuthEvent> {
     const powertools = this.powertools!;
     const platform: PlatformConfig = options.platform;
     const state: State = options.state;
@@ -296,10 +335,7 @@ export class LtiLaunchAuth {
         );
       }
       try {
-        stateRecord = await state.load(
-          requestPostState!,
-          ltiJwtPayload.nonce
-        );
+        stateRecord = await state.load(requestPostState!, ltiJwtPayload.nonce!);
       } catch (e) {
         return errorResponse(
           powertools,
@@ -369,7 +405,9 @@ export class LtiLaunchAuth {
    * @see https://www.typescriptlang.org/docs/handbook/decorators.html#method-decorators
    * @returns {HandlerMethodDecorator}
    */
-  public launchAuthHandler(options: LtiLaunchAuthHandlerOptions): HandlerMethodDecorator {
+  public launchAuthHandler(
+    options: LtiLaunchAuthHandlerOptions
+  ): HandlerMethodDecorator {
     return (_target, _propertyKey, descriptor) => {
       /**
        * The descriptor.value is the method this decorator decorates, it cannot be undefined.
@@ -381,35 +419,71 @@ export class LtiLaunchAuth {
       const ltiLaunchAuthRef = this;
       // Use a function() {} instead of an () => {} arrow function so that we can
       // access `myClass` as `this` in a decorated `myClass.myMethod()`.
-      descriptor.value = (async function (this: LambdaInterface, event, context, callback) {
-
-        LtiLaunchAuth.launchAuthHandlerBefore(ltiLaunchAuthRef, event, context, options);
+      descriptor.value = async function (
+        this: LambdaInterface,
+        event,
+        context,
+        callback
+      ) {
+        LtiLaunchAuth.launchAuthHandlerBefore(
+          ltiLaunchAuthRef,
+          event,
+          context,
+          options
+        );
 
         let preResult: APIGatewayProxyResult | LtiLaunchAuthEvent;
         let result: unknown;
         try {
-          preResult = await LtiLaunchAuth.launchAuthHandlerRun(ltiLaunchAuthRef, event, context, options);
-          result = isLtiLaunchAuthEvent(preResult) ? await originalMethod.apply(this, [{ ...event, ...preResult }, context, callback]) : preResult;
+          preResult = await LtiLaunchAuth.launchAuthHandlerRun(
+            ltiLaunchAuthRef,
+            event,
+            context,
+            options
+          );
+          result = isLtiLaunchAuthEvent(preResult)
+            ? await originalMethod.apply(this, [
+                { ...event, ...preResult },
+                context,
+                callback,
+              ])
+            : preResult;
         } catch (error) {
           throw error;
         } finally {
-          LtiLaunchAuth.launchAuthHandlerAfterOrOnError(ltiLaunchAuthRef, options);
+          LtiLaunchAuth.launchAuthHandlerAfterOrOnError(
+            ltiLaunchAuthRef,
+            options
+          );
         }
 
         return result;
-      });
+      };
     };
   }
 
-  public static launchAuthHandlerBefore(ltiLaunchAuth: LtiLaunchAuth, event: APIGatewayProxyEvent, context: Context, options: LtiLaunchAuthHandlerOptions): void {
+  public static launchAuthHandlerBefore(
+    ltiLaunchAuth: LtiLaunchAuth,
+    event: APIGatewayProxyEvent,
+    context: Context,
+    options: LtiLaunchAuthHandlerOptions
+  ): void {
     // PLACEHOLDER: Before
   }
 
-  public static async launchAuthHandlerRun(ltiLaunchAuth: LtiLaunchAuth, event: APIGatewayProxyEvent, context: Context, options: LtiLaunchAuthHandlerOptions): Promise<APIGatewayProxyResult | LtiLaunchAuthEvent> {
+  public static async launchAuthHandlerRun(
+    ltiLaunchAuth: LtiLaunchAuth,
+    event: APIGatewayProxyEvent,
+    context: Context,
+    options: LtiLaunchAuthHandlerOptions
+  ): Promise<APIGatewayProxyResult | LtiLaunchAuthEvent> {
     return ltiLaunchAuth.launchAuth(options, event, context);
   }
 
-  public static launchAuthHandlerAfterOrOnError(ltiLaunchAuth: LtiLaunchAuth, options: LtiLaunchAuthHandlerOptions): void {
+  public static launchAuthHandlerAfterOrOnError(
+    ltiLaunchAuth: LtiLaunchAuth,
+    options: LtiLaunchAuthHandlerOptions
+  ): void {
     // PLACEHOLDER: AfterOrOnError
   }
 }
