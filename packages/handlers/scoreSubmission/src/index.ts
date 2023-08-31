@@ -126,9 +126,9 @@ export class LambdaFunction implements LambdaInterface {
       }
       const unverified: Record<string, any> = jose.decodeJwt(idToken!);
       powertools.logger.debug(JSON.stringify(unverified));
-      const LMSIssuer = unverified['custom:LMS:Issuer'];
-      const LMSClientId = unverified['custom:LMS:ClientId'];
-      const LMSDeploymentId = unverified['custom:LMS:DeploymentId'];
+      let LMSIssuer = unverified['custom:LMS:Issuer'] || unverified['iss'];
+      let LMSClientId = unverified['custom:LMS:ClientId'] || unverified['aud'];
+      let LMSDeploymentId = unverified['custom:LMS:DeploymentId'] || unverified['https://purl.imsglobal.org/spec/lti/claim/deployment_id'];
       if (!LMSIssuer || !LMSClientId || !LMSDeploymentId) {
         return errorResponse(
           powertools,
@@ -142,13 +142,18 @@ export class LambdaFunction implements LambdaInterface {
         lineitem = JSON.parse(unverified['custom:LMS:Endpoint']).lineitem;
         LMSStudentId = unverified.identities[0].userId;
       } catch (e) {
-        return errorResponse(
-          powertools,
-          new Error('Lineitem or student id not as expected in token'),
-          400,
-          REQUEST_ERROR,
-          SCORE_SUBMISSION_FAILURE
-        );
+        lineitem = unverified['https://purl.imsglobal.org/spec/lti-ags/claim/endpoint'].lineitem;
+        LMSStudentId = unverified['sub'];
+        if (!lineitem || !LMSStudentId) {
+          return errorResponse(
+            powertools,
+            new Error('Lineitem or student id not as expected in token'),
+            400,
+            REQUEST_ERROR,
+            SCORE_SUBMISSION_FAILURE
+          );
+        }
+
       }
       try {
         platformConfigRecord = await platform.load(
