@@ -78,7 +78,7 @@ export class LambdaFunction implements LambdaInterface {
           }
           const toolOIDCURL = tool.toolOIDCAuthorizeURL(
             tool.url,
-            targetPath,
+            stateRecord.id,
             payload.targetLinkUri,
             stateRecord.nonce
           );
@@ -106,8 +106,8 @@ export class LambdaFunction implements LambdaInterface {
             body: '',
             multiValueHeaders: {
               'Set-Cookie': [
-                `state=${stateRecord.id}`,
-                `nonce=${stateRecord.nonce}`,
+                `state=${stateRecord.id}; SameSite=None; Secure`,
+                `nonce=${stateRecord.nonce}; SameSite=None; Secure`,
               ],
             },
             headers: {
@@ -190,8 +190,8 @@ export class LambdaFunction implements LambdaInterface {
                 body: '',
                 multiValueHeaders: {
                   'Set-Cookie': [
-                    `state=${stateRecord.id}`,
-                    `nonce=${stateRecord.nonce}`,
+                    `state=${stateRecord.id}; SameSite=None; Secure`,
+                    `nonce=${stateRecord.nonce}; SameSite=None; Secure`,
                   ],
                 },
                 headers: {
