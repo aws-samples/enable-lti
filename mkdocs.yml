@@ -5,6 +5,7 @@ nav:
   - Homepage: index.md
   - Architecture: architecture.md
   - Implementing: implementing.md
+  - Configuration: configuration.md
 
 theme:
   name: material
