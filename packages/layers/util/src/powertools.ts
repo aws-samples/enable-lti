@@ -73,7 +73,6 @@ export const handlerWithPowertools = (
     tracer.setSegment(handlerSegment);
     tracer.annotateColdStart();
     tracer.addServiceNameAnnotation();
-    logger.debug(`EVENT\n${JSON.stringify(event, null, 2)}`);
     metrics.captureColdStartMetric();
     try {
       if ('handler' in handler) {

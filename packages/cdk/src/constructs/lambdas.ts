@@ -29,7 +29,7 @@ export interface LambdasConfig {
   keys: Keys;
 }
 
-const LOG_LEVEL = 'debug';
+const LOG_LEVEL = 'INFO';
 
 const ltiNodejsFunction = (
   scope: Construct,
