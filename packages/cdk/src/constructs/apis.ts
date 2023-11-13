@@ -89,9 +89,7 @@ export class Apis extends Construct {
             effect: Effect.ALLOW,
             actions: ['execute-api:Invoke'],
             principals: [new StarPrincipal()],
-            resources: [
-              'execute-api:/*/POST/deepLinkingProxy',
-            ],
+            resources: ['execute-api:/*/POST/deepLinkingProxy'],
           }),
           new PolicyStatement({
             effect: Effect.ALLOW,
@@ -111,7 +109,7 @@ export class Apis extends Construct {
               'execute-api:/*/GET/authorizerProxy',
               'execute-api:/*/POST/tokenProxy',
             ],
-          })
+          }),
         ],
       }),
     });
@@ -168,7 +166,8 @@ export class Apis extends Construct {
     );
     tokenProxyResource.addMethod('POST', tokenProxyIntegration);
 
-    const deepLinkingProxyResource = apiLTI.root.addResource('deepLinkingProxy');
+    const deepLinkingProxyResource =
+      apiLTI.root.addResource('deepLinkingProxy');
     const deepLinkingProxyIntegration = new LambdaIntegration(
       config.lambdas.deepLinkingProxy
     );
@@ -203,25 +202,38 @@ export class Apis extends Construct {
       [
         {
           id: 'AwsSolutions-IAM4',
-          reason: 'Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.',
+          reason:
+            'Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.',
         },
         {
           id: 'AwsSolutions-APIG2',
-          reason: 'Suppress all AwsSolutions-APIG2 findings on apiLTI validation.',
+          reason:
+            'Suppress all AwsSolutions-APIG2 findings on apiLTI validation.',
         },
         {
           id: 'AwsSolutions-COG4',
-          reason: 'Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.',
+          reason:
+            'Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.',
         },
       ],
       true
     );
     NagSuppressions.addResourceSuppressions(
-      [apiLTI, loginResource, launchResource, scoreSubmissionResource, jwksResource, deepLinkingProxyResource, authProxyResource, tokenProxyResource],
+      [
+        apiLTI,
+        loginResource,
+        launchResource,
+        scoreSubmissionResource,
+        jwksResource,
+        deepLinkingProxyResource,
+        authProxyResource,
+        tokenProxyResource,
+      ],
       [
         {
           id: 'AwsSolutions-APIG4',
-          reason: 'Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.',
+          reason:
+            'Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.',
         },
       ],
       true
@@ -231,14 +243,10 @@ export class Apis extends Construct {
       value: endpointValue,
     });
 
-    const dataPlaneCfnWebACLAssoc = new CfnWebACLAssociation(
-      scope,
-      'EltiWebACLAssociation',
-      {
-        resourceArn: apiLTI.deploymentStage.stageArn,
-        webAclArn: config.wafArn,
-      }
-    );
+    new CfnWebACLAssociation(scope, 'EltiWebACLAssociation', {
+      resourceArn: apiLTI.deploymentStage.stageArn,
+      webAclArn: config.wafArn,
+    });
 
     /**
      * Control Plane API
@@ -266,7 +274,7 @@ export class Apis extends Construct {
           }),
         ],
       }),
-    })
+    });
 
     apiLTIControlPlane.root.addCorsPreflight({
       allowOrigins: ['*'],
@@ -294,19 +302,23 @@ export class Apis extends Construct {
       [
         {
           id: 'AwsSolutions-IAM4',
-          reason: 'Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.',
+          reason:
+            'Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.',
         },
         {
           id: 'AwsSolutions-APIG2',
-          reason: 'Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.',
+          reason:
+            'Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane validation.',
         },
         {
           id: 'AwsSolutions-APIG4',
-          reason: 'Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.',
+          reason:
+            'Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource.',
         },
         {
           id: 'AwsSolutions-COG4',
-          reason: 'Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.',
+          reason:
+            'Suppress all AwsSolutions-APIG2 findings on apiLTIControlPlane resource does not use cognito authorizer.',
         },
       ],
       true
@@ -316,13 +328,9 @@ export class Apis extends Construct {
       value: apiLTIControlPlane.url,
     });
 
-    const controlPlaneCfnWebACLAssoc = new CfnWebACLAssociation(
-      scope,
-      'EltiConfigWebACLAssociation',
-      {
-        resourceArn: apiLTIControlPlane.deploymentStage.stageArn,
-        webAclArn: config.wafArn,
-      }
-    );
+    new CfnWebACLAssociation(scope, 'EltiConfigWebACLAssociation', {
+      resourceArn: apiLTIControlPlane.deploymentStage.stageArn,
+      webAclArn: config.wafArn,
+    });
   }
 }

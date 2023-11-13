@@ -1,16 +1,11 @@
 import * as jose from 'jose';
 import { JWTVerifyResult } from 'jose';
+import { JWTPayload } from 'jose/dist/types/types';
+import { LtiCustomError } from './customErrors';
 import { PlatformConfig, PlatformConfigRecord } from './platformConfig';
-import {
-  JWTHeaderParameters,
-  JWTPayload,
-  KeyLike,
-} from 'jose/dist/types/types';
 
 export class LTIJwtPayload {
   private readonly _payload?: Record<string, any> & JWTPayload = undefined;
-  private readonly _header?: JWTHeaderParameters = undefined;
-  private readonly _key?: KeyLike | Uint8Array = undefined;
 
   readonly platformConfigRecord: PlatformConfigRecord;
 
@@ -32,41 +27,68 @@ export class LTIJwtPayload {
    */
   static async load(
     token: string,
-    platform: PlatformConfig
+    platform: PlatformConfig,
+    checkNonce = true
   ): Promise<LTIJwtPayload> {
     let jwt;
-    const unverified: Record<string, any> = jose.decodeJwt(token);
-    let platformConfigRecord: PlatformConfigRecord | undefined = undefined;
+    let unverified: Record<string, any>;
     try {
-      platformConfigRecord = await platform.load(
-        LTIJwtPayload.getAud(unverified.aud)!,
-        unverified.iss!,
-        unverified['https://purl.imsglobal.org/spec/lti/claim/deployment_id']
-      );
+      unverified = jose.decodeJwt(token);
     } catch (e) {
-      throw e as Error;
+      throw new LtiCustomError((e as Error).message, 'InvalidToken', 401);
     }
+    const aud = LTIJwtPayload.getAud(unverified.aud);
+    if (!aud) {
+      throw new LtiCustomError(
+        'Auth Token is missing required claims',
+        'TokenMissingAud',
+        401
+      );
+    }
+    const platformConfigRecord = await platform.load(
+      aud,
+      unverified.iss,
+      unverified['https://purl.imsglobal.org/spec/lti/claim/deployment_id'],
+      401
+    );
     try {
       // #1, #2, #3
       jwt = await this.verifyToken(token, platform, platformConfigRecord);
     } catch (e) {
-      throw e as Error;
+      const error = e as Error;
+      throw new LtiCustomError(
+        `Auth Token verification failed ${error.name} - ${error.message}`,
+        'TokenVerificationFailed',
+        401
+      );
     }
     const jwtPayload = new LTIJwtPayload(jwt, platformConfigRecord);
     // #4
-    if (jwtPayload.aud instanceof Array && jwtPayload.aud.length > 1 && jwtPayload.azp === undefined) {
-      throw Error('Authorized Party not provided');
+    if (
+      jwtPayload.aud instanceof Array &&
+      jwtPayload.aud.length > 1 &&
+      jwtPayload.azp === undefined
+    ) {
+      throw new LtiCustomError(
+        'Authorized Party not provided for multiple audiences',
+        'TokenMissingAzp',
+        401
+      );
     }
     // #5
     if (
       jwtPayload.azp !== undefined &&
       jwtPayload.azp !== platformConfigRecord.clientId
     ) {
-      throw Error('Invalid Authorized Party');
+      throw new LtiCustomError(
+        'Invalid Authorized Party',
+        'TokenAzpInvalid',
+        401
+      );
     }
     // #6
-    if (jwtPayload.nonce === undefined) {
-      throw Error('Nonce not provided');
+    if (jwtPayload.nonce === undefined && checkNonce) {
+      throw new LtiCustomError('Nonce not provided', 'TokenMissingNonce', 401);
     }
     return jwtPayload;
   }
@@ -89,7 +111,9 @@ export class LTIJwtPayload {
       try {
         platformConfigRecord = await platform.load(
           LTIJwtPayload.getAud(unverified.aud)!,
-          unverified.iss!
+          unverified.iss!,
+          undefined,
+          401
         );
       } catch (e) {
         throw e as Error;
@@ -115,25 +139,21 @@ export class LTIJwtPayload {
     platformConfigRecord: PlatformConfigRecord
   ) {
     this._payload = jwt.payload;
-    this._header = jwt.protectedHeader;
-    this._key = jwt.key;
     this.platformConfigRecord = platformConfigRecord;
   }
 
   public getClaim(...keys: string[]): string | undefined {
     let claim: string | undefined = undefined;
     if (this._payload !== undefined) {
-      let currentRecord: any = new Map(Object.entries(this._payload));
+      let currentRecord: any = this._payload;
       for (const key of keys) {
-        if (currentRecord.has(key)) {
-          const record = currentRecord.get(key);
-          currentRecord =  typeof record === 'object' ? new Map(Object.entries(record)) : record;
-          claim = record;
+        if (key in currentRecord) {
+          currentRecord = currentRecord[key];
         } else {
-          claim = undefined;
           break;
         }
       }
+      claim = currentRecord !== this._payload ? currentRecord : undefined;
     }
     return claim;
   }
@@ -141,9 +161,30 @@ export class LTIJwtPayload {
   public getTruthyClaim(...keys: string[]): string {
     const claim = this.getClaim(...keys);
     if (!claim) {
-      throw Error('Claim not found');
+      throw new LtiCustomError(
+        'Claim not found',
+        'RequiredClaimsMissingInToken',
+        401
+      );
     }
     return claim;
+  }
+
+  public jsonParseClaim(jsonString: string, key: string) {
+    try {
+      const value = JSON.parse(jsonString)[key];
+      if (value) {
+        return value;
+      } else {
+        throw new Error('Key is not present in the Json object');
+      }
+    } catch (e) {
+      throw new LtiCustomError(
+        (e as Error).message,
+        'RequiredClaimsMissingInToken',
+        401
+      );
+    }
   }
 
   get contextId(): string | undefined {
@@ -245,6 +286,29 @@ export class LTIJwtPayload {
     return this.getClaim(
       'https://purl.imsglobal.org/spec/lti/claim/target_link_uri'
     );
+  }
+  get customClaim(): string | undefined {
+    return this.getClaim('https://purl.imsglobal.org/spec/lti/claim/custom');
+  }
+  get courseId(): string | undefined {
+    const courseId = this.getClaim(
+      'https://purl.imsglobal.org/spec/lti/claim/custom',
+      'course_id'
+    );
+    if (typeof courseId !== 'string') {
+      return undefined;
+    }
+    return courseId;
+  }
+  get lmsUserId(): string | undefined {
+    const lmsUserId = this.getClaim(
+      'https://purl.imsglobal.org/spec/lti/claim/custom',
+      'lms_user_id'
+    );
+    if (typeof lmsUserId !== 'string') {
+      return undefined;
+    }
+    return lmsUserId;
   }
   get sub(): string | undefined {
     return this.getClaim('sub');

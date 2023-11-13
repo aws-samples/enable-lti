@@ -1,30 +1,21 @@
 import {
-  APIGatewayProxyEvent,
-  APIGatewayProxyResult,
-  Callback,
-  Context,
-} from 'aws-lambda';
-import {
-  abort,
   DynamoDBPlatformConfig,
-  InvalidValueError,
+  LtiCustomError,
   PlatformConfigRecord,
+  Powertools,
+  errorResponse,
+  handlerWithPowertools,
   requiredValueFromRequest,
   valueFromRequest,
-  handlerWithPowertools,
-  Powertools,
 } from '@enable-lti/util';
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 
 const CONTROL_PLANE_TABLE_NAME = process.env.CONTROL_PLANE_TABLE_NAME || '';
 const powertools = Powertools.getInstance();
+const platform = new DynamoDBPlatformConfig(CONTROL_PLANE_TABLE_NAME);
 
 export const handler = handlerWithPowertools(
-  async (
-    event: APIGatewayProxyEvent,
-    context: Context,
-    callback: Callback<APIGatewayProxyResult>
-  ): Promise<APIGatewayProxyResult> => {
-    const platform = new DynamoDBPlatformConfig(CONTROL_PLANE_TABLE_NAME);
+  async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
       const config = {
         authTokenUrl: requiredValueFromRequest(event, 'auth_token_url'),
@@ -35,10 +26,8 @@ export const handler = handlerWithPowertools(
         iss: requiredValueFromRequest(event, 'iss'),
         keySetUrl: requiredValueFromRequest(event, 'key_set_url'),
       } as PlatformConfigRecord;
-
       //Instantiate a new platform instance with the required input pararms and persist to storage
       const platformConfigRecord = await platform.save(config);
-
       //Return a JSON representation of the Configuration
       return {
         statusCode: 200,
@@ -47,14 +36,22 @@ export const handler = handlerWithPowertools(
     } catch (e) {
       const error = e as Error;
       powertools.logger.error(`${error.name} - ${error.message}`, error);
-      if (error instanceof InvalidValueError) {
-        return abort(400, `${error.name} - ${error.message}`);
+      if (error instanceof LtiCustomError) {
+        return errorResponse({
+          pt: powertools,
+          err: error,
+          statusCode: error.statusCode,
+          metricString: error.customMetric,
+        });
       } else {
-        return {
+        return errorResponse({
+          pt: powertools,
+          err: error,
           statusCode: 500,
-          body: JSON.stringify((error as Error).message),
-        };
+          metricString: 'InternalError',
+        });
       }
     }
-  }, powertools
+  },
+  powertools
 );

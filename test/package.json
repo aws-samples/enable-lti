@@ -15,13 +15,14 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "test": "tsc -b && jest --passWithNoTests --all --updateSnapshot",
+    "test": "tsc -b && jest integration/*.js",
     "test:setup": "ts-node ./scripts/setupEnv.ts && ts-node ./scripts/setupInteg.ts",
-    "jest": "tsc -b && jest",
+    "jest": "tsc -b && jest integration/*.js",
     "eslint": "eslint ./src/**/**.ts",
     "eslint:fix": "eslint ./src/**/**.ts --fix"
   },
   "devDependencies": {
-    "@types/jest": "^29.2.3"
+    "@types/jest": "^29.2.3",
+    "@types/aws-lambda": "8.10.102"
   }
 }

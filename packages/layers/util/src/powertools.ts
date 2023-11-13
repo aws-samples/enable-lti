@@ -1,4 +1,5 @@
 import { Logger } from '@aws-lambda-powertools/logger';
+import { LogLevel } from '@aws-lambda-powertools/logger/lib/types';
 import { Metrics } from '@aws-lambda-powertools/metrics';
 import { Tracer } from '@aws-lambda-powertools/tracer';
 import {
@@ -8,19 +9,17 @@ import {
   Callback,
   Context,
 } from 'aws-lambda';
-import {
-  LambdaInterface,
-} from './index';
+import { LambdaInterface } from './index';
 
 export interface PowertoolsConfig {
   namespace: string;
   serviceName: string;
-  logLevel: string;
+  logLevel: LogLevel;
 }
 
 export class Powertools {
   static readonly DEFAULT_CONFIG = {
-    logLevel: process.env.LOG_LEVEL ?? 'INFO',
+    logLevel: (process.env.LOG_LEVEL as LogLevel) ?? 'INFO',
     serviceName: process.env.POWERTOOLS_SERVICE_NAME ?? 'service',
     namespace: process.env.POWERTOOLS_METRICS_NAMESPACE ?? 'default',
   };
@@ -53,9 +52,7 @@ export class Powertools {
 }
 
 export const handlerWithPowertools = (
-  handler:
-    | APIGatewayProxyHandler
-    | LambdaInterface,
+  handler: APIGatewayProxyHandler | LambdaInterface,
   powertools: Powertools = Powertools.getInstance()
 ): APIGatewayProxyHandler => {
   return (
@@ -67,6 +64,9 @@ export const handlerWithPowertools = (
     const logger = powertools.logger;
     const metrics = powertools.metrics;
     const segment = tracer.getSegment();
+    if (segment === undefined) {
+      throw Error('Undefined segment');
+    }
     const handlerSegment = segment.addNewSubsegment(
       `## ${process.env._HANDLER}`
     );
@@ -91,9 +91,11 @@ export const handlerWithPowertools = (
   };
 };
 
-export function injectPowertools(powertools: Powertools = Powertools.getInstance()) {
+export function injectPowertools(
+  powertools: Powertools = Powertools.getInstance()
+) {
   return function (
-    target: Object,
+    target: object,
     propertyKey: string,
     descriptor: PropertyDescriptor
   ): void {

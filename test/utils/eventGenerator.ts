@@ -47,7 +47,9 @@ const requestContext = (resourcePath: string) => {
   };
 };
 
-export const loginRequestEvent = (): APIGatewayProxyEvent => {
+export const loginRequestEvent = (
+  clientId = CLIENT_ID
+): APIGatewayProxyEvent => {
   const request: APIGatewayProxyEvent = {
     resource: '/login',
     path: '/login',
@@ -125,7 +127,7 @@ export const loginRequestEvent = (): APIGatewayProxyEvent => {
     requestContext: requestContext('/login'),
     body: `iss=${encodeURIComponent(
       ISS
-    )}&login_hint=b0be1d1d0a2f64749cc50020c0493674dcf6b49c&client_id=${CLIENT_ID}&target_link_uri=${TOOL_DEEPLINK_URL1}&lti_message_hint=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJpZmllciI6IjExYTkzNGQyMjUwZjk4ZGE5YTJmMGNjOWI1MDkzYmFhNTdmYmY2OWUyYTAwNGZjMDUzYjNhMTAxYWViMTQwYjVhYmE3MjkyNDExY2FmZDBhMDQzMDI3NGVhODEzODgyZmU2Njg2YzA3ZTI0N2EzMzBhMWRlMTAwMTVjYjhmMzgwIiwiY2FudmFzX2RvbWFpbiI6ImVkdWNhdGV0ZXN0Lmluc3RydWN0dXJlLmNvbSIsImNvbnRleHRfdHlwZSI6IkNvdXJzZSIsImNvbnRleHRfaWQiOjk2OTUwMDAwMDAwMDAwODE2LCJjYW52YXNfbG9jYWxlIjoiZW4iLCJleHAiOjE2NjkzMjY3ODl9.bXpmh4pkSC2aBNvfTPngQaSfbvP2ZmVFcWEL81wJ8yY&canvas_region=us-east-1&lti_storage_target=_parent`,
+    )}&login_hint=b0be1d1d0a2f64749cc50020c0493674dcf6b49c&client_id=${clientId}&target_link_uri=${TOOL_DEEPLINK_URL1}&lti_message_hint=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJpZmllciI6IjExYTkzNGQyMjUwZjk4ZGE5YTJmMGNjOWI1MDkzYmFhNTdmYmY2OWUyYTAwNGZjMDUzYjNhMTAxYWViMTQwYjVhYmE3MjkyNDExY2FmZDBhMDQzMDI3NGVhODEzODgyZmU2Njg2YzA3ZTI0N2EzMzBhMWRlMTAwMTVjYjhmMzgwIiwiY2FudmFzX2RvbWFpbiI6ImVkdWNhdGV0ZXN0Lmluc3RydWN0dXJlLmNvbSIsImNvbnRleHRfdHlwZSI6IkNvdXJzZSIsImNvbnRleHRfaWQiOjk2OTUwMDAwMDAwMDAwODE2LCJjYW52YXNfbG9jYWxlIjoiZW4iLCJleHAiOjE2NjkzMjY3ODl9.bXpmh4pkSC2aBNvfTPngQaSfbvP2ZmVFcWEL81wJ8yY&canvas_region=us-east-1&lti_storage_target=_parent`,
     isBase64Encoded: false,
   };
   return request;
@@ -133,7 +135,8 @@ export const loginRequestEvent = (): APIGatewayProxyEvent => {
 
 export const launchProxyRequestEvent = (
   idToken: string,
-  state: string
+  state: string,
+  clientId = CLIENT_ID
 ): APIGatewayProxyEvent => {
   const request: APIGatewayProxyEvent = {
     resource: '/launch',
@@ -155,7 +158,7 @@ export const launchProxyRequestEvent = (
       Cookie: `state=${state}`,
       Host: 'id.execute-api.us-east-1.amazonaws.com',
       origin: ISS,
-      Referer: `${ISS}/api/lti/authorize?client_id=${CLIENT_ID}&login_hint=b0be1d1d0a2f64749cc50020c0493674dcf6b49c&lti_message_hint=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJpZmllciI6IjExYTkzNGQyMjUwZjk4ZGE5YTJmMGNjOWI1MDkzYmFhNTdmYmY2OWUyYTAwNGZjMDUzYjNhMTAxYWViMTQwYjVhYmE3MjkyNDExY2FmZDBhMDQzMDI3NGVhODEzODgyZmU2Njg2YzA3ZTI0N2EzMzBhMWRlMTAwMTVjYjhmMzgwIiwiY2FudmFzX2RvbWFpbiI6ImVkdWNhdGV0ZXN0Lmluc3RydWN0dXJlLmNvbSIsImNvbnRleHRfdHlwZSI6IkNvdXJzZSIsImNvbnRleHRfaWQiOjk2OTUwMDAwMDAwMDAwODE2LCJjYW52YXNfbG9jYWxlIjoiZW4iLCJleHAiOjE2NjkzMjY3ODl9.bXpmh4pkSC2aBNvfTPngQaSfbvP2ZmVFcWEL81wJ8yY&nonce=78e7eaf5-cd1d-40ae-aa7e-0c44c5e5be2e&prompt=none&redirect_uri=https%3A%2F%2Fid.execute-api.us-east-1.amazonaws.com%2Fprod%2Flaunch&response_mode=form_post&response_type=id_token&scope=openid&state=${state}`,
+      Referer: `${ISS}/api/lti/authorize?client_id=${clientId}&login_hint=b0be1d1d0a2f64749cc50020c0493674dcf6b49c&lti_message_hint=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJpZmllciI6IjExYTkzNGQyMjUwZjk4ZGE5YTJmMGNjOWI1MDkzYmFhNTdmYmY2OWUyYTAwNGZjMDUzYjNhMTAxYWViMTQwYjVhYmE3MjkyNDExY2FmZDBhMDQzMDI3NGVhODEzODgyZmU2Njg2YzA3ZTI0N2EzMzBhMWRlMTAwMTVjYjhmMzgwIiwiY2FudmFzX2RvbWFpbiI6ImVkdWNhdGV0ZXN0Lmluc3RydWN0dXJlLmNvbSIsImNvbnRleHRfdHlwZSI6IkNvdXJzZSIsImNvbnRleHRfaWQiOjk2OTUwMDAwMDAwMDAwODE2LCJjYW52YXNfbG9jYWxlIjoiZW4iLCJleHAiOjE2NjkzMjY3ODl9.bXpmh4pkSC2aBNvfTPngQaSfbvP2ZmVFcWEL81wJ8yY&nonce=78e7eaf5-cd1d-40ae-aa7e-0c44c5e5be2e&prompt=none&redirect_uri=https%3A%2F%2Fid.execute-api.us-east-1.amazonaws.com%2Fprod%2Flaunch&response_mode=form_post&response_type=id_token&scope=openid&state=${state}`,
       'sec-fetch-dest': 'document',
       'sec-fetch-mode': 'navigate',
       'sec-fetch-site': 'cross-site',
@@ -187,7 +190,7 @@ export const launchProxyRequestEvent = (
       Host: ['id.execute-api.us-east-1.amazonaws.com'],
       origin: [ISS],
       Referer: [
-        `${ISS}/api/lti/authorize?client_id=${CLIENT_ID}&login_hint=b0be1d1d0a2f64749cc50020c0493674dcf6b49c&lti_message_hint=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJpZmllciI6IjExYTkzNGQyMjUwZjk4ZGE5YTJmMGNjOWI1MDkzYmFhNTdmYmY2OWUyYTAwNGZjMDUzYjNhMTAxYWViMTQwYjVhYmE3MjkyNDExY2FmZDBhMDQzMDI3NGVhODEzODgyZmU2Njg2YzA3ZTI0N2EzMzBhMWRlMTAwMTVjYjhmMzgwIiwiY2FudmFzX2RvbWFpbiI6ImVkdWNhdGV0ZXN0Lmluc3RydWN0dXJlLmNvbSIsImNvbnRleHRfdHlwZSI6IkNvdXJzZSIsImNvbnRleHRfaWQiOjk2OTUwMDAwMDAwMDAwODE2LCJjYW52YXNfbG9jYWxlIjoiZW4iLCJleHAiOjE2NjkzMjY3ODl9.bXpmh4pkSC2aBNvfTPngQaSfbvP2ZmVFcWEL81wJ8yY&nonce=78e7eaf5-cd1d-40ae-aa7e-0c44c5e5be2e&prompt=none&redirect_uri=https%3A%2F%2Fid.execute-api.us-east-1.amazonaws.com%2Fprod%2Flaunch&response_mode=form_post&response_type=id_token&scope=openid&state=${state}`,
+        `${ISS}/api/lti/authorize?client_id=${clientId}&login_hint=b0be1d1d0a2f64749cc50020c0493674dcf6b49c&lti_message_hint=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJpZmllciI6IjExYTkzNGQyMjUwZjk4ZGE5YTJmMGNjOWI1MDkzYmFhNTdmYmY2OWUyYTAwNGZjMDUzYjNhMTAxYWViMTQwYjVhYmE3MjkyNDExY2FmZDBhMDQzMDI3NGVhODEzODgyZmU2Njg2YzA3ZTI0N2EzMzBhMWRlMTAwMTVjYjhmMzgwIiwiY2FudmFzX2RvbWFpbiI6ImVkdWNhdGV0ZXN0Lmluc3RydWN0dXJlLmNvbSIsImNvbnRleHRfdHlwZSI6IkNvdXJzZSIsImNvbnRleHRfaWQiOjk2OTUwMDAwMDAwMDAwODE2LCJjYW52YXNfbG9jYWxlIjoiZW4iLCJleHAiOjE2NjkzMjY3ODl9.bXpmh4pkSC2aBNvfTPngQaSfbvP2ZmVFcWEL81wJ8yY&nonce=78e7eaf5-cd1d-40ae-aa7e-0c44c5e5be2e&prompt=none&redirect_uri=https%3A%2F%2Fid.execute-api.us-east-1.amazonaws.com%2Fprod%2Flaunch&response_mode=form_post&response_type=id_token&scope=openid&state=${state}`,
       ],
       'sec-fetch-dest': ['document'],
       'sec-fetch-mode': ['navigate'],
@@ -212,6 +215,31 @@ export const launchProxyRequestEvent = (
     requestContext: requestContext('/launch'),
     body: `utf8=%E2%9C%93&authenticity_token=QWcphzTL8cOxDyql5aaVRLTy8plYwKH4Q2Q5Cblab3YRUhuoQqiUlOs8c%2BKpwdkG%2BpeZzmDv1p5yHHx48Q8qNw%3D%3D&id_token=${idToken}&state=${state}`,
     isBase64Encoded: false,
+  };
+  return request;
+};
+
+export const logoutRedirectRequestEvent = (
+  state: string,
+  nonce: string
+): APIGatewayProxyEvent => {
+  const request: APIGatewayProxyEvent = {
+    resource: '/logoutRedirect',
+    path: '/logoutRedirect',
+    httpMethod: 'GET',
+    headers: {
+      Cookie: `state=${state};nonce=${nonce}`,
+    },
+    multiValueHeaders: {
+      Cookie: [`state=${state}`, `nonce=${nonce}`],
+    },
+    pathParameters: null,
+    stageVariables: null,
+    requestContext: requestContext('/logoutRedirect'),
+    body: null,
+    isBase64Encoded: false,
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
   };
   return request;
 };
@@ -633,8 +661,7 @@ export const scoreSubmissionRequestEvent = (
 
 // Roster retrieval request object from LXP
 export const rosterRetrievalRequestEvent = (
-  idToken: string,
-  reqJSON: string
+  idToken: string
 ): APIGatewayProxyEvent => {
   const request: APIGatewayProxyEvent = {
     resource: '/rosterRetrieval',
@@ -698,7 +725,7 @@ export const rosterRetrievalRequestEvent = (
     },
     queryStringParameters: null,
     multiValueQueryStringParameters: null,
-    body: reqJSON,
+    body: `id_token=${idToken}`,
     pathParameters: null,
     stageVariables: null,
     requestContext: requestContext('/rosterRetrieval'),

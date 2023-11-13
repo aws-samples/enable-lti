@@ -1,32 +1,32 @@
-import { handler as loginHandler } from '@enable-lti/oidc';
-import { handler as launchAuthHandler } from '@enable-lti/launch';
 import { handler as authProxyHandler } from '@enable-lti/auth-proxy';
+import { handler as launchAuthHandler } from '@enable-lti/launch';
+import { handler as loginHandler } from '@enable-lti/oidc';
 import { handler as tokenProxyHandler } from '@enable-lti/token-proxy';
 import {
-  DynamoDBLtiToolConfig,
-  getSignedJWT,
-  LtiToolConfigRecord,
-  DynamoDBPlatformConfig,
-  PlatformConfigRecord,
-  DynamoDBJwks,
   APIGatewayProxyEventWithLtiLaunchAuth,
+  DynamoDBJwks,
+  DynamoDBLtiToolConfig,
+  DynamoDBPlatformConfig,
+  getSignedJWT,
 } from '@enable-lti/util';
 import {
   authProxyRequestEvent,
-  loginRequestEvent,
   launchProxyRequestEvent,
+  loginRequestEvent,
+  logoutRedirectRequestEvent,
   tokenProxyRequestEvent,
 } from '../utils/eventGenerator';
-import { is401Response, isRedirectResponse } from '../utils/validators';
 import {
-  platformConfig,
-  CLIENT_ID,
-  ISS,
   AUTH_TOKEN_URL,
-  jwtBodyForLaunch,
+  CLIENT_ID,
+  CLIENT_ID_WITH_FORCE_LOGOUT,
   TOOL_OIDC_DOMAIN,
   integToolConfig,
+  integToolConfigWithForceLogoutFeature,
+  jwtBodyForLaunch,
+  platformConfig,
 } from '../utils/models';
+import { is401Response, isRedirectResponse } from '../utils/validators';
 
 /**
  * Specification for first 2 steps in this integ test is below:
@@ -47,19 +47,9 @@ describe('CanvasLMS login launch flow works', () => {
     const jwks = new DynamoDBJwks(CONTROL_TABLE_NAME, KMS_KEY_ID);
     const kids = await jwks.all();
     KID = kids.keys[0].kid;
-    let platformConfigRecord: PlatformConfigRecord;
-    try {
-      platformConfigRecord = await platform.load(CLIENT_ID, ISS);
-    } catch {
-      platformConfigRecord = await platform.save(platformConfig(JWK_URL));
-    }
+    await platform.save(platformConfig(JWK_URL));
     const tool = new DynamoDBLtiToolConfig(CONTROL_TABLE_NAME);
-    let toolConfigRecord: LtiToolConfigRecord;
-    try {
-      toolConfigRecord = await tool.load(CLIENT_ID, ISS);
-    } catch {
-      toolConfigRecord = await tool.save(integToolConfig(CLIENT_ID));
-    }
+    await tool.save(integToolConfig(CLIENT_ID));
   });
 
   test('user launched tool from CanvasLMS, OIDC launch flow', async () => {
@@ -71,6 +61,22 @@ describe('CanvasLMS login launch flow works', () => {
     const params = new URLSearchParams(loginRes.headers!.Location as string);
     let eLTIState = params.get('state');
     let eLTINonce = params.get('nonce');
+
+    // Negative cases for login request:
+    // Case 1: Bad clientId - config error
+    const badLoginEvent = loginRequestEvent('badClientId');
+    const badLoginRes = await loginHandler(badLoginEvent);
+    expect(badLoginRes).toBeDefined();
+    expect(badLoginRes.statusCode).toEqual(400);
+
+    // Case 2: Undefined domain name and path
+    const badLoginEventUndefinedDomain = loginRequestEvent();
+    badLoginEventUndefinedDomain.requestContext.domainName = undefined;
+    const badLoginResUndefinedDomain = await loginHandler(
+      badLoginEventUndefinedDomain
+    );
+    expect(badLoginResUndefinedDomain).toBeDefined();
+    expect(badLoginResUndefinedDomain.statusCode).toEqual(400);
 
     //ELTI has redirected to CanvasLMS auth token url above
     //-------------------------------------------------------
@@ -86,14 +92,17 @@ describe('CanvasLMS login launch flow works', () => {
       launchEvent as APIGatewayProxyEventWithLtiLaunchAuth
     );
     expect(launchRes).toBeDefined();
-    expect(isRedirectResponse(launchRes, TOOL_OIDC_DOMAIN)).toBe(true);
-    const badState = 'badStatebadStatebadState';
-    const launchEventBadState = launchProxyRequestEvent(signedJWT, badState);
-    const launchResBadResponse = await launchAuthHandler(
-      launchEventBadState as APIGatewayProxyEventWithLtiLaunchAuth
+    expect(
+      isRedirectResponse(launchRes, `${TOOL_OIDC_DOMAIN}oauth2/authorize`)
+    ).toBe(true);
+    await NegativeCasesInLaunchAuthHandlerStep(
+      eLTINonce,
+      KMS_KEY_ID,
+      KID,
+      eLTIState,
+      signedJWT
     );
-    expect(launchResBadResponse).toBeDefined();
-    expect(is401Response(launchResBadResponse)).toBe(true);
+
     //ELTI has verified the token and redirected to Tool OIDC above
     //---------------------------------------------------------
     //now simulating Tool OIDC calling ELTI for authorization, we create a code and send
@@ -101,9 +110,18 @@ describe('CanvasLMS login launch flow works', () => {
     const cookieArr = launchRes.multiValueHeaders![
       'Set-Cookie'
     ] as Array<string>;
-    console.log(launchRes);
     eLTIState = cookieArr[0].split('=')[1];
     eLTINonce = cookieArr[1].split('=')[1];
+
+    // Negative case for bad state, session not found internally.
+    const authProxyEventBadState = authProxyRequestEvent(
+      'BadState',
+      eLTINonce!
+    );
+    const authResBadState = await authProxyHandler(authProxyEventBadState);
+    expect(authResBadState).toBeDefined();
+    expect(authResBadState.statusCode).toEqual(401);
+
     const authProxyEvent = authProxyRequestEvent(eLTIState!, eLTINonce!);
     const authRes = await authProxyHandler(authProxyEvent);
     expect(authRes).toBeDefined();
@@ -114,8 +132,14 @@ describe('CanvasLMS login launch flow works', () => {
     const authCode = toolOIDCAuthFlowParams.get(
       `${TOOL_OIDC_DOMAIN}/oauth2/idpresponse?code`
     );
-    const toolOIDCState = toolOIDCAuthFlowParams.get('state');
     expect(authCode).toBeDefined();
+
+    // Negative case: nonce is already used so re-playing should error
+    const rePlayAuthProxyEvent = authProxyRequestEvent(eLTIState!, eLTINonce!);
+    const replayAuthProxyRes = await authProxyHandler(rePlayAuthProxyEvent);
+    expect(replayAuthProxyRes).toBeDefined();
+    expect(replayAuthProxyRes.statusCode).toEqual(401);
+
     //ELTI has sent a code to Tool OIDCabove
     //--------------------------------------------------
     //now simulating Tool OIDC calling for authentication where ELTI will give the token from canvas LMS
@@ -125,3 +149,52 @@ describe('CanvasLMS login launch flow works', () => {
     expect(tokenRes.statusCode).toEqual(200);
   });
 });
+
+async function NegativeCasesInLaunchAuthHandlerStep(
+  nonce: string | null,
+  KMS_KEY_ID: string,
+  KID: string | undefined,
+  state: string | null,
+  signedJWT: string
+) {
+  const badState = 'badStatebadStatebadState';
+  const launchEventBadState = launchProxyRequestEvent(signedJWT, badState);
+  const launchResBadResponse = await launchAuthHandler(
+    launchEventBadState as APIGatewayProxyEventWithLtiLaunchAuth
+  );
+  expect(launchResBadResponse).toBeDefined();
+  expect(is401Response(launchResBadResponse)).toBe(true);
+
+  // Negative cases: Issue with targetLinkUri, bad target link uri in the payload inside the token
+  const jwtBodyWithBadTargetLinkUri = jwtBodyForLaunch(nonce!);
+  jwtBodyWithBadTargetLinkUri[
+    'https://purl.imsglobal.org/spec/lti/claim/target_link_uri'
+  ] = '';
+  const signedJWTWithFaultyTarget_Uri = await getSignedJWT(
+    jwtBodyWithBadTargetLinkUri,
+    {
+      keyId: KMS_KEY_ID,
+      kid: KID!,
+    }
+  );
+  const launchEventForBadTargetLinkUri = launchProxyRequestEvent(
+    signedJWTWithFaultyTarget_Uri,
+    state!
+  );
+  const launchResForBadTargetLinkUri = await launchAuthHandler(
+    launchEventForBadTargetLinkUri as APIGatewayProxyEventWithLtiLaunchAuth
+  );
+  expect(launchResForBadTargetLinkUri).toBeDefined();
+  //expect(launchResForBadTargetLinkUri.statusCode).toEqual(400);
+  expect(launchResForBadTargetLinkUri.statusCode).toEqual(401);
+
+  // Negative cases: Issue with the JWT token, JWT_Validation_Failure
+  const launchResForBadToken = await launchAuthHandler(
+    launchProxyRequestEvent(
+      'BadToken',
+      state!
+    ) as APIGatewayProxyEventWithLtiLaunchAuth
+  );
+  expect(launchResForBadToken).toBeDefined();
+  expect(launchResForBadToken.statusCode).toEqual(401);
+}

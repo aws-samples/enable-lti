@@ -1,58 +1,58 @@
-import { mockClient } from 'aws-sdk-client-mock';
 import 'aws-sdk-client-mock-jest';
-import * as data from '../../../../test/utils/data';
-import { CLIENT_ID, DEPLOYMENT_ID, ISS, jwtBodyForDeepLinking } from '../../../../test/utils/models';
-import { ContentItemLTIResourceLink, ContentItemTypes, createDeepLinkingMessage } from '../src/ltiDeepLinking';
+import * as helpers from '../src/helpers';
 import {
-    KMSClient,
-    SignCommand
-} from '@aws-sdk/client-kms';
-import { v4 as uuidv4 } from 'uuid';
-import * as jose from 'jose';
+  ContentItemLTIResourceLink,
+  ContentItemTypes,
+  createDeepLinkingMessage,
+} from '../src/ltiDeepLinking';
 
-const kmsMock = mockClient(KMSClient);
+const mockGetSignedJWT = jest
+  .spyOn(helpers, 'getSignedJWT')
+  .mockResolvedValue('token_string');
 
-beforeEach(() => {
-    kmsMock.reset();
-});
-
-describe('ltiDeepLinking Tests', () => {
-
-    it('createDeepLinkingMessage', async () => {
-        const nonce = uuidv4();
-        const payload = jwtBodyForDeepLinking(nonce);
-
-        kmsMock.on(SignCommand).resolves(data.signResponse);
-
-        const ltiResourceLinks: ContentItemLTIResourceLink[] = [{
-            type: ContentItemTypes.LTIResourceLink,
-            title: 'Test 1',
-            url: 'http://test'
-        }];
-
-        const options = {
-            message: 'Successfully registered resource!',
-            deepLinkingSettingsData: '',
-        };
-
-        const message = await createDeepLinkingMessage(
-            {
-                aud: payload.aud,
-                iss: payload.iss,
-                deploymentId: DEPLOYMENT_ID
-            },
-            ltiResourceLinks,
-            options,
-            { keyId: data.jwksGetPublicKey.KeyId!, kid: 'f2cafabe-8d1b-423c-9082-53201c279a0a' }
-        );
-
-        const decodedMessage: Record<string, any> = jose.decodeJwt(message);
-
-        expect(kmsMock).toHaveReceivedCommandTimes(SignCommand, 1);
-        expect(Array.isArray(decodedMessage.iss)).toBeFalsy();
-        expect(decodedMessage.iss).toEqual(CLIENT_ID);
-        expect(Array.isArray(decodedMessage.aud)).toBeFalsy();
-        expect(decodedMessage.aud).toEqual(ISS);
-        expect(decodedMessage['https://purl.imsglobal.org/spec/lti-dl/claim/content_items'][0]['title']).toEqual('Test 1');
-    });
+const receivedToken = {
+  aud: 'testAud',
+  iss: 'testIss',
+  deploymentId: 'testDeploymentId',
+};
+const contentItems: ContentItemLTIResourceLink[] = [
+  {
+    type: ContentItemTypes.LTIResourceLink,
+    url: 'testUrl',
+  },
+];
+const options = {
+  message: 'testMessage',
+  deepLinkingSettingsData: 'deepLinkingSettingsData',
+};
+const keyDetails = { keyId: 'keyId', kid: 'kid' };
+const jwtBody = {
+  iat: Math.floor(Date.now() / 1000),
+  exp: Math.floor(Date.now() / 1000) + 86400,
+  iss: 'testIss',
+  aud: ['testAud'],
+  'https://purl.imsglobal.org/spec/lti/claim/deployment_id': 'testDeploymentId',
+  'https://purl.imsglobal.org/spec/lti-dl/claim/content_items': contentItems,
+  'https://purl.imsglobal.org/spec/lti-dl/claim/msg': options.message,
+  'https://purl.imsglobal.org/spec/lti-dl/claim/data':
+    options.deepLinkingSettingsData,
+};
+describe('createDeepLinkingMessage', () => {
+  beforeEach(() => {
+    jest.resetModules();
+  });
+  it('method works as expected', async () => {
+    const signedJWT = await createDeepLinkingMessage(
+      receivedToken,
+      contentItems,
+      options,
+      keyDetails
+    );
+    expect(mockGetSignedJWT).toHaveBeenCalledTimes(1);
+    expect(mockGetSignedJWT).toHaveBeenCalledWith(
+      expect.objectContaining(jwtBody),
+      keyDetails
+    );
+    expect(signedJWT).toBe('token_string');
+  });
 });

@@ -1,4 +1,5 @@
 import {
+  DynamoDBPlatformConfigRecord,
   PlatformConfigRecord,
   toolConfigData,
   toolConfigRecord,
@@ -6,6 +7,7 @@ import {
 } from '@enable-lti/util';
 
 export const CLIENT_ID = 'integ-test-client-id';
+export const CLIENT_ID_WITH_FORCE_LOGOUT = 'integ-test-client-id-force-logout';
 export const ISS = 'https://lms-integ-test.com';
 export const DEPLOYMENT_ID = 'integ-deployment-id';
 export const ACCESS_TOKEN_URL =
@@ -21,23 +23,23 @@ export const IDP_NAME = 'IntegIDPName';
 export const TOOL_BASE_URL = 'https://integ-tool.test.com';
 export const TOOL_DEEPLINK_URL1 = `${TOOL_BASE_URL}/sa/lab/123`;
 export const TOOL_DEEPLINK_URL2 = `${TOOL_BASE_URL}/sa/lab/456`;
-export const PLATFORM_EXTERNAL_TOOL_DIALOG_URL = `${ISS}/courses/813/external_content/success/external_tool_dialog`;
-export const PLATFORM_DEEP_LINKING_URL = `${ISS}/courses/813/deep_linking_response`;
-export const PLATFORM_LINE_ITEMS_URL = `${ISS}/api/lti/courses/820/line_items`;
-export const PLATFORM_LINE_ITEM_URL = `${PLATFORM_LINE_ITEMS_URL}/116`;
-export const PLATFORM_MODULE_URL = `${ISS}/courses/816/modules`;
-export const PLATFORM_NAMES_AND_ROLE_URL = `${ISS}/api/lti/courses/820/names_and_roles`;
+export const LINE_ITEM_URL = `${ISS}/api/lti/courses/820/line_items/116`;
+export const NAMES_AND_ROLES_URL = `${ISS}/api/lti/courses/820/names_and_roles`;
 
-export const platformConfig = (keySetUrl: string, ltiDeploymentId?: string) => {
-  return {
-    accessTokenUrl: ACCESS_TOKEN_URL,
-    authTokenUrl: AUTH_TOKEN_URL,
-    authLoginUrl: AUTH_LOGIN_URL,
-    clientId: CLIENT_ID,
-    iss: ISS,
+export const platformConfig = (
+  keySetUrl: string,
+  clientId = CLIENT_ID,
+  ltiDeploymentId?: string
+): PlatformConfigRecord => {
+  return new DynamoDBPlatformConfigRecord(
+    clientId,
+    ISS,
+    AUTH_LOGIN_URL,
+    AUTH_TOKEN_URL,
+    ACCESS_TOKEN_URL,
     keySetUrl,
-    ltiDeploymentId: ltiDeploymentId,
-  } as PlatformConfigRecord;
+    ltiDeploymentId
+  );
 };
 
 export const integToolConfig = (id: string): toolConfigRecord => {
@@ -62,7 +64,16 @@ export const integToolConfig = (id: string): toolConfigRecord => {
         },
       ],
     } as toolConfigData,
+    features: [],
   };
+};
+
+export const integToolConfigWithForceLogoutFeature = (
+  id: string
+): toolConfigRecord => {
+  const toolConfig = integToolConfig(id);
+  toolConfig.features = [{ name: 'ForceLogout', enabled: true }];
+  return toolConfig;
 };
 
 export const jwtBodyForDeepLinking = (nonce: string) => {
@@ -71,7 +82,8 @@ export const jwtBodyForDeepLinking = (nonce: string) => {
       'LtiDeepLinkingRequest',
     'https://purl.imsglobal.org/spec/lti/claim/version': '1.3.0',
     'https://purl.imsglobal.org/spec/lti-dl/claim/deep_linking_settings': {
-      deep_link_return_url: PLATFORM_DEEP_LINKING_URL,
+      deep_link_return_url:
+        'https://educatetest.instructure.com/courses/813/deep_linking_response',
       accept_types: ['ltiResourceLink'],
       accept_presentation_document_targets: ['iframe', 'window'],
       accept_media_types: 'application/vnd.ims.lti.v1.ltilink',
@@ -81,9 +93,8 @@ export const jwtBodyForDeepLinking = (nonce: string) => {
       errors: {
         errors: {},
       },
-      data: "_3_1::_13_1::-1::false::true::_3_1::27a227f9f4e340539a2263d7f4145f54::false",
     },
-    aud: [CLIENT_ID],
+    aud: CLIENT_ID,
     azp: CLIENT_ID,
     'https://purl.imsglobal.org/spec/lti/claim/deployment_id': DEPLOYMENT_ID,
     exp: Date.now() + 60 * 60 * 1000,
@@ -103,8 +114,8 @@ export const jwtBodyForDeepLinking = (nonce: string) => {
       },
     },
     'https://purl.imsglobal.org/spec/lti/claim/tool_platform': {
-      guid: 'Hyqnum17FKopFCKygJJxAbg88bUeWU9bM9cy6P7G:canvas-lms',
-      name: 'Integ Test',
+      guid: 'AOpOS8uH12pBdXrXcJ23u92lCuMtNwhdpsaAHBeB:canvas-lms',
+      name: 'AWS Educate',
       version: 'cloud',
       product_family_code: 'canvas',
       validation_context: null,
@@ -114,7 +125,8 @@ export const jwtBodyForDeepLinking = (nonce: string) => {
     },
     'https://purl.imsglobal.org/spec/lti/claim/launch_presentation': {
       document_target: 'iframe',
-      return_url: PLATFORM_EXTERNAL_TOOL_DIALOG_URL,
+      return_url:
+        'https://educatetest.instructure.com/courses/813/external_content/success/external_tool_dialog',
       locale: 'en',
       validation_context: null,
       errors: {
@@ -159,7 +171,7 @@ export const jwtBodyForDeepLinking = (nonce: string) => {
   };
 };
 
-export const jwtBodyForLaunch = (nonce: string) => {
+export const jwtBodyForLaunch = (nonce: string, clientId = CLIENT_ID) => {
   return {
     'https://purl.imsglobal.org/spec/lti/claim/message_type':
       'LtiResourceLinkRequest',
@@ -167,14 +179,14 @@ export const jwtBodyForLaunch = (nonce: string) => {
     'https://purl.imsglobal.org/spec/lti/claim/resource_link': {
       id: '55da1204-03ee-46d5-8076-8ae74b5b1292',
       description: null,
-      title: 'EH Deeplink ELTI Library',
+      title: 'Amazon ElastiCache with Windows Server',
       validation_context: null,
       errors: {
         errors: {},
       },
     },
-    aud: CLIENT_ID,
-    azp: CLIENT_ID,
+    aud: clientId,
+    azp: clientId,
     'https://purl.imsglobal.org/spec/lti/claim/deployment_id': DEPLOYMENT_ID,
     exp: Date.now() + 60 * 60 * 1000,
     iat: Date.now(),
@@ -194,8 +206,8 @@ export const jwtBodyForLaunch = (nonce: string) => {
       },
     },
     'https://purl.imsglobal.org/spec/lti/claim/tool_platform': {
-      guid: 'Hyqnum17FKopFCKygJJxAbg88bUeWU9bM9cy6P7G:canvas-lms',
-      name: 'Integ Test',
+      guid: 'AOpOS8uH12pBdXrXcJ23u92lCuMtNwhdpsaAHBeB:canvas-lms',
+      name: 'AWS Educate',
       version: 'cloud',
       product_family_code: 'canvas',
       validation_context: null,
@@ -205,7 +217,7 @@ export const jwtBodyForLaunch = (nonce: string) => {
     },
     'https://purl.imsglobal.org/spec/lti/claim/launch_presentation': {
       document_target: 'iframe',
-      return_url: PLATFORM_MODULE_URL,
+      return_url: 'https://educatetest.instructure.com/courses/816/modules',
       locale: 'en',
       validation_context: null,
       errors: {
@@ -269,7 +281,7 @@ export const jwtBodyForScoreSubmission = () => {
         dateCreated: '1673283674394',
       },
     ],
-    'custom:LMS:Endpoint': `{"errors":{"errors":{}},"lineitem":"${PLATFORM_LINE_ITEM_URL}","lineitems":"${PLATFORM_LINE_ITEMS_URL}","scope":["https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly","https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly","https://purl.imsglobal.org/spec/lti-ags/scope/lineitem","https://purl.imsglobal.org/spec/lti-ags/scope/score","https://canvas.instructure.com/lti-ags/progress/scope/show"],"validation_context":null}`,
+    'custom:LMS:Endpoint': `{"errors":{"errors":{}},"lineitem":"${LINE_ITEM_URL}","lineitems":"https://educatetest.instructure.com/api/lti/courses/820/line_items","scope":["https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly","https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly","https://purl.imsglobal.org/spec/lti-ags/scope/lineitem","https://purl.imsglobal.org/spec/lti-ags/scope/score","https://canvas.instructure.com/lti-ags/progress/scope/show"],"validation_context":null}`,
     auth_time: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + 3600,
     iat: Math.floor(Date.now() / 1000),
@@ -311,11 +323,23 @@ export const jwtBodyForRosterRetrieval = () => {
       },
     ],
     'custom:LMS:CustomClaims': `{"course_id": "${COURSE_ID}"}`,
-    'custom:LMS:NamesRoleService': `{"context_memberships_url": "${PLATFORM_NAMES_AND_ROLE_URL}", "service_versions": ["2.0"]}`,
+    'custom:LMS:NamesRoleService': `{"context_memberships_url": "${NAMES_AND_ROLES_URL}", "service_versions": ["2.0"]}`,
     auth_time: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + 3600,
     iat: Math.floor(Date.now() / 1000),
     jti: 'b69b663f-f219-4b32-85b7-284f664c7b7e',
     email: 'test@amazon.com',
+    email_verified: false,
+    'cognito:username': 'Something',
+    public_provider_name: 'CCTPLMS',
+    given_name: 'Given',
+    nonce:
+      'd-1nIhkTjQiPdZMZLoaKdK5Qz-V6AZ1-Lv7wEi1Pcl-DOa2A398rz8VYKDdatX0u267ovubl-FVvDRjZV_pjkVBsIoWM41MOhvVCoZLSQC9D16RKTO91EIFh_dN58FHxejfBP1WS-hT07kLV-Ed4PmmNRKRr9NLYr_-ZGAN9XSE',
+    origin_jti: '93997ddb-165c-4042-be91-9832b51e8ca4',
+    aud: CLIENT_ID,
+    token_use: 'id',
+    name: 'Some Name',
+    hat_id: 'f57223eb-18d4-4219-b5fd-f6bee804fdc1',
+    family_name: 'Student',
   };
 };

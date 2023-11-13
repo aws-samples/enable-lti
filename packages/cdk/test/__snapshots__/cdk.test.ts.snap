@@ -229,7 +229,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "eb5b005c858404ea0c8f68098ed5dcdf5340e02461f149751d10f59c210d5ef8.zip",
+          "S3Key": "5bc602ecde93c947efe5899ae355f999986a1acbe610b1c0b9c468d738857555.zip",
         },
         "Handler": "index.handler",
         "Role": {
@@ -238,7 +238,8 @@ exports[`Snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs18.x",
+        "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -298,7 +299,10 @@ exports[`Snapshot 1`] = `
                   ],
                 },
               },
-              "Resource": "execute-api:/*/POST/scoreSubmission",
+              "Resource": [
+                "execute-api:/*/POST/scoreSubmission",
+                "execute-api:/*/POST/rosterRetrieval",
+              ],
             },
             {
               "Action": "execute-api:Invoke",
@@ -426,7 +430,7 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "apiELTIApiDeploymentE5E04DBA9ba6b5578e79d92d91aee4126de451ea": {
+    "apiELTIApiDeploymentE5E04DBA93e1c78c483d0df4fec9db0f0a93a3fa": {
       "DependsOn": [
         "apiELTIApiauthorizerProxyGETB536CE11",
         "apiELTIApiauthorizerProxy7A5A1CC9",
@@ -441,6 +445,8 @@ exports[`Snapshot 1`] = `
         "apiELTIApiloginPOST7A347EDB",
         "apiELTIApilogin45BDD80F",
         "apiELTIApiOPTIONS844F69E5",
+        "apiELTIApirosterRetrievalPOST7634E488",
+        "apiELTIApirosterRetrieval10F0EB02",
         "apiELTIApiscoreSubmissionPOST816C45CF",
         "apiELTIApiscoreSubmission1718D13B",
         "apiELTIApitokenProxyPOSTA5640BB9",
@@ -513,7 +519,7 @@ exports[`Snapshot 1`] = `
           "Format": "{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","user":"$context.identity.user","caller":"$context.identity.caller","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}",
         },
         "DeploymentId": {
-          "Ref": "apiELTIApiDeploymentE5E04DBA9ba6b5578e79d92d91aee4126de451ea",
+          "Ref": "apiELTIApiDeploymentE5E04DBA93e1c78c483d0df4fec9db0f0a93a3fa",
         },
         "MethodSettings": [
           {
@@ -556,6 +562,7 @@ exports[`Snapshot 1`] = `
         },
       },
       "Properties": {
+        "ApiKeyRequired": false,
         "AuthorizationType": "NONE",
         "HttpMethod": "OPTIONS",
         "Integration": {
@@ -2069,6 +2076,227 @@ exports[`Snapshot 1`] = `
       },
       "Type": "AWS::Lambda::Permission",
     },
+    "apiELTIApirosterRetrieval10F0EB02": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "apiELTIApiA792B265",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "rosterRetrieval",
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "apiELTIApirosterRetrievalPOST7634E488": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AuthorizationType": "AWS_IAM",
+        "HttpMethod": "POST",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "lambdasrosterRetrieval7B572A4F",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": {
+          "Ref": "apiELTIApirosterRetrieval10F0EB02",
+        },
+        "RestApiId": {
+          "Ref": "apiELTIApiA792B265",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "apiELTIApirosterRetrievalPOSTApiPermissionTesttestapiELTIApi6BB5DB92POSTrosterRetrieval93107B3B": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasrosterRetrieval7B572A4F",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/test-invoke-stage/POST/rosterRetrieval",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "apiELTIApirosterRetrievalPOSTApiPermissiontestapiELTIApi6BB5DB92POSTrosterRetrieval54A59022": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Suppress all AwsSolutions-IAM4 findings on apiLTI for AmazonAPIGatewayPushToCloudWatchLogs.",
+            },
+            {
+              "id": "AwsSolutions-APIG2",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI validation.",
+            },
+            {
+              "id": "AwsSolutions-COG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+            {
+              "id": "AwsSolutions-APIG4",
+              "reason": "Suppress all AwsSolutions-APIG2 findings on apiLTI resources as it enforces auth inside lambdas.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "lambdasrosterRetrieval7B572A4F",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              {
+                "Ref": "apiELTIApiA792B265",
+              },
+              "/",
+              {
+                "Ref": "apiELTIApiDeploymentStageprod2D274CC9",
+              },
+              "/POST/rosterRetrieval",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
     "apiELTIApiscoreSubmission1718D13B": {
       "Metadata": {
         "cdk_nag": {
@@ -2604,7 +2832,7 @@ exports[`Snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "apiELTIConfigApiDeploymentD7D043C105fe0cc36587094a438cf68769b29dc0": {
+    "apiELTIConfigApiDeploymentD7D043C1942d3b5b2f37e2df90bb86b1be772f73": {
       "DependsOn": [
         "apiELTIConfigApiOPTIONS928634A9",
         "apiELTIConfigApiplatformPOSTED8FE0A7",
@@ -2679,7 +2907,7 @@ exports[`Snapshot 1`] = `
           "Format": "{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","user":"$context.identity.user","caller":"$context.identity.caller","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}",
         },
         "DeploymentId": {
-          "Ref": "apiELTIConfigApiDeploymentD7D043C105fe0cc36587094a438cf68769b29dc0",
+          "Ref": "apiELTIConfigApiDeploymentD7D043C1942d3b5b2f37e2df90bb86b1be772f73",
         },
         "MethodSettings": [
           {
@@ -2781,6 +3009,7 @@ exports[`Snapshot 1`] = `
         },
       },
       "Properties": {
+        "ApiKeyRequired": false,
         "AuthorizationType": "NONE",
         "HttpMethod": "OPTIONS",
         "Integration": {
@@ -3265,6 +3494,12 @@ exports[`Snapshot 1`] = `
     },
     "eltiWafBase": {
       "Properties": {
+        "CustomResponseBodies": {
+          "denialOfService": {
+            "Content": "{"message": "[Service Unavailable] Please try again after some time."}",
+            "ContentType": "APPLICATION_JSON",
+          },
+        },
         "DefaultAction": {
           "Allow": {},
         },
@@ -3312,6 +3547,61 @@ exports[`Snapshot 1`] = `
               "CloudWatchMetricsEnabled": true,
               "MetricName": "ELTIAPIWebACL-CRS",
               "SampledRequestsEnabled": true,
+            },
+          },
+          {
+            "Name": "AWSManagedRulesAmazonIpReputationList",
+            "OverrideAction": {
+              "None": {},
+            },
+            "Priority": 1,
+            "Statement": {
+              "ManagedRuleGroupStatement": {
+                "Name": "AWSManagedRulesAmazonIpReputationList",
+                "VendorName": "AWS",
+              },
+            },
+            "VisibilityConfig": {
+              "CloudWatchMetricsEnabled": true,
+              "MetricName": "ELTIAPIWebACL-IPReputation",
+              "SampledRequestsEnabled": true,
+            },
+          },
+          {
+            "Action": {
+              "Block": {
+                "CustomResponse": {
+                  "CustomResponseBodyKey": "denialOfService",
+                  "ResponseCode": 429,
+                  "ResponseHeaders": [
+                    {
+                      "Name": "x-amzn-waf-action",
+                      "Value": "denial-of-service",
+                    },
+                    {
+                      "Name": "x-amzn-errortype",
+                      "Value": "ServiceUnavailableException",
+                    },
+                    {
+                      "Name": "Retry-After",
+                      "Value": "300",
+                    },
+                  ],
+                },
+              },
+            },
+            "Name": "RateLimitByPublicIP",
+            "Priority": 2,
+            "Statement": {
+              "RateBasedStatement": {
+                "AggregateKeyType": "IP",
+                "Limit": 100000,
+              },
+            },
+            "VisibilityConfig": {
+              "CloudWatchMetricsEnabled": true,
+              "MetricName": "ELTIAPIWebACL-RateLimitByPublicIP",
+              "SampledRequestsEnabled": false,
             },
           },
         ],
@@ -3390,7 +3680,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "acebb000645e43a1d1e998a83872773d084c29358c026e47da5d0955738c29f7.zip",
+          "S3Key": "978dfe9b63c35055a62c5a2cdfa0d9ce763ae08a509cbc643d65d437b6de2146.zip",
         },
         "Environment": {
           "Variables": {
@@ -3401,7 +3691,7 @@ exports[`Snapshot 1`] = `
             "KMS_KEY_ID": {
               "Ref": "keysltiAsymmetricKeyFE868879",
             },
-            "LOG_LEVEL": "debug",
+            "LOG_LEVEL": "INFO",
             "POWERTOOLS_METRICS_NAMESPACE": "lti",
             "POWERTOOLS_SERVICE_NAME": "authorizerProxy",
           },
@@ -3412,7 +3702,7 @@ exports[`Snapshot 1`] = `
             "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
-        "MemorySize": 256,
+        "MemorySize": 1536,
         "Role": {
           "Fn::GetAtt": [
             "lambdasauthorizerProxyRole5A1F7C54",
@@ -3700,7 +3990,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "7afaea21f0a09d1bafca680d84bfbc7a12f6a56331e4f2e5388099e4644b1bd6.zip",
+          "S3Key": "6b3c7fcbe9a6849148a9512db46ef8cb8a92e27aba92176e77c17b77d5fb6a54.zip",
         },
         "Environment": {
           "Variables": {
@@ -3714,7 +4004,7 @@ exports[`Snapshot 1`] = `
             "KMS_KEY_ID": {
               "Ref": "keysltiAsymmetricKeyFE868879",
             },
-            "LOG_LEVEL": "debug",
+            "LOG_LEVEL": "INFO",
             "POWERTOOLS_METRICS_NAMESPACE": "lti",
             "POWERTOOLS_SERVICE_NAME": "deepLinkingProxy",
           },
@@ -3725,7 +4015,7 @@ exports[`Snapshot 1`] = `
             "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
-        "MemorySize": 256,
+        "MemorySize": 1536,
         "Role": {
           "Fn::GetAtt": [
             "lambdasdeepLinkingProxyRole73AD3815",
@@ -4046,7 +4336,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "e7081ef9ec3b08f8460d230e5f0985acf8ffc59d73f43732aa530f4203ee818a.zip",
+          "S3Key": "4289054b1df8bf422c86b25ca6c84834da79c34c4cf550004e687c8e34751c12.zip",
         },
         "Description": "LTI utility functions",
       },
@@ -4066,7 +4356,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "5f6c9c3465ee1d8f44930a9abb343a50836ebb61e79c709a1f868c1e1d0bc594.zip",
+          "S3Key": "ac6dc88ae2397f55d583728b87b789cd3c961026f77032e3062146b90e587df6.zip",
         },
         "Environment": {
           "Variables": {
@@ -4077,7 +4367,7 @@ exports[`Snapshot 1`] = `
             "KMS_KEY_ID": {
               "Ref": "keysltiAsymmetricKeyFE868879",
             },
-            "LOG_LEVEL": "debug",
+            "LOG_LEVEL": "INFO",
             "POWERTOOLS_METRICS_NAMESPACE": "lti",
             "POWERTOOLS_SERVICE_NAME": "jwks",
           },
@@ -4088,7 +4378,7 @@ exports[`Snapshot 1`] = `
             "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
-        "MemorySize": 256,
+        "MemorySize": 1536,
         "Role": {
           "Fn::GetAtt": [
             "lambdasltiJwksRole046B1089",
@@ -4390,7 +4680,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "11f79f5eaf629412200cdf6824ea458dd964564772f6728307c59fc6034595b6.zip",
+          "S3Key": "a09a0226eb6f1f0f4a70433a37e8f2c6a6aaa66c37895665800c5edb786f359f.zip",
         },
         "Environment": {
           "Variables": {
@@ -4404,7 +4694,7 @@ exports[`Snapshot 1`] = `
             "KMS_KEY_ID": {
               "Ref": "keysltiAsymmetricKeyFE868879",
             },
-            "LOG_LEVEL": "debug",
+            "LOG_LEVEL": "INFO",
             "POWERTOOLS_METRICS_NAMESPACE": "lti",
             "POWERTOOLS_SERVICE_NAME": "launch",
           },
@@ -4415,7 +4705,7 @@ exports[`Snapshot 1`] = `
             "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
-        "MemorySize": 256,
+        "MemorySize": 1536,
         "Role": {
           "Fn::GetAtt": [
             "lambdasltiLaunchRole34FBA536",
@@ -4745,7 +5035,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "6d36685fcc07cd7440b8566ac2ab1a30a2e586e61a54b5d96775d1491b661c94.zip",
+          "S3Key": "2251080fd4798c499a8992ee07a587172e5713395415e5bc4bebe44f5352bcd5.zip",
         },
         "Environment": {
           "Variables": {
@@ -4756,7 +5046,7 @@ exports[`Snapshot 1`] = `
             "DATA_PLANE_TABLE_NAME": {
               "Ref": "tablesdataPlaneTable57BF29C7",
             },
-            "LOG_LEVEL": "debug",
+            "LOG_LEVEL": "INFO",
             "POWERTOOLS_METRICS_NAMESPACE": "lti",
             "POWERTOOLS_SERVICE_NAME": "oidc",
             "STATE_TTL": "7200",
@@ -4768,7 +5058,7 @@ exports[`Snapshot 1`] = `
             "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
-        "MemorySize": 256,
+        "MemorySize": 1536,
         "Role": {
           "Fn::GetAtt": [
             "lambdasltiOidcRole4647658A",
@@ -5114,7 +5404,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "b90eec1f09fd904728431103e196b240387cdcc588895e21ffce0b81d577adb9.zip",
+          "S3Key": "ee0b0be77c5560b4ec113c5a3aa6c9cee31c01c0f31b3e80edeb7a9c0be1acf9.zip",
         },
         "Environment": {
           "Variables": {
@@ -5122,7 +5412,7 @@ exports[`Snapshot 1`] = `
             "CONTROL_PLANE_TABLE_NAME": {
               "Ref": "tablescontrolPlaneTable49F703D0",
             },
-            "LOG_LEVEL": "debug",
+            "LOG_LEVEL": "INFO",
             "POWERTOOLS_METRICS_NAMESPACE": "lti",
             "POWERTOOLS_SERVICE_NAME": "platformRegister",
           },
@@ -5133,7 +5423,7 @@ exports[`Snapshot 1`] = `
             "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
-        "MemorySize": 256,
+        "MemorySize": 1536,
         "Role": {
           "Fn::GetAtt": [
             "lambdasltiPlatformRegisterRoleF4E57286",
@@ -5414,7 +5704,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "2be39fe7e3afea2bbc9872198fc4b490ace89e51588f907e1b2c3020730d62fc.zip",
+          "S3Key": "ed8cfcece2b0bad0e2fc94b4d6d2531169c1a77e17ac65ad465b04bb7f6e631e.zip",
         },
         "Environment": {
           "Variables": {
@@ -5422,7 +5712,7 @@ exports[`Snapshot 1`] = `
             "CONTROL_PLANE_TABLE_NAME": {
               "Ref": "tablescontrolPlaneTable49F703D0",
             },
-            "LOG_LEVEL": "debug",
+            "LOG_LEVEL": "INFO",
             "POWERTOOLS_METRICS_NAMESPACE": "lti",
             "POWERTOOLS_SERVICE_NAME": "toolConfig",
           },
@@ -5433,7 +5723,7 @@ exports[`Snapshot 1`] = `
             "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
-        "MemorySize": 256,
+        "MemorySize": 1536,
         "Role": {
           "Fn::GetAtt": [
             "lambdasltiToolConfigRoleF95D8DE7",
@@ -5700,6 +5990,333 @@ exports[`Snapshot 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
+    "lambdasrosterRetrieval7B572A4F": {
+      "DependsOn": [
+        "lambdasrosterRetrievalLogRetentionPolicy057299F6",
+        "lambdasrosterRetrievalRoleDefaultPolicy9852C37C",
+        "lambdasrosterRetrievalRole525ACB0F",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "ecb093c2a0eb2c615d3b96eca6d0cd6c6fb3a271576bddf943ac6d1a4e36c528.zip",
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "CONTROL_PLANE_TABLE_NAME": {
+              "Ref": "tablescontrolPlaneTable49F703D0",
+            },
+            "DATA_PLANE_TABLE_NAME": {
+              "Ref": "tablesdataPlaneTable57BF29C7",
+            },
+            "KMS_KEY_ID": {
+              "Ref": "keysltiAsymmetricKeyFE868879",
+            },
+            "LOG_LEVEL": "INFO",
+            "POWERTOOLS_METRICS_NAMESPACE": "lti",
+            "POWERTOOLS_SERVICE_NAME": "rosterRetrieval",
+          },
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Ref": "lambdaslayerUtilF24D5864",
+          },
+        ],
+        "MemorySize": 1536,
+        "Role": {
+          "Fn::GetAtt": [
+            "lambdasrosterRetrievalRole525ACB0F",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 30,
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "lambdasrosterRetrievalLogRetentionAE070158": {
+      "DependsOn": [
+        "lambdasrosterRetrievalLogRetentionPolicy057299F6",
+      ],
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "lambdasrosterRetrieval7B572A4F",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 3653,
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "lambdasrosterRetrievalLogRetentionPolicy057299F6": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:/aws/lambda/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasrosterRetrievalLogRetentionRoleC2945738",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasrosterRetrievalLogRetentionRoleC2945738": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasrosterRetrievalPolicy84C66CAA": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:",
+                    {
+                      "Fn::GetAtt": [
+                        "lambdasrosterRetrievalLogRetentionAE070158",
+                        "LogGroupName",
+                      ],
+                    },
+                    ":*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Roles": [
+          {
+            "Ref": "lambdasrosterRetrievalRole525ACB0F",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "lambdasrosterRetrievalRole525ACB0F": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdasrosterRetrievalRoleDefaultPolicy9852C37C": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Suppress all AwsSolutions-IAM5 findings on ltiNodejsFunction role as required by log group.",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "tablescontrolPlaneTable49F703D0",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+            {
+              "Action": [
+                "kms:Verify",
+                "kms:GetPublicKey",
+                "kms:Sign",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "keysltiAsymmetricKeyFE868879",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "lambdasrosterRetrievalRoleDefaultPolicy9852C37C",
+        "Roles": [
+          {
+            "Ref": "lambdasrosterRetrievalRole525ACB0F",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
     "lambdasscoreSubmission63FC62E4": {
       "DependsOn": [
         "lambdasscoreSubmissionLogRetentionPolicy2BB71258",
@@ -5714,7 +6331,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "3c62f0cbbb12094f9c2db2e7f9f38227cf2a4f79c9a5942ce45764dd0b680bba.zip",
+          "S3Key": "ed2a8d7d32f20bc19359ffb03313167b6d4b9a41d242ce60d2f202dd7c304568.zip",
         },
         "Environment": {
           "Variables": {
@@ -5728,7 +6345,7 @@ exports[`Snapshot 1`] = `
             "KMS_KEY_ID": {
               "Ref": "keysltiAsymmetricKeyFE868879",
             },
-            "LOG_LEVEL": "debug",
+            "LOG_LEVEL": "INFO",
             "POWERTOOLS_METRICS_NAMESPACE": "lti",
             "POWERTOOLS_SERVICE_NAME": "scoreSubmission",
           },
@@ -5739,7 +6356,7 @@ exports[`Snapshot 1`] = `
             "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
-        "MemorySize": 256,
+        "MemorySize": 1536,
         "Role": {
           "Fn::GetAtt": [
             "lambdasscoreSubmissionRoleCE1A9D7C",
@@ -6065,7 +6682,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "8a10574186a9176a9649517f8537ce6088d1682e839886778a407c35f7e3a9ac.zip",
+          "S3Key": "570bab4288da1acc1ee07806cce135b72cf1ae6a08f1eeddbbb2ac9e7504f5b4.zip",
         },
         "Environment": {
           "Variables": {
@@ -6076,7 +6693,7 @@ exports[`Snapshot 1`] = `
             "KMS_KEY_ID": {
               "Ref": "keysltiAsymmetricKeyFE868879",
             },
-            "LOG_LEVEL": "debug",
+            "LOG_LEVEL": "INFO",
             "POWERTOOLS_METRICS_NAMESPACE": "lti",
             "POWERTOOLS_SERVICE_NAME": "tokenProxy",
           },
@@ -6087,7 +6704,7 @@ exports[`Snapshot 1`] = `
             "Ref": "lambdaslayerUtilF24D5864",
           },
         ],
-        "MemorySize": 256,
+        "MemorySize": 1536,
         "Role": {
           "Fn::GetAtt": [
             "lambdastokenProxyRole47CD04F8",

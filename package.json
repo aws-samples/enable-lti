@@ -13,10 +13,12 @@
     "eslint:fix": "eslint  --quiet --ext .ts,.tsx --fix --no-error-on-unmatched-pattern packages",
     "start": "npm run start -w packages/examples/client ",
     "cdk": "npm run cdk -w packages/cdk",
-    "test": "jest --passWithNoTests ---updateSnapshot",
+    "pretest": "npm run eslint",
+    "test": "jest --testPathPattern=packages --coverage",
     "test:ws": "export POWERTOOLS_DEV=true && jest --passWithNoTests ---updateSnapshot --silent --testPathPattern",
     "test:integration": "export POWERTOOLS_DEV=true && jest --passWithNoTests ---updateSnapshot --testPathPattern=test/integration --silent",
-    "test:setup": "npm run test:setup -w test"
+    "test:setup": "npm run test:setup -w test",
+    "posttest": "generate-coverage-data"
   },
   "workspaces": [
     "packages/cdk",

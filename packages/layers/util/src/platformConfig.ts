@@ -1,10 +1,6 @@
+import { LtiCustomError } from '@enable-lti/util';
 import { marshall } from '@aws-sdk/util-dynamodb';
 import { Aws } from './aws';
-import {
-  InvalidValueError,
-  RecordNotFoundError,
-  StoreAccessError,
-} from '@enable-lti/util';
 
 export interface PlatformConfigRecord {
   authTokenUrl: string;
@@ -16,7 +12,7 @@ export interface PlatformConfigRecord {
   keySetUrl: string;
 }
 
-class DynamoDBPlatformConfigRecord implements PlatformConfigRecord {
+export class DynamoDBPlatformConfigRecord implements PlatformConfigRecord {
   readonly PK: string;
   readonly authLoginUrl: string;
   readonly authTokenUrl: string;
@@ -28,18 +24,18 @@ class DynamoDBPlatformConfigRecord implements PlatformConfigRecord {
 
   static assign(incoming: Record<string, any>): DynamoDBPlatformConfigRecord {
     return new DynamoDBPlatformConfigRecord(
-      incoming.clientId,
-      incoming.iss,
-      incoming.authLoginUrl,
-      incoming.authTokenUrl,
-      incoming.accessTokenUrl,
-      incoming.keySetUrl,
-      incoming.ltiDeploymentId,
-      incoming.PK
+      incoming.clientId || '',
+      incoming.iss || '',
+      incoming.authLoginUrl || '',
+      incoming.authTokenUrl || '',
+      incoming.accessTokenUrl || '',
+      incoming.keySetUrl || '',
+      incoming.ltiDeploymentId || undefined,
+      incoming.PK || undefined
     );
   }
 
-  private constructor(
+  constructor(
     clientId: string,
     iss: string,
     authLoginUrl: string,
@@ -70,7 +66,8 @@ export interface PlatformConfig {
   load(
     client_id: string,
     iss: string,
-    lti_deployment_id?: string
+    lti_deployment_id?: string,
+    errorStatusCode?: number
   ): Promise<PlatformConfigRecord>;
 
   /**
@@ -95,51 +92,52 @@ export class DynamoDBPlatformConfig implements PlatformConfig {
   async load(
     clientId: string,
     iss: string,
-    ltiDeploymentId?: string
+    ltiDeploymentId?: string,
+    errorStatusCode = 500
   ): Promise<PlatformConfigRecord> {
     const aws = Aws.getInstance();
-    let ignoreLtiDeploymentId = ltiDeploymentId ? false : true;
-    for (let retries = 0; retries < 2; retries++) {
-      try {
-        const item = await aws.getItem({
-          TableName: this.tableName,
-          Key: {
-            PK: {
-              S: `PLATFORM#${clientId}#${iss}#${
-                ignoreLtiDeploymentId ? '' : ltiDeploymentId
-              }`,
-            },
+    try {
+      let item = await aws.getItem({
+        TableName: this.tableName,
+        Key: {
+          PK: {
+            S: `PLATFORM#${clientId}#${iss}#${ltiDeploymentId}`,
           },
-        });
-        if (item !== undefined) {
-          return DynamoDBPlatformConfigRecord.assign(item);
-        } else {
-          ignoreLtiDeploymentId = true;
-        }
-      } catch (e) {
-        ltiDeploymentId = undefined;
+        },
+      });
+      if (item) {
+        return DynamoDBPlatformConfigRecord.assign(item);
       }
+      item = await aws.getItem({
+        TableName: this.tableName,
+        Key: {
+          PK: {
+            S: `PLATFORM#${clientId}#${iss}#`,
+          },
+        },
+      });
+      if (item) {
+        return DynamoDBPlatformConfigRecord.assign(item);
+      }
+    } catch (e) {
+      const error = e as Error;
+      throw new LtiCustomError(
+        `PlatformConfig data retrieval error. ${error.name} - ${error.message}`,
+        'DataAccessError',
+        500
+      );
     }
-    throw new RecordNotFoundError(
-      `No PlatformConfig record found for PLATFORM#${clientId}#${iss}#${ltiDeploymentId}.`
+    throw new LtiCustomError(
+      `PlatformConfig could not be found for clientId:${clientId}, issuer:${iss}, deploymentId:${ltiDeploymentId}.`,
+      'RecordNotFoundError',
+      errorStatusCode
     );
   }
 
   /**
    * Persist the instance to storage.
    */
-  async save(config: PlatformConfigRecord): Promise<PlatformConfigRecord> {
-    if (
-      !config.authTokenUrl ||
-      !config.authLoginUrl ||
-      !config.accessTokenUrl ||
-      !config.clientId ||
-      !config.iss ||
-      !config.keySetUrl
-    ) {
-      throw new InvalidValueError('InvalidParameterException');
-    }
-    const record = DynamoDBPlatformConfigRecord.assign(config);
+  async save(record: PlatformConfigRecord): Promise<PlatformConfigRecord> {
     const aws = Aws.getInstance();
     const item = marshall(record, {
       convertClassInstanceToMap: true,
@@ -153,8 +151,10 @@ export class DynamoDBPlatformConfig implements PlatformConfig {
       return record;
     } catch (e) {
       const error = e as Error;
-      throw new StoreAccessError(
-        `Error persisting PlatformConfig. ${error.name} - ${error.message}`
+      throw new LtiCustomError(
+        `Error persisting PlatformConfig. ${error.name} - ${error.message}`,
+        'StoreAccessError',
+        500
       );
     }
   }

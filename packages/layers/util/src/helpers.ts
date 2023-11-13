@@ -1,17 +1,24 @@
+import { Sha256 } from '@aws-crypto/sha256-js';
+import { MetricUnits } from '@aws-lambda-powertools/metrics';
+import { SignatureV4 } from '@aws-sdk/signature-v4';
 import {
   APIGatewayProxyEvent,
   APIGatewayProxyEventHeaders,
   APIGatewayProxyResult,
 } from 'aws-lambda';
-import { InvalidValueError } from './customErrors';
-import { PlatformConfigRecord } from './platformConfig';
+import axios, { AxiosError } from 'axios';
 import * as jose from 'jose';
+import * as forge from 'node-forge';
+import * as nodeUtil from 'util';
 import { v4 as uuidv4 } from 'uuid';
 import { Aws } from './aws';
-import * as axios from 'axios';
-import * as nodeUtil from 'util';
-import * as forge from 'node-forge';
+import { LtiCustomError } from './customErrors';
+import { LTIJwtPayload } from './jwt';
+import { LmsParams, ScoreSubmissionLmsParams } from './lmsParams';
+import { DynamoDBPlatformConfig, PlatformConfigRecord } from './platformConfig';
 import { Powertools } from './powertools';
+const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN } =
+  process.env;
 
 /**
  * https://www.imsglobal.org/spec/security/v1p0/#using-json-web-tokens-with-oauth-2-0-client-credentials-grant
@@ -24,8 +31,7 @@ import { Powertools } from './powertools';
 export async function requestBearerClientCredential(
   platform: PlatformConfigRecord,
   kid: string,
-  kmsKeyId: string,
-  powertools: Powertools
+  kmsKeyId: string
 ): Promise<string> {
   try {
     const jwt = new jose.SignJWT({})
@@ -40,18 +46,25 @@ export async function requestBearerClientCredential(
         alg: 'RS256',
         kid: kid,
       });
-
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const payload = JSON.stringify(jwt._payload);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const header = JSON.stringify(jwt._protectedHeader);
     const headerJson = Buffer.from(header).toString('base64url');
     const payloadJson = Buffer.from(payload).toString('base64url');
     const clientAssertion = `${headerJson}.${payloadJson}`;
-    powertools.logger.debug(`clientAssertion: ${clientAssertion}`);
     const aws = Aws.getInstance();
     const encoded = new nodeUtil.TextEncoder().encode(clientAssertion);
     const signedClientAssertion = await aws.sign(kmsKeyId, encoded);
+    const scopeParams = [
+      'https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly',
+      'https://purl.imsglobal.org/spec/lti-ags/scope/lineitem',
+      'https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly',
+      'https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly',
+      'https://purl.imsglobal.org/spec/lti-ags/scope/score',
+    ];
     // const valid=await aws.verify(kmsKeyId,encoded,signedClientAssertion!)
     // assert(valid===true)
     const b64urlSignedClientAssertion = Buffer.from(
@@ -65,22 +78,11 @@ export async function requestBearerClientCredential(
       'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
     );
     searchParams.append('client_assertion', token);
-    searchParams.append(
-      'scope',
-      [
-        'https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly',
-        'https://purl.imsglobal.org/spec/lti-ags/scope/lineitem',
-        'https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly',
-        'https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly',
-        'https://purl.imsglobal.org/spec/lti-ags/scope/score'
-      ].join(' ')
-    );
-    const httpClient = axios.default;
-    powertools.logger.debug(`POST: ${platform.accessTokenUrl}?${searchParams}`);
-    const r = await httpClient.post(platform.accessTokenUrl, searchParams);
-    if (r.status !== 200 && r.status !== 201) {
+    searchParams.append('scope', scopeParams.join(' '));
+    const r = await axios.post(platform.accessTokenUrl, searchParams);
+    if (r.status !== 200) {
       const msg = `Error retrieving access token from platform ${platform.accessTokenUrl}. ${r.status}: ${r.statusText}`;
-      throw Error(msg);
+      throw new LtiCustomError(msg, 'PlatformObjectRetrievalFailure', 400);
     }
     const accessToken = r.data.access_token;
     return accessToken;
@@ -89,7 +91,11 @@ export async function requestBearerClientCredential(
     Powertools.getInstance().logger.error(
       `Problem requesting bearer client credentials from ${platform.accessTokenUrl}: ${error.name} ${error.message}`
     );
-    throw error;
+    throw new LtiCustomError(
+      error.message,
+      'FailedToGetClientCredentials',
+      500
+    );
   }
 }
 
@@ -110,30 +116,19 @@ export function valueFromRequest(
   req: APIGatewayProxyEvent,
   key: string
 ): any | undefined {
-  let value = undefined;
   if (req.queryStringParameters !== null && key in req.queryStringParameters!) {
-    value = req.queryStringParameters?.[key] ?? undefined;
-    if (value  !== undefined) return value;
-  }
-  if (req?.body) {
+    return req.queryStringParameters?.[key] ?? undefined;
+  } else if (req?.body) {
     try {
       const body = JSON.parse(req.body);
       if (key in body) {
-        value = body?.[key] ?? undefined;
-        if (value  !== undefined) return value;
+        return body?.[key] ?? undefined;
       }
     } catch (e) {
       const urlParams = new URLSearchParams(req.body);
-      value = urlParams.get(key) ?? undefined;
-      if (value  !== undefined) return value;
+      return urlParams.get(key) ?? undefined;
     }
   }
-
-  if (req?.headers?.Cookie) {
-    value = valueFromCookies(req.headers, key);
-     if (value  !== undefined) return value;
-  }
-
   return undefined;
 }
 
@@ -151,7 +146,11 @@ export function requiredValueFromRequest(
   if (value !== undefined) {
     return value;
   } else {
-    throw new InvalidValueError(`${key} not available in request`);
+    throw new LtiCustomError(
+      `${key} not available in request`,
+      'MissingKeyInRequest',
+      400
+    );
   }
 }
 
@@ -169,7 +168,11 @@ export function requiredTruthyValueFromRequest(
   if (value) {
     return value;
   } else {
-    throw new InvalidValueError(`${key} not available or is empty`);
+    throw new LtiCustomError(
+      `${key} not available in request`,
+      'MissingKeyInRequest',
+      400
+    );
   }
 }
 
@@ -182,36 +185,12 @@ export function requiredAllowedValueFromRequest(
   if (value !== undefined && allowedValues.includes(value)) {
     return value;
   } else {
-    throw new InvalidValueError(
-      `${key} not available or is sending unexpected value`
+    throw new LtiCustomError(
+      `${key} is invalid in request`,
+      'InvalidKeyInRequest',
+      400
     );
   }
-}
-
-/**
- * Parses HTTP Header and returns a list of cookies
- * @param headers APIGatewayProxyEventHeaders
- * @returns list of cookies found
- */
-export function cookiesFromHeaders(
-  headers: APIGatewayProxyEventHeaders
-): Record<string, string> | undefined {
-  if (headers?.Cookie === undefined) {
-    return undefined;
-  }
-  const list = {},
-    rc = headers.Cookie;
-
-  rc &&
-    rc.split(';').forEach(function (cookie) {
-      const parts = cookie.split('=');
-      const key = (parts as any)?.shift().trim();
-      const value = decodeURI(parts.join('='));
-      if (key !== '') {
-        (list as any)[key] = value;
-      }
-    });
-  return list;
 }
 
 /**
@@ -224,11 +203,12 @@ export function valueFromCookies(
   headers: APIGatewayProxyEventHeaders,
   key: string
 ): string | undefined {
-  if (headers?.Cookie === undefined) {
+  const rc = headers?.Cookie || headers?.cookie;
+  if (rc === undefined) {
     Powertools.getInstance().logger.warn('No cookie found');
     return undefined;
   }
-  const rc = headers.Cookie;
+
   for (const cookie of rc.split(';')) {
     const parts = cookie.split('=');
     const ckey = (parts as any)?.shift().trim();
@@ -254,7 +234,11 @@ export function requiredValueFromCookies(
   if (value !== undefined) {
     return value;
   } else {
-    throw new InvalidValueError(`${key} not available in cookie`);
+    throw new LtiCustomError(
+      `${key} not available in cookie`,
+      'MissingKeyInCookie',
+      400
+    );
   }
 }
 
@@ -263,37 +247,32 @@ export function requiredValueFromCookies(
  *
  */
 export const getSignedJWT = async (
-  jwtBody: {},
+  jwtBody: object,
   keyDetails: { keyId: string; kid: string }
 ): Promise<string> => {
-  try {
-    const headers = {
-      alg: 'RS256',
-      typ: 'JWT',
-      kid: keyDetails.kid,
-    };
+  const headers = {
+    alg: 'RS256',
+    typ: 'JWT',
+    kid: keyDetails.kid,
+  };
 
-    const headerJson = Buffer.from(JSON.stringify(headers)).toString(
-      'base64url'
-    );
-    const payloadJson = Buffer.from(JSON.stringify(jwtBody)).toString(
-      'base64url'
-    );
-    const clientAssertion = `${headerJson}.${payloadJson}`;
-    const aws = Aws.getInstance();
-    const encoded = new nodeUtil.TextEncoder().encode(clientAssertion);
-    const signedClientAssertion = await aws.sign(keyDetails.keyId, encoded);
-    const b64urlSignedClientAssertion = Buffer.from(
-      signedClientAssertion!
-    ).toString('base64url');
-    const token = `${headerJson}.${payloadJson}.${b64urlSignedClientAssertion}`;
-    return token;
-  } catch (e) {
-    throw e;
-  }
+  const headerJson = Buffer.from(JSON.stringify(headers)).toString('base64url');
+  const payloadJson = Buffer.from(JSON.stringify(jwtBody)).toString(
+    'base64url'
+  );
+  const clientAssertion = `${headerJson}.${payloadJson}`;
+  const aws = Aws.getInstance();
+  const encoded = new nodeUtil.TextEncoder().encode(clientAssertion);
+  const signedClientAssertion = await aws.sign(keyDetails.keyId, encoded);
+  const b64urlSignedClientAssertion = Buffer.from(
+    signedClientAssertion!
+  ).toString('base64url');
+  const token = `${headerJson}.${payloadJson}.${b64urlSignedClientAssertion}`;
+  return token;
 };
 
 /**
+ *
  * This is how aws amplify library encodes the state param,
  * https://github.com/aws-amplify/amplify-js/blob/main/packages/core/src/Util/StringUtils.ts#L1-L11
  * https://github.com/aws-amplify/amplify-js/blob/e1b0b5be3e8ccb3c76e8e2e2f43f910d40d73254/packages/auth/src/OAuth/OAuth.ts#L79
@@ -312,4 +291,106 @@ export const isIsoDateString = (inStr: string) => {
   if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(inStr)) return false;
   const d = new Date(inStr);
   return d instanceof Date && d.toISOString() === inStr;
+};
+
+export async function setParamsFromTokenOrRequestCombined(
+  event: APIGatewayProxyEvent,
+  platform: DynamoDBPlatformConfig,
+  powertools: Powertools,
+  lmsParams: LmsParams,
+  metricPrefix: string
+) {
+  let idToken: string | undefined = undefined;
+
+  try {
+    idToken = requiredTruthyValueFromRequest(event, 'id_token');
+  } catch (e) {
+    powertools.logger.info(
+      "The request does not contain an 'id_token' parameter"
+    );
+  }
+
+  if (idToken) {
+    let jwt;
+    try {
+      jwt = await LTIJwtPayload.load(idToken, platform);
+    } catch (e) {
+      throw new LtiCustomError(
+        (e as Error).message,
+        'JwtValidationFailure',
+        401
+      );
+    }
+
+    lmsParams.setLmsParamsFromJwt(jwt, idToken);
+
+    if (lmsParams instanceof ScoreSubmissionLmsParams) {
+      lmsParams.setScoringParamsFromRequest(event);
+    }
+
+    powertools.metrics.addMetric(
+      `${metricPrefix}WithParameter`,
+      MetricUnits.Count,
+      1
+    );
+  } else {
+    lmsParams.setLmsParamsFromRequestBody(event);
+
+    powertools.metrics.addMetric(
+      `${metricPrefix}WithParameter`,
+      MetricUnits.Count,
+      1
+    );
+  }
+}
+
+export async function submitGetRequestToLms(url: string, accessToken: string) {
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response;
+  } catch (e) {
+    throw new LtiCustomError(
+      (e as Error).message,
+      'FailedRequestToAxios',
+      (e as AxiosError) && (e as AxiosError).response
+        ? (e as AxiosError).response!.status
+        : 500
+    );
+  }
+}
+
+export const sendSignedGetRequest = async (requestURL: string) => {
+  const apiUrl = new URL(requestURL);
+  const sigv4 = new SignatureV4({
+    service: 'execute-api',
+    region: 'us-east-1',
+    credentials: {
+      accessKeyId: AWS_ACCESS_KEY_ID!,
+      secretAccessKey: AWS_SECRET_ACCESS_KEY!,
+      sessionToken: AWS_SESSION_TOKEN,
+    },
+    sha256: Sha256,
+  });
+  const signed = await sigv4.sign({
+    method: 'GET',
+    hostname: apiUrl.host,
+    path: apiUrl.pathname,
+    protocol: apiUrl.protocol,
+    headers: {
+      'Content-Type': 'application/json',
+      host: apiUrl.hostname,
+    },
+  });
+  try {
+    return await axios({
+      ...signed,
+      url: requestURL,
+    });
+  } catch (e) {
+    throw new Error(`Failed to send signed get request : ${requestURL}`);
+  }
 };
