@@ -17,8 +17,7 @@
     "test": "jest --updateSnapshot --testPathPattern=packages --coverage",
     "test:ws": "export POWERTOOLS_DEV=true && jest --passWithNoTests ---updateSnapshot --silent --testPathPattern",
     "test:integration": "export POWERTOOLS_DEV=true && jest --passWithNoTests ---updateSnapshot --testPathPattern=test/integration --silent",
-    "test:setup": "npm run test:setup -w test",
-    "posttest": "generate-coverage-data"
+    "test:setup": "npm run test:setup -w test"
   },
   "workspaces": [
     "packages/cdk",
