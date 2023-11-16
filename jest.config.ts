@@ -9,6 +9,6 @@ export default async (): Promise<Config> => {
       '^.+\\.tsx?$': 'ts-jest',
     },
     testTimeout: 15000,
-    setupFiles: ['<rootDir>/test/env.local.ts'],
+    coverageReporters: ['json', 'lcov', 'text', 'clover', 'cobertura'],
   };
 };
