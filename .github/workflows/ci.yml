@@ -26,10 +26,10 @@ jobs:
         run: npm run eslint
         continue-on-error: true
 
-      - name: Run tests
-        run: npm run test
-        continue-on-error: true
-
       - name: Run build
         run: npm run build
         continue-on-error: false
+
+      - name: Run tests
+        run: npm run test
+        continue-on-error: true
