@@ -14,7 +14,7 @@
     "start": "npm run start -w packages/examples/client ",
     "cdk": "npm run cdk -w packages/cdk",
     "pretest": "npm run eslint",
-    "test": "jest --testPathPattern=packages --coverage",
+    "test": "jest ---updateSnapshot --testPathPattern=packages --coverage",
     "test:ws": "export POWERTOOLS_DEV=true && jest --passWithNoTests ---updateSnapshot --silent --testPathPattern",
     "test:integration": "export POWERTOOLS_DEV=true && jest --passWithNoTests ---updateSnapshot --testPathPattern=test/integration --silent",
     "test:setup": "npm run test:setup -w test",

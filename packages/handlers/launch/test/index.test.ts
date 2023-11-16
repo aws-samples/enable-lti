@@ -80,7 +80,7 @@ describe('launch', () => {
     const launchRes = await handler(
       simpleLaunchProxyRequestEvent() as APIGatewayProxyEventWithLtiLaunchAuth
     );
-    expect(spyJWTLoad).toHaveBeenCalledTimes(1);
+    expect(spyJWTLoad).toHaveBeenCalledTimes(2);
     expect(spyStateLoad).toHaveBeenCalledTimes(1);
     expect(spyStateSave).toHaveBeenCalledTimes(2);
     expect(spyToolLoad).toHaveBeenCalledTimes(1);
