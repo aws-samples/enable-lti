@@ -1,0 +1,35 @@
+name: PR Workflow
+
+on:
+  pull_request:
+    branches: ['main', 'refactor-11-2023']
+
+jobs:
+  build:
+    name: Run pull request workflow
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run eslint
+        continue-on-error: true
+
+      - name: Run tests
+        run: npm run test
+        continue-on-error: true
+
+      - name: Run build
+        run: npm run build
+        continue-on-error: true
