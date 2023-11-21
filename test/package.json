@@ -3,11 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "jest": {
-    "setupFiles": [
-      "./env.local.js"
-    ]
-  },
   "dependencies": {
     "@enable-lti/auth-proxy": "*",
     "@enable-lti/launch": "*",
