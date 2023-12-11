@@ -1,29 +1,24 @@
-import { handler as loginHandler } from '@enable-lti/oidc';
 import { handler as launchAuthHandler } from '@enable-lti/launch';
+import { handler as loginHandler } from '@enable-lti/oidc';
 import {
-  DynamoDBLtiToolConfig,
-  getSignedJWT,
-  LtiToolConfigRecord,
-  DynamoDBPlatformConfig,
-  PlatformConfigRecord,
-  DynamoDBJwks,
   APIGatewayProxyEventWithLtiLaunchAuth,
+  DynamoDBJwks,
+  DynamoDBLtiToolConfig,
+  DynamoDBPlatformConfig,
+  getSignedJWT,
 } from '@enable-lti/util';
 import {
-  loginRequestEvent,
   launchProxyRequestEvent,
+  loginRequestEvent,
 } from '../utils/eventGenerator';
-import { is200Response, isRedirectResponse } from '../utils/validators';
 import {
-  platformConfig,
-  CLIENT_ID,
-  ISS,
   AUTH_TOKEN_URL,
-  jwtBodyForLaunch,
-  TOOL_OIDC_DOMAIN,
+  CLIENT_ID,
   integToolConfig,
   jwtBodyForDeepLinking,
+  platformConfig,
 } from '../utils/models';
+import { is200Response, isRedirectResponse } from '../utils/validators';
 
 /**
  * Specification for first 2 steps in this integ test is below:
@@ -44,19 +39,9 @@ describe('CanvasLMS deep linking flow works', () => {
     const jwks = new DynamoDBJwks(CONTROL_TABLE_NAME, KMS_KEY_ID);
     const kids = await jwks.all();
     KID = kids.keys[0].kid;
-    let platformConfigRecord: PlatformConfigRecord;
-    try {
-      platformConfigRecord = await platform.load(CLIENT_ID, ISS);
-    } catch {
-      platformConfigRecord = await platform.save(platformConfig(JWK_URL));
-    }
+    await platform.save(platformConfig(JWK_URL));
     const tool = new DynamoDBLtiToolConfig(CONTROL_TABLE_NAME);
-    let toolConfigRecord: LtiToolConfigRecord;
-    try {
-      toolConfigRecord = await tool.load(CLIENT_ID, ISS);
-    } catch {
-      toolConfigRecord = await tool.save(integToolConfig(CLIENT_ID));
-    }
+    await tool.save(integToolConfig(CLIENT_ID));
   });
 
   test('user launched tool from CanvasLMS, deep linking flow', async () => {
@@ -78,8 +63,11 @@ describe('CanvasLMS deep linking flow works', () => {
       kid: KID!,
     });
     const launchEvent = launchProxyRequestEvent(signedJWT, state!);
-    const launchRes = await launchAuthHandler(launchEvent as APIGatewayProxyEventWithLtiLaunchAuth);
+    const launchRes = await launchAuthHandler(
+      launchEvent as APIGatewayProxyEventWithLtiLaunchAuth
+    );
     expect(launchRes).toBeDefined();
+    console.log(launchRes);
     expect(is200Response(launchRes)).toBe(true);
   });
 });

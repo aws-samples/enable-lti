@@ -1,37 +1,29 @@
 import {
-  APIGatewayProxyEvent,
-  APIGatewayProxyResult,
-  Callback,
-  Context,
-} from 'aws-lambda';
-import {
-  abort,
   DynamoDBLtiToolConfig,
-  InvalidValueError,
+  LtiCustomError,
+  Powertools,
+  errorResponse,
+  handlerWithPowertools,
   requiredValueFromRequest,
   toolConfigRecord,
   valueFromRequest,
-  handlerWithPowertools,
-  Powertools,
 } from '@enable-lti/util';
+import { MetricUnits } from '@aws-lambda-powertools/metrics';
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 
+const TOOL_FAILURE = 'ToolFailure';
 const CONTROL_PLANE_TABLE_NAME = process.env.CONTROL_PLANE_TABLE_NAME || '';
-
 const powertools = Powertools.getInstance();
+const toolConfig = new DynamoDBLtiToolConfig(CONTROL_PLANE_TABLE_NAME);
 
 export const handler = handlerWithPowertools(
-  async (
-    event: APIGatewayProxyEvent,
-    context: Context,
-    callback: Callback<APIGatewayProxyResult>
-  ): Promise<APIGatewayProxyResult> => {
-    const toolConfig = new DynamoDBLtiToolConfig(CONTROL_PLANE_TABLE_NAME);
-
+  async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
       const id = requiredValueFromRequest(event, 'client_id');
       const issuer = requiredValueFromRequest(event, 'issuer');
       const url = requiredValueFromRequest(event, 'url');
       const data = valueFromRequest(event, 'data');
+      const features = valueFromRequest(event, 'features');
 
       //Instantiate a new tool instance with the required input pararms and persist to storage
       const toolConfigRecord = await toolConfig.save({
@@ -39,7 +31,10 @@ export const handler = handlerWithPowertools(
         issuer,
         url,
         data: data === undefined ? {} : data,
+        features: features === undefined ? [] : features,
       } as toolConfigRecord);
+
+      powertools.metrics.addMetric(TOOL_FAILURE, MetricUnits.Count, 0);
 
       //Return a JSON representation of the Configuration
       return {
@@ -49,14 +44,24 @@ export const handler = handlerWithPowertools(
     } catch (e) {
       const error = e as Error;
       powertools.logger.error(`${error.name} - ${error.message}`, error);
-      if (error instanceof InvalidValueError) {
-        return abort(400, `${error.name} - ${error.message}`);
+      if (error instanceof LtiCustomError) {
+        return errorResponse({
+          pt: powertools,
+          err: e as Error,
+          statusCode: error.statusCode,
+          metricString: error.customMetric,
+          businessMetric: TOOL_FAILURE,
+        });
       } else {
-        return {
+        return errorResponse({
+          pt: powertools,
+          err: e as Error,
           statusCode: 500,
-          body: JSON.stringify((error as Error).message),
-        };
+          metricString: 'FailedSaveToolConfig',
+          businessMetric: TOOL_FAILURE,
+        });
       }
     }
-  }, powertools
+  },
+  powertools
 );

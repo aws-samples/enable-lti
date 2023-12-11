@@ -1,11 +1,10 @@
+import { LtiCustomError } from '@enable-lti/util';
+import { marshall } from '@aws-sdk/util-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
 import { Aws } from './aws';
-import { marshall } from '@aws-sdk/util-dynamodb';
 import { Powertools } from './powertools';
-import { StoreAccessError, SessionNotFound } from '@enable-lti/util';
 
 export interface StateRecord {
-  /* eslint-disable */
   id: string;
   PK: string;
   nonce: string;
@@ -13,21 +12,20 @@ export interface StateRecord {
   ttl: number;
   platform_lti_token: string | undefined;
   id_token: string | undefined;
-  learn_rest_token: string | undefined;
-  /* eslint-enable */
+  learn_rest_token?: string | undefined;
+  tool_url?: string;
 }
 
 export interface State {
-  load(id: string, nonce: string): Promise<StateRecord | undefined>;
+  load(id: string, nonce: string): Promise<StateRecord>;
   save(record: StateRecord | undefined): Promise<StateRecord>;
 }
 
-export const makeStatePK = (stateId: string) => {
+export const makeStatePK = (stateId: string): string => {
   return `STATE#${stateId}`;
 };
 
 export class DynamoDBStateRecord implements StateRecord {
-  /* eslint-disable */
   readonly PK: string;
   readonly id: string;
   readonly nonce: string;
@@ -36,7 +34,7 @@ export class DynamoDBStateRecord implements StateRecord {
   id_token: string | undefined;
   platform_lti_token: string | undefined;
   learn_rest_token: string | undefined;
-  /* eslint-enable */
+  tool_url?: string;
   static assign(incoming: Record<string, any>): DynamoDBStateRecord {
     return new DynamoDBStateRecord(
       incoming.id,
@@ -46,7 +44,8 @@ export class DynamoDBStateRecord implements StateRecord {
       incoming.ttl,
       incoming.id_token,
       incoming.platform_lti_token,
-      incoming.learn_rest_token
+      incoming.learn_rest_token,
+      incoming.tool_url
     );
   }
 
@@ -58,9 +57,9 @@ export class DynamoDBStateRecord implements StateRecord {
     ttl = 0,
     idToken?: string,
     platformLtiToken?: string,
-    learnRestToken?: string
+    learnRestToken?: string,
+    toolURL?: string
   ) {
-    /* eslint-disable */
     this.id = id;
     this.PK = PK;
     this.nonce = nonce;
@@ -69,7 +68,7 @@ export class DynamoDBStateRecord implements StateRecord {
     this.id_token = idToken;
     this.platform_lti_token = platformLtiToken;
     this.learn_rest_token = learnRestToken;
-    /* eslint-enable */
+    this.tool_url = toolURL;
   }
 
   static new(): DynamoDBStateRecord {
@@ -92,6 +91,7 @@ export class DynamoDBStateRecord implements StateRecord {
     );
   }
 }
+
 export class DynamoDBState implements State {
   private readonly tableName: string;
   private readonly ttlSeconds: number;
@@ -112,21 +112,27 @@ export class DynamoDBState implements State {
    * @returns boolean value indicating if the state has been validated.
    */
   async load(id: string, nonce?: string): Promise<StateRecord> {
-    const aws = Aws.getInstance();
     try {
+      const aws = Aws.getInstance();
       const item = await aws.getItem({
         TableName: this.tableName,
-        Key: { PK: { S: `STATE#${id}` } },
+        Key: { PK: { S: makeStatePK(id) } },
         ConsistentRead: true,
       });
-      if (item !== undefined) {
+      if (!item) {
+        throw new LtiCustomError(
+          `No State record found for ${makeStatePK(id)}.`,
+          'SessionNotFound',
+          401
+        );
+      } else {
         // In one case, we are using the state record and mechanism to limit to single use for single id, below condition is to accommodate for that case
         if (!nonce) {
           nonce = id;
         }
         const stateRecord = DynamoDBStateRecord.assign(item);
         if (stateRecord.nonce !== nonce || stateRecord.nonce_count !== 0) {
-          throw Error('Invalid state');
+          throw new LtiCustomError('Invalid nonce', 'SessionNotFound', 401);
         } else {
           await aws.updateItem({
             TableName: this.tableName,
@@ -142,17 +148,18 @@ export class DynamoDBState implements State {
           });
         }
         return stateRecord;
-      } else {
-        throw new SessionNotFound(
-          `No State record found for ${makeStatePK(id)}.`
-        );
       }
     } catch (e) {
       const error = e as Error;
-      throw new StoreAccessError(
+      if (error instanceof LtiCustomError) {
+        throw error;
+      }
+      throw new LtiCustomError(
         `Error retrieving State for ${makeStatePK(id)}. ${error.name} - ${
           error.message
-        }`
+        }`,
+        'StateLoadError',
+        500
       );
     }
   }
@@ -189,8 +196,10 @@ export class DynamoDBState implements State {
           error.name
         } - ${error.message}`
       );
-      throw new StoreAccessError(
-        `Error persisting State. ${error.name} - ${error.message}`
+      throw new LtiCustomError(
+        `Error persisting State. ${error.name} - ${error.message}`,
+        'StoreAccessError',
+        500
       );
     }
   }

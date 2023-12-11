@@ -1,41 +1,39 @@
-import { handler as loginHandler } from '@enable-lti/oidc';
-import { handler as launchAuthHandler } from '@enable-lti/launch';
 import { handler as authProxyHandler } from '@enable-lti/auth-proxy';
+import { handler as launchAuthHandler } from '@enable-lti/launch';
+import { handler as loginHandler } from '@enable-lti/oidc';
 import { handler as tokenProxyHandler } from '@enable-lti/token-proxy';
-import axios from 'axios';
 import {
-  DynamoDBLtiToolConfig,
-  getSignedJWT,
-  LtiToolConfigRecord,
-  DynamoDBJwks,
-  DynamoDBPlatformConfig,
-  PlatformConfigRecord,
   APIGatewayProxyEventWithLtiLaunchAuth,
+  DynamoDBJwks,
+  DynamoDBLtiToolConfig,
+  DynamoDBPlatformConfig,
+  getSignedJWT,
 } from '@enable-lti/util';
+import axios from 'axios';
 import {
   authProxyRequestEvent,
   bbLaunchProxyRequestEvent,
-  tokenProxyRequestEvent,
   bbLoginRequestEvent,
+  tokenProxyRequestEvent,
 } from '../utils/eventGenerator';
+import {
+  ACCESS_TOKEN_URL,
+  AUTH_TOKEN_URL,
+  CLIENT_ID,
+  DEPLOYMENT_ID,
+  TOOL_OIDC_DOMAIN,
+  integToolConfig,
+  jwtBodyForLaunch,
+  platformConfig,
+} from '../utils/models';
 import {
   is401Response,
   is500Response,
   isRedirectResponse,
 } from '../utils/validators';
-import {
-  platformConfig,
-  CLIENT_ID,
-  ISS,
-  AUTH_TOKEN_URL,
-  DEPLOYMENT_ID,
-  jwtBodyForLaunch,
-  TOOL_OIDC_DOMAIN,
-  integToolConfig,
-  ACCESS_TOKEN_URL,
-} from '../utils/models';
 
 jest.mock('axios');
+
 /**
  * Specification for first 2 steps in this integ test is below:
  * https://www.imsglobal.org/spec/security/v1p0/#openid_connect_launch_flow
@@ -55,21 +53,9 @@ describe('BlackBoardLMS login launch flow works', () => {
     const jwks = new DynamoDBJwks(CONTROL_TABLE_NAME, KMS_KEY_ID);
     const kids = await jwks.all();
     KID = kids.keys[0].kid;
-    let platformConfigRecord: PlatformConfigRecord;
-    try {
-      platformConfigRecord = await platform.load(CLIENT_ID, ISS, DEPLOYMENT_ID);
-    } catch {
-      platformConfigRecord = await platform.save(
-        platformConfig(JWK_URL, DEPLOYMENT_ID)
-      );
-    }
+    await platform.save(platformConfig(JWK_URL, CLIENT_ID, DEPLOYMENT_ID));
     const tool = new DynamoDBLtiToolConfig(CONTROL_TABLE_NAME);
-    let toolConfigRecord: LtiToolConfigRecord;
-    try {
-      toolConfigRecord = await tool.load(CLIENT_ID, ISS);
-    } catch {
-      toolConfigRecord = await tool.save(integToolConfig(CLIENT_ID));
-    }
+    await tool.save(integToolConfig(CLIENT_ID));
     jest.setTimeout(30000);
   });
 
@@ -79,8 +65,8 @@ describe('BlackBoardLMS login launch flow works', () => {
     expect(loginRes).toBeDefined();
     expect(isRedirectResponse(loginRes, AUTH_TOKEN_URL)).toBe(true);
     const params = new URLSearchParams(loginRes.headers!.Location as string);
-    let eLTIState = params.get('state');
-    let eLTINonce = params.get('nonce');
+    const eLTIState = params.get('state');
+    const eLTINonce = params.get('nonce');
     //ELTI has redirected to CanvasLMS auth token url above
     //-------------------------------------------------------
     //now simulating canvasLMS calling back ELTI with token
@@ -120,11 +106,20 @@ describe('BlackBoardLMS login launch flow works', () => {
       keyId: KMS_KEY_ID,
       kid: KID!,
     });
+    const badState = 'badStatebadStatebadState';
+    const launchEventBadState = bbLaunchProxyRequestEvent(signedJWT, badState);
+    const launchResBadResponse = await launchAuthHandler(
+      launchEventBadState as APIGatewayProxyEventWithLtiLaunchAuth
+    );
+    expect(launchResBadResponse).toBeDefined();
+    expect(is401Response(launchResBadResponse)).toBe(true);
+    //Good launch response
+
+    const launchEvent = bbLaunchProxyRequestEvent(signedJWT, eLTIState!);
     (axios.post as jest.Mock).mockResolvedValueOnce({
       status: 200,
       data: { access_token: 'ACCESS_TOKEN' },
     });
-    const launchEvent = bbLaunchProxyRequestEvent(signedJWT, eLTIState!);
     const launchRes = await launchAuthHandler(
       launchEvent as APIGatewayProxyEventWithLtiLaunchAuth
     );
@@ -135,6 +130,7 @@ describe('BlackBoardLMS login launch flow works', () => {
     );
     expect(isRedirectResponse(launchRes, TOOL_OIDC_DOMAIN)).toBe(true);
     jest.clearAllMocks();
+
     //ELTI has verified the token and redirected to Tool OIDC above
     //---------------------------------------------------------
     //now simulating Tool OIDC calling ELTI for authorization, we create a code and send
@@ -144,7 +140,7 @@ describe('BlackBoardLMS login launch flow works', () => {
     ] as Array<string>;
     eLTIState = cookieArr[0].split('=')[1];
     eLTINonce = cookieArr[1].split('=')[1];
-    const authProxyEvent = authProxyRequestEvent(eLTIState!, eLTINonce!);
+    const authProxyEvent = authProxyRequestEvent(eLTIState, eLTINonce);
     const authRes = await authProxyHandler(authProxyEvent);
     expect(authRes).toBeDefined();
     expect(isRedirectResponse(authRes)).toBe(true);
@@ -154,14 +150,13 @@ describe('BlackBoardLMS login launch flow works', () => {
     const authCode = toolOIDCAuthFlowParams.get(
       `${TOOL_OIDC_DOMAIN}/oauth2/idpresponse?code`
     );
-    const toolOIDCState = toolOIDCAuthFlowParams.get('state');
     expect(authCode).toBeDefined();
 
     // Negative case: nonce is already used so re-playing should error
-    const rePlayAuthProxyEvent = authProxyRequestEvent(eLTIState!, eLTINonce!);
+    const rePlayAuthProxyEvent = authProxyRequestEvent(eLTIState, eLTINonce);
     const replayAuthProxyRes = await authProxyHandler(rePlayAuthProxyEvent);
     expect(replayAuthProxyRes).toBeDefined();
-    expect(replayAuthProxyRes.statusCode).toEqual(500);
+    expect(replayAuthProxyRes.statusCode).toEqual(401);
 
     //ELTI has send a code to Tool OIDCabove
     //--------------------------------------------------
@@ -174,7 +169,7 @@ describe('BlackBoardLMS login launch flow works', () => {
     //Negative test re-using the authCode
     const replayTokenRes = await tokenProxyHandler(tokenProxyEvent);
     expect(replayTokenRes).toBeDefined();
-    expect(replayTokenRes.statusCode).toEqual(500);
+    expect(replayTokenRes.statusCode).toEqual(401);
   });
   jest.resetAllMocks();
 });

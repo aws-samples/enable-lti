@@ -1,13 +1,4 @@
-import {
-  GetPublicKeyCommand,
-  KMSClient,
-  MessageType,
-  SignCommand,
-  SigningAlgorithmSpec,
-  VerifyCommand,
-} from '@aws-sdk/client-kms';
 import { Sha256 } from '@aws-crypto/sha256-js';
-import { SSMClient } from '@aws-sdk/client-ssm';
 import {
   DynamoDBClient,
   GetItemCommand,
@@ -21,18 +12,40 @@ import {
   UpdateItemCommandInput,
   UpdateItemCommandOutput,
 } from '@aws-sdk/client-dynamodb';
+import {
+  GetPublicKeyCommand,
+  KMSClient,
+  MessageType,
+  SignCommand,
+  SigningAlgorithmSpec,
+  VerifyCommand,
+} from '@aws-sdk/client-kms';
+import {
+  PublishCommand,
+  PublishCommandInput,
+  PublishCommandOutput,
+  SNSClient,
+} from '@aws-sdk/client-sns';
+import {
+  SQSClient,
+  SendMessageCommand,
+  SendMessageCommandInput,
+  SendMessageCommandOutput,
+} from '@aws-sdk/client-sqs';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
 
 export class Aws {
   private static instance: Aws;
   private kmsClient: KMSClient;
-  private ssmClient: SSMClient;
   private dynamoDBClient: DynamoDBClient;
+  private sqsClient: SQSClient;
+  private snsClient: SNSClient;
 
   private constructor(configuration: object = {}) {
     this.kmsClient = new KMSClient(configuration);
-    this.ssmClient = new SSMClient(configuration);
     this.dynamoDBClient = new DynamoDBClient(configuration);
+    this.sqsClient = new SQSClient(configuration);
+    this.snsClient = new SNSClient(configuration);
   }
 
   static getInstance(): Aws {
@@ -75,6 +88,16 @@ export class Aws {
     );
 
     return response.Signature;
+  }
+
+  async sendMessage(
+    input: SendMessageCommandInput
+  ): Promise<SendMessageCommandOutput> {
+    return await this.sqsClient.send(new SendMessageCommand(input));
+  }
+
+  async publish(input: PublishCommandInput): Promise<PublishCommandOutput> {
+    return await this.snsClient.send(new PublishCommand(input));
   }
 
   async verify(
@@ -122,7 +145,7 @@ export class Aws {
   ): Promise<Record<string, any>[] | undefined> {
     const response = await this.dynamoDBClient.send(new ScanCommand(input));
     if (response.Items !== undefined && response.Items.length > 0) {
-      return response.Items.map((item) => {
+      return response.Items.map((item: any) => {
         return unmarshall(item);
       });
     } else {

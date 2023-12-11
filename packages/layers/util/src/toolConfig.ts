@@ -1,10 +1,6 @@
-import { Aws } from './aws';
+import { LtiCustomError } from '@enable-lti/util';
 import { marshall } from '@aws-sdk/util-dynamodb';
-import {
-  InvalidValueError,
-  RecordNotFoundError,
-  StoreAccessError,
-} from '@enable-lti/util';
+import { Aws } from './aws';
 
 export type titleURLs = {
   title: string;
@@ -28,11 +24,26 @@ export type toolConfigData = {
   LTIResourceLinks?: titleURLs[];
 };
 
+export type featureName = 'ForceLogout' | 'CMPDeepLinkingRedirect';
+export type featureData = {
+  cmpDomain?: string;
+  cmpResourceLinksAPI?: string;
+  oidc?: toolOIDCConfig;
+};
+
+export type eLTIFeature = {
+  name: featureName;
+  enabled: boolean;
+  data?: featureData;
+};
+
 export type toolConfigRecord = {
   id: string;
   issuer: string;
   url: string;
   data: toolConfigData;
+  features: eLTIFeature[];
+  clientUuId?: string;
 };
 
 export interface LtiToolConfigRecord {
@@ -40,12 +51,18 @@ export interface LtiToolConfigRecord {
   issuer: string;
   url: string;
   data: toolConfigData;
+  features: eLTIFeature[];
+  clientUuId?: string;
   toolOIDCAuthorizeURL(
-    toolURL: string,
     state?: string,
     launchUrl?: string,
     nonce?: string
   ): string;
+  toolOIDCLogoutURL(logoutRedirectURL: string, state: string): string;
+  cmpAuthorizeURL(state?: string, nonce?: string): string;
+  cmpDomainFlow(): boolean;
+  isFeatureEnabled(feature: featureName): boolean;
+  cmpResourceLinkAPIURL(): string | undefined;
   authUrl(): string;
   jwksUrl(): string;
 }
@@ -55,12 +72,14 @@ export interface LtiToolConfig {
   save(config: toolConfigRecord): Promise<LtiToolConfigRecord>;
 }
 
-class DynamoDBLtiToolConfigRecord implements LtiToolConfigRecord {
+export class DynamoDBLtiToolConfigRecord implements LtiToolConfigRecord {
   readonly PK: string;
   readonly id: string;
   readonly issuer: string;
   readonly url: string;
   readonly data: toolConfigData;
+  readonly features: eLTIFeature[];
+  readonly clientUuId?: string;
 
   static assign(incoming: Record<string, any>): DynamoDBLtiToolConfigRecord {
     return new DynamoDBLtiToolConfigRecord(
@@ -68,22 +87,28 @@ class DynamoDBLtiToolConfigRecord implements LtiToolConfigRecord {
       incoming.issuer,
       incoming.url,
       incoming.PK,
-      incoming.data
+      incoming.data,
+      incoming.features,
+      incoming.clientUuId
     );
   }
 
-  private constructor(
+  constructor(
     id: string,
     issuer: string,
     url: string,
     PK?: string,
-    data: toolConfigData = {}
+    data: toolConfigData = {},
+    features?: eLTIFeature[],
+    clientUuId?: string
   ) {
     this.id = id;
     this.issuer = issuer;
     this.url = url;
     this.PK = PK === undefined ? `TOOL#${id}#${issuer}` : PK!;
     this.data = data;
+    this.features = features === undefined ? [] : features;
+    this.clientUuId = clientUuId;
   }
 
   static new(
@@ -107,24 +132,22 @@ class DynamoDBLtiToolConfigRecord implements LtiToolConfigRecord {
    * This function will construct the oath2/authorize url with response_type=code and scope=openId
    * https://docs.aws.amazon.com/cognito/latest/developerguide/authorization-endpoint.html
    *
-   * @param toolURL the url user must be redirected to after Authentication
-   * @param state an optional state parameter to be added
+   * @param optional state
    * @param launchUrl an optional launch url to launch if there is no OIDC configuration
-   * @param nonce an optional nonce to be added for tool oidc flow
+   * @param optional nonce
    *
    * @returns the oauth2/authorize endpoint of tool's OIDC provider with toolURL as redirect_uri
    * Please note that this will return the toolURL back if there is no OIDC configured
    */
   toolOIDCAuthorizeURL(
-    toolURL: string,
     state?: string,
     launchUrl?: string,
     nonce?: string
   ): string {
     if (!this.data.OIDC) {
-      return launchUrl ?? toolURL;
+      return launchUrl ?? this.url;
     }
-    let toolOIDCURL = `${this.data.OIDC.domain}oauth2/authorize?identity_provider=${this.data.OIDC.idpName}&redirect_uri=${toolURL}&response_type=code&client_id=${this.data.OIDC.clientId}&scope=openid`;
+    let toolOIDCURL = `${this.data.OIDC.domain}oauth2/authorize?identity_provider=${this.data.OIDC.idpName}&redirect_uri=${this.url}&response_type=code&client_id=${this.data.OIDC.clientId}&scope=openid`;
     if (state) {
       toolOIDCURL = `${toolOIDCURL}&state=${state}`;
     }
@@ -132,6 +155,81 @@ class DynamoDBLtiToolConfigRecord implements LtiToolConfigRecord {
       toolOIDCURL = `${toolOIDCURL}&nonce=${nonce}`;
     }
     return toolOIDCURL;
+  }
+
+  /**
+   * This function will construct the logout url with client_id, logout_uri, and state as params
+   * https://docs.aws.amazon.com/cognito/latest/developerguide/logout-endpoint.html
+   *
+   * @param logoutRedirectURL the url user must be redirected to after logou
+   * @param state an optional state parameter to be added
+   * @returns the logout endpoint of tool's OIDC provider with eLTI redirect handler endpoint as logout_url
+   */
+  toolOIDCLogoutURL(logoutRedirectURL: string, state?: string): string {
+    if (!this.data.OIDC) {
+      throw new LtiCustomError(
+        'OIDC does not exist in tool config',
+        'OIDCDoesNotExist',
+        500
+      );
+    }
+    let toolOIDCLogoutURL = `${this.data.OIDC!.domain}logout?client_id=${
+      this.data.OIDC!.clientId
+    }&logout_uri=${logoutRedirectURL}`;
+    if (state) {
+      toolOIDCLogoutURL = `${toolOIDCLogoutURL}&state=${state}`;
+    }
+    return toolOIDCLogoutURL;
+  }
+
+  cmpAuthorizeURL(state?: string, nonce?: string): string {
+    const cmpOidc = this.cmpOidc();
+    if (!cmpOidc) {
+      throw new Error('CMP OIDC data not found on tool object');
+    }
+    const cmpDomain = this.cmpDomain();
+    if (!cmpDomain) {
+      throw new Error('CMP Domain not found');
+    }
+    let cmpAuthorizeURL = `${cmpOidc.domain}oauth2/authorize?identity_provider=${cmpOidc.idpName}&redirect_uri=${cmpDomain}&response_type=code&client_id=${cmpOidc.clientId}&scope=openid`;
+    if (state) {
+      cmpAuthorizeURL = `${cmpAuthorizeURL}&state=${state}`;
+    }
+    if (nonce) {
+      cmpAuthorizeURL = `${cmpAuthorizeURL}&nonce=${nonce}`;
+    }
+    return cmpAuthorizeURL;
+  }
+  cmpDomainFlow(): boolean {
+    return (
+      this.isFeatureEnabled('CMPDeepLinkingRedirect') &&
+      this.cmpDomain() !== undefined &&
+      this.cmpResourceLinkAPIURL() !== undefined
+    );
+  }
+  cmpDomain(): string | undefined {
+    return this.features.find((f) => f.name === 'CMPDeepLinkingRedirect')?.data
+      ?.cmpDomain;
+  }
+  cmpResourceLinkAPIURL(): string | undefined {
+    return this.features.find((f) => f.name === 'CMPDeepLinkingRedirect')?.data
+      ?.cmpResourceLinksAPI;
+  }
+  cmpOidc(): toolOIDCConfig | undefined {
+    return this.features.find((f) => f.name === 'CMPDeepLinkingRedirect')?.data
+      ?.oidc;
+  }
+  /**
+   * As we are expanding our features, we will provide the ability to enable or disable features using tool config object
+   * @param featureName
+   * @returns
+   */
+  isFeatureEnabled(featureName: featureName): boolean {
+    return (
+      this.features &&
+      this.features.length > 0 &&
+      this.features.some((f) => f.name === featureName && f.enabled)
+    );
   }
 }
 
@@ -141,7 +239,7 @@ export class DynamoDBLtiToolConfig implements LtiToolConfig {
   constructor(tableName: string) {
     this.tableName = tableName;
   }
-  async load(id: String, issuer: String): Promise<LtiToolConfigRecord> {
+  async load(id: string, issuer: string): Promise<LtiToolConfigRecord> {
     const aws = Aws.getInstance();
     try {
       const item = await aws.getItem({
@@ -155,15 +253,21 @@ export class DynamoDBLtiToolConfig implements LtiToolConfig {
       }
     } catch (e) {
       const error = e as Error;
-      throw new RecordNotFoundError(
-        `Error retrieving LtiToolConfig for TOOL#${id}. ${error.name} - ${error.message}`
+      throw new LtiCustomError(
+        `Error retrieving LtiToolConfig for TOOL#${id}. ${error.name} - ${error.message}`,
+        'RecordNotFoundError',
+        500
       );
     }
   }
 
   async save(config: toolConfigRecord): Promise<LtiToolConfigRecord> {
-    if (!config.url) {
-      throw new InvalidValueError('InvalidParameterException');
+    if (!config.url || !config.id || !config.issuer) {
+      throw new LtiCustomError(
+        'InvalidParameterException',
+        'InvalidValueError',
+        500
+      );
     }
     const record = DynamoDBLtiToolConfigRecord.assign(config);
     const aws = Aws.getInstance();
@@ -179,8 +283,10 @@ export class DynamoDBLtiToolConfig implements LtiToolConfig {
       return record;
     } catch (e) {
       const error = e as Error;
-      throw new StoreAccessError(
-        `Error persisting LtiToolConfig. ${error.name} - ${error.message}`
+      throw new LtiCustomError(
+        `Error persisting LtiToolConfig. ${error.name} - ${error.message}`,
+        'StoreAccessError',
+        500
       );
     }
   }

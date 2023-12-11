@@ -39,7 +39,7 @@ export class ELTIApisStack extends Stack {
       keys: keys,
     });
     const webAcl = new WebAcl(this, 'eltiWaf');
-    let apiConfig: ApisConfig = {
+    const apiConfig: ApisConfig = {
       lambdas: this._lambdas,
       wafArn: webAcl.arn,
       customDomainConfig: {
