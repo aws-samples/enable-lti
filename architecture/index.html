@@ -1,0 +1,683 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../implementing/">
+      
+      
+      <link rel="icon" href="../None">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.2">
+    
+    
+      
+        <title>Architecture - AWS Samples - Enable LTI (eLTI)</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.50c56a3b.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Ubuntu";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="AWS Samples - Enable LTI (eLTI)" class="md-header__button md-logo" aria-label="AWS Samples - Enable LTI (eLTI)" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AWS Samples - Enable LTI (eLTI)
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws-samples/enable-lti" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="AWS Samples - Enable LTI (eLTI)" class="md-nav__button md-logo" aria-label="AWS Samples - Enable LTI (eLTI)" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    AWS Samples - Enable LTI (eLTI)
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws-samples/enable-lti" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Homepage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Architecture
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#aws-service-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS Service Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detailed-flows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed Flows
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detailed Flows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#out-of-band-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Out-of-band registration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openid-connect-launch" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenID Connect launch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deep-linking-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deep Linking workflow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#names-and-role-provisioning-services-nrps-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Names and Role Provisioning Services (NRPS) workflow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implementing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Implementing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h1>
+<h3 id="aws-service-overview">AWS Service Overview<a class="headerlink" href="#aws-service-overview" title="Permanent link">&para;</a></h3>
+<p>The following architecture represents an overview of the AWS services used for the implementation of eLTI.</p>
+<p><img alt="Enable-LTI Service Overview" src="../images/EnableLTI-Architecture-Service-Overview.png" width="600" /></p>
+<p>eLTI leverages the following AWS services:</p>
+<ul>
+<li><a href="https://aws.amazon.com/waf/" target="_blank"><strong>AWS WAF</strong></a> is a web application firewall that helps protect web applications from attacks by allowing you to configure rules that allow, block, or monitor (count) web requests based on conditions that you define.</li>
+<li><a href="https://aws.amazon.com/api-gateway/" target="_blank"><strong>Amazon API Gateway</strong></a> is a fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale. Amazon API Gateway acts as the “Front Door” for accessing our application and proxy the entire HTTP request to the AWS Lambda function. It is also used as an API to configure the tools.</li>
+<li><a href="https://aws.amazon.com/lambda/" target="_blank"><strong>AWS Lambda</strong></a> is a serverless, event-driven compute service that lets you run code for virtually any type of application or backend service without provisioning or managing servers. AWS Lambda provides the logic for the invoking the LTI handshakes and routing for the tool.</li>
+<li><a href="https://aws.amazon.com/dynamodb/" target="_blank"><strong>Amazon DynamoDB</strong></a> is a fully managed, serverless, key-value NoSQL database designed to run high-performance applications at any scale. Amazon DynamoDB is used to store persistent data such as LTI platform configuration data and user state.</li>
+<li><a href="https://aws.amazon.com/kms/" target="_blank"><strong>AWS Key Management Service (AWS KMS)</strong></a> is a managed service that helps you more easily create and control the keys used for cryptographic operations. AWS KMS is used to verify messages and generate keys for signing JSON Web Token (JWT) tokens.</li>
+</ul>
+<h2 id="detailed-flows">Detailed Flows<a class="headerlink" href="#detailed-flows" title="Permanent link">&para;</a></h2>
+<h3 id="out-of-band-registration">Out-of-band registration<a class="headerlink" href="#out-of-band-registration" title="Permanent link">&para;</a></h3>
+<p>The following component flow diagram shows how eLTI enables a tool to be integrated into a LMS.</p>
+<pre class="mermaid"><code>graph LR
+  subgraph LT["Learning Tool"]
+    direction LR
+    eLTIAdmin("eLTI Admin") --3--&gt; eLTI
+    eLTIAdmin --4--&gt; ToolOIDC["Tool OIDC"]
+    eLTIAdmin("eLTI Admin") --5--&gt; eLTI
+    ToolOIDC --- Tool
+  end
+  subgraph IT["Institution"]
+    direction RL
+    LMSAdmin("LMS Admin") --1--&gt; LMS
+  end
+  IT -.2.-&gt; LT</code></pre>
+<p>One time out-of-band registration steps:</p>
+<ol>
+<li>LMS Admin configures the Learning Tool inside of the LMS using the eLTI URLs.</li>
+<li>LMS Admin shares the output of the configuration with the eLTI admin. These details include the <code>client_id</code>, <code>secret_key</code>, and <code>deployment_id</code>.</li>
+<li>eLTI Admin saves the platform information using eLTI's Configuration API. A platform config record is created in DynamoDB with the shared <code>client_id</code> and <code>deployment_id</code>, in addition to the platform's <code>iss</code>, <code>auth_token_url</code>, <code>auth_login_url</code>, and <code>access_token_url</code>.</li>
+<li>eLTI Admin creates a new OIDC IDP in the Tool's OIDC provider with <code>client_id</code>, <code>secret_key</code>, and eLTI URLs for authorize and token endpoints.</li>
+<li>eLTI Admin adds Tool and Tool OIDC information to eLTI via Configuration API. A tool config record is created in DynamoDB.</li>
+</ol>
+<p><em>References:</em></p>
+<ul>
+<li><a href="https://www.imsglobal.org/spec/security/v1p0/#platform-originating-messages" target="_blank">LTI 1.3 Platform-Originating Messages Specification</a></li>
+</ul>
+<h3 id="openid-connect-launch">OpenID Connect launch<a class="headerlink" href="#openid-connect-launch" title="Permanent link">&para;</a></h3>
+<p>The following component flow diagram shows how eLTI enables a Tool to be launched by a LMS using OpenID Connect Launch flow.</p>
+<pre class="mermaid"><code>graph LR
+    subgraph LT["Learning Tool"]
+        eLTI
+        ToolOIDC["Tool OIDC"]
+        Tool
+    end
+    subgraph IT["Institution"]
+        User("Platform User") --1--&gt; LMS
+    end
+    LMS --2--&gt; eLTI
+    eLTI --3--&gt; eLTI
+    eLTI --4--&gt; LMS
+    LMS --5--&gt; LMS
+    LMS --6--&gt; eLTI
+    eLTI --7--&gt; eLTI
+    eLTI --8--&gt; ToolOIDC
+    ToolOIDC --9--&gt; eLTI
+    eLTI --10--&gt; ToolOIDC
+    eLTI &lt;--11--&gt; ToolOIDC
+    ToolOIDC --12--&gt; Tool</code></pre>
+<p>The beginning of a platform initiated message contains the following OIDC launch steps:</p>
+<ol>
+<li>A user launches LTI resource in LMS platform which is created using this tool.</li>
+<li>Initiate 3rd party login request POST or GET <code>/login</code> eLTI endpoint.</li>
+<li>eLTI verifies <code>client_id</code> and <code>iss</code>, then creates <code>state</code> and <code>nonce</code> uuids and stores them in DynamoDB.</li>
+<li>eLTI redirects user to LMS platform’s <code>authorize_redirect</code> endpoint, registered in the <em><a href="#out-of-band-registration">Out-of-band registration</a></em> flow. The <code>redirect_url</code> contains the <code>login_hint</code> and <code>lti_message_hint</code> also provided in the payload from <em>#3</em> above, in addition to the <code>state</code> and <code>nonce</code> values created.</li>
+<li>LMS verifies that <code>redirect_url</code> is registered with <code>client_id</code> being sent, also confirms that <code>login_hint</code> and <code>lti_message_hint</code> are valid.</li>
+<li>LMS calls the eLTI’s <code>/launch</code> endpoint, registered in the <em><a href="#out-of-band-registration">Out-of-band registration</a></em> flow, and gives the JWT <code>id_token</code> and <code>access_token</code> to eLTI.</li>
+<li>eLTI validates <code>state</code>, <code>nonce</code>, and <code>id_token</code> before saving to DynamoDB and initializes Tool OIDC login flow.</li>
+<li>eLTI redirects user to the Tool OIDC’s <code>/oauth2/authorize</code> endpoint, registered in the <em><a href="#out-of-band-registration">Out-of-band registration</a></em> flow. The <code>state</code> and <code>nonce</code> values that are created in <em>#3</em> are sent included in the URL. Example of redirect URL: <code>https://{tool_oidc_url}/oauth2/authorize?identity_provider={lms_idp}&amp;redirect_uri=&amp;response_type=code&amp;client_id=&amp;scope=openid&amp;state=&lt;state&gt;&amp;nonce=&lt;nonce&gt;</code></li>
+<li>Tool OIDC provider will call back eLTI’s <code>/authProxy</code> endpoint, registered in the <em><a href="#out-of-band-registration">Out-of-band registration</a></em> flow, and sends back <code>state</code> and <code>nonce</code> values.</li>
+<li>eLTI creates a new <code>code</code> value which is a uuid, associates it in DynamoDB with <code>state</code> and <code>nonce</code> created in <em>#3</em>, redirects to the <code>redirect_url</code> that from <em>#9</em>, then sends the <code>code</code> and <code>state</code> in url params and adds <code>nonce</code> as a header value.</li>
+<li>Tool OIDC provider calls back eLTI’s <code>/tokenProxy</code> endpoint, registered in the <em><a href="#out-of-band-registration">Out-of-band registration</a></em> flow. eLTI confirms that <code>state</code>, <code>nonce</code>, and <code>code</code> are matching the values in DynamoDB and returns the token associated with as JSON response to this request.</li>
+<li>Tool OIDC confirms the validity of the <code>id_token</code> and redirects user to the <code>redirect_url</code> that it got in <em>#8</em> which is the Tool URL that user wants to load in LMS.</li>
+</ol>
+<p><em>References:</em></p>
+<ul>
+<li><a href="https://www.imsglobal.org/spec/security/v1p0/#openid_connect_launch_flow" target="_blank">LTI 1.3 - OpenID Connect Launch Flow Overview Specification</a></li>
+<li><a href="https://www.imsglobal.org/spec/security/v1p0/#authentication-response-validation" target="_blank">LTI 1.3 - Authentication Response Validation</a></li>
+<li><a href="https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowSteps" target="_blank">OpenID Connect - Authorization Code Flow Steps</a></li>
+</ul>
+<h3 id="deep-linking-workflow">Deep Linking workflow<a class="headerlink" href="#deep-linking-workflow" title="Permanent link">&para;</a></h3>
+<p>The following component flow diagram shows how eLTI enables a Tool to integrate the Deep Linking workflow.</p>
+<pre class="mermaid"><code>graph LR
+    User --1--&gt; LMS
+    LMS -."Launch Flow".-&gt; eLTI
+    subgraph LT["Learning Tool"]
+        eLTI -.-&gt; ToolOIDC["Tool OIDC"]
+        ToolOIDC --2--&gt; Tool
+        Tool --3--&gt; Tool
+        Tool --4--&gt; eLTI
+    end
+    subgraph IT["Institution"]
+        User("Platform User")
+        LMS --6--&gt; LMS
+    end
+    eLTI --5--&gt; LMS</code></pre>
+<p>Deep Linking workflow steps:</p>
+<ol>
+<li>User clicks on eLTI Tool from a module, assignment, or other context which initiates an OIDC launch flow, refer to <em><a href="#openid-connect-launch">OpenID Connect launch</a></em> flow.</li>
+<li>eLTI's Lambda function for the <code>/launch</code> endpoint checks the claim value for <code>lti_message_type</code> inside the the <code>id_token</code>. If the <code>lti_message_type</code> equals <code>LtiDeepLinkingRequest</code>, then the Deep Linking flow starts.</li>
+<li>The request is then routed to the Tool at the given launch link location. The Tool then renders the requested content. The Tool can allow users to select resources to get resource links to insert into the LMS. These resource links can implement line items to specify grading and scoring. <em><a href="https://www.imsglobal.org/spec/lti-dl/v2p0#lti-resource-link" target="_blank">LTI Resource Link Specification</a></em></li>
+<li>After a user selects the resources in the Tool, the Tool submits request to eLTI with the <code>resource_links</code> and <code>id_token</code>, where eLTI signs the request to be sent to the LMS.</li>
+<li>eLTI creates a deep linking response form and auto submits it to the <code>deep_linking_settings.deep_link_return_url</code> inside the <code>id_token</code> claim.</li>
+<li>LMS will process the content items and render the module or assignment or other context with the selected resources.</li>
+</ol>
+<p><em>References:</em></p>
+<ul>
+<li><a href="https://www.imsglobal.org/spec/lti-dl/v2p0#workflow" target="_blank">LTI 1.3 - Deep Linking Workflow</a></li>
+</ul>
+<h3 id="names-and-role-provisioning-services-nrps-workflow">Names and Role Provisioning Services (NRPS) workflow<a class="headerlink" href="#names-and-role-provisioning-services-nrps-workflow" title="Permanent link">&para;</a></h3>
+<p>The following component flow diagram shows how eLTI enables a Tool to integrate the NRPS workflow.</p>
+<pre class="mermaid"><code>graph LR
+    subgraph LT["Learning Tool"]
+        eLTI
+        Tool
+    end
+    subgraph IT["Institution"]
+        LMS
+    end
+    Tool --1--&gt; eLTI
+    eLTI --2--&gt; LMS
+    eLTI --3--&gt; LMS
+    eLTI --4--&gt; Tool</code></pre>
+<p>NRPS workflow steps:</p>
+<ol>
+<li>Tool calls eLTI's <code>/rosterRetrieval</code> endpoint with <code>id_token</code>, <code>issuer</code>, <code>client_id</code>, <code>deployment_id</code> and <code>context_memberships_url</code>. <code>context_memberships_url</code> specifies the customer LMS's NRPS endpoint for a specific course.</li>
+<li>eLTI's Lambda function for the <code>/rosterRetrieval</code> endpoint retrieves the platform configuration, which contains client ID, access token URL, and key ID (kid) for the LMS associated with the combination of <code>client_id</code>, <code>deployment_id</code>, and <code>issuer</code>. It then generates the JWT token from the platform configuration value and request access token from the LMS's access token URL.</li>
+<li>Once a new access token is retrieved, it then submit <code>GET</code> request to <code>context_memberships_url</code> to retrieve the student roster from LMS.</li>
+<li>When the LMS returns the response to the eLTI, eLTI forwards the response to Tool.</li>
+</ol>
+<p><em>References:</em></p>
+<ul>
+<li><a href="https://www.imsglobal.org/spec/lti-nrps/v2p0" target="_blank">LTI 1.3 - Name and Role Provisioning Services Specification</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Homepage">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Homepage
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../implementing/" class="md-footer__link md-footer__link--next" aria-label="Next: Implementing">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Implementing
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.sections", "navigation.expand", "navigation.footer", "navigation.top", "navigation.instant", "navigation.indexes", "navigation.tracking", "content.code.annotate", "content.code.copy", "toc.follow", "toc.integrate", "announce.dismiss"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      
+    
+  </body>
+</html>

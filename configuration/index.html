@@ -1,0 +1,820 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../implementing/">
+      
+      
+      
+      <link rel="icon" href="../None">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.2">
+    
+    
+      
+        <title>Configuration - AWS Samples - Enable LTI (eLTI)</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.50c56a3b.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Ubuntu";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#configuration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="AWS Samples - Enable LTI (eLTI)" class="md-header__button md-logo" aria-label="AWS Samples - Enable LTI (eLTI)" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AWS Samples - Enable LTI (eLTI)
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Configuration
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws-samples/enable-lti" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="AWS Samples - Enable LTI (eLTI)" class="md-nav__button md-logo" aria-label="AWS Samples - Enable LTI (eLTI)" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    AWS Samples - Enable LTI (eLTI)
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws-samples/enable-lti" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Homepage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implementing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Implementing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#lms-platform-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      LMS Platform Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="LMS Platform Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-developer-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating Developer Key 
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-as-external-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adding as External Tool 
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tool-oidc-idp-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tool OIDC IDP Setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#elti-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      eLTI Configuration
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="configuration">Configuration <!-- omit in toc --><a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
+<p>The following steps outlined are intended to be performed after completing the <a href="../implementing/#getting-started">Getting Started</a> guide. Therefore, you already have the infrastructure deployed into your AWS Account and ready to be configured.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+</div>
+<p>The following walkthrough uses Canvas as the LMS and Amazon Cognito as the Tool OIDC IDP. The information shown below will correlate to other LMSs and Tool OIDCs.</p>
+<p>Setup configurations included below:</p>
+<ul>
+<li><a href="#lms-platform-setup">LMS Platform Setup</a></li>
+<li><a href="#tool-oidc-idp-setup">Tool OIDC IDP Setup</a></li>
+<li><a href="#elti-configuration">eLTI Configuration</a></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code>Output: &lt;keys&gt;</code> mentioned in the following docs are specific values for your deployment. These can be found in the <code>packages &gt; cdk &gt; output.json</code> file if you followed the <a href="../implementing/#getting-started">Getting Started</a> guide or can be viewed in the console under the Amazon CloudFormation <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html">stack outputs</a>.</p>
+</div>
+<h2 id="lms-platform-setup">LMS Platform Setup<a class="headerlink" href="#lms-platform-setup" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+</div>
+<p>Uses Canvas LMS as the example.</p>
+<p><em>Prerequisites:</em></p>
+<ul>
+<li><code>Tool URI</code> - The tool we are enabling LTI for using eLTI.</li>
+<li><code>Output: &lt;keys&gt;</code> - From <a href="../implementing/#getting-started">Getting Started</a> guide</li>
+</ul>
+<h4 id="creating-developer-key">Creating Developer Key <!-- omit in toc --><a class="headerlink" href="#creating-developer-key" title="Permanent link">&para;</a></h4>
+<ol>
+<li>In Canvas create a dev key by clicking on “Admin” on left</li>
+<li>Select “Developer Keys“ - <em>URL should be simliar to [https://XXXX/accounts/X/developer_keys]</em></li>
+<li>Click on <code>+ Developer Key</code> button and select <code>LTI Key</code></li>
+</ol>
+<p><img alt="Canvas developer keys" src="../images/configuration/canvas-developer-keys.jpg" /></p>
+<ol>
+<li>Make sure the Method is <code>Manual Entry</code></li>
+<li>Add a name for the key like <code>ExampleEnableLTIDevKey</code></li>
+<li>Give it a Title and Description</li>
+<li>Enter the following:</li>
+<li><code>Target Link URI</code> - Enter Tool URI</li>
+<li><code>Redirect URI</code> - Enter <code>Output: apiELTIURI*</code>/launch</li>
+<li><code>OpenID Connect Initiation URL</code> - Enter <code>Output: apiELTIURI*</code>/login</li>
+<li>Change JWK Method to <strong>Public JWK URL</strong> and enter the URL <code>Output: apiELTIURI*</code>/jwks.json</li>
+<li>In Additional Settings change Privacy Level to <code>Public</code></li>
+<li>
+<p>Under <code>Link Selection</code> → Select Message Type to be <code>LtiDeepLinkingRequest</code></p>
+<p><img alt="Canvas developer key settings" src="../images/configuration/canvas-key-settings.jpg" /></p>
+</li>
+<li>
+<p>Click on Save button at the bottom right</p>
+</li>
+<li>Save the <code>Client Id</code> for later use</li>
+<li>
+<p>Switch the state of the Developer Key from Off to On</p>
+<p><img alt="Canvas developer key created" src="../images/configuration/canvas-key-created.jpg" /></p>
+</li>
+</ol>
+<p><em>Saved for later steps:</em></p>
+<ul>
+<li><code>Saved: Client Id</code></li>
+</ul>
+<h4 id="adding-as-external-tool">Adding as External Tool <!-- omit in toc --><a class="headerlink" href="#adding-as-external-tool" title="Permanent link">&para;</a></h4>
+<ol>
+<li>After creating the developer key.</li>
+<li>Go to <code>Admin</code> screen and select <code>Settings</code>, <code>Apps, View App Center</code> and click on <code>+App</code></li>
+</ol>
+<p><img alt="Canvas external apps" src="../images/configuration/canvas-external-apps.jpg" /></p>
+<ol>
+<li>Change App creation config type to be <strong>By client id.</strong> Enter <code>Saved: Client Id</code>.</li>
+</ol>
+<p><img alt="Canvas external add app" src="../images/configuration/canvas-external-add-app.png" /></p>
+<ol>
+<li>After adding the app, get the save the <code>Deployment Id</code> for late use.</li>
+</ol>
+<p><img alt="Canvas external app created" src="../images/configuration/canvas-external-apps-created.jpg" /></p>
+<p><em>Section Saved Outputs:</em></p>
+<ul>
+<li><code>Saved: Client Id</code></li>
+<li><code>Saved: Deployment Id</code></li>
+</ul>
+<h2 id="tool-oidc-idp-setup">Tool OIDC IDP Setup<a class="headerlink" href="#tool-oidc-idp-setup" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Optional</p>
+<p>Only complete if you are configuring a Tool OIDC IDP.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+</div>
+<p>Uses Canvas LMS and Amazon Cognito as the example.</p>
+<p><em>Prerequisites:</em></p>
+<ul>
+<li><code>Tool URI</code> - The tool we are enabling LTI for using eLTI.</li>
+<li><code>Output: &lt;keys&gt;</code> - From <a href="../implementing/#getting-started">Getting Started</a> guide</li>
+<li><code>Saved: Client Id</code></li>
+</ul>
+<p>Add a new IDP in Cognito</p>
+<ol>
+<li>Select the UserPool that your Tool is using.</li>
+<li>Go to <code>Sign-in experience</code> → <code>Federated Identity Provider</code> and select <code>Add Identity Provider</code></li>
+</ol>
+<p><img alt="Cognito IDP list" src="../images/configuration/cognito-idp-list.jpg" /></p>
+<ol>
+<li>
+<p>Add identity provider details:</p>
+</li>
+<li>
+<p>Federated sign-in options: OpenId Connect (OIDC)</p>
+</li>
+<li>Provider name: Enter IDP Name and save for later.</li>
+<li>Client Id: Enter <code>Saved: Client Id</code></li>
+<li>Authorized scopes: Default value should be “openid”</li>
+<li>Attribute request method: POST</li>
+<li>Manual input<ol>
+<li>Issuer URL: <em>Since using Canvas in example</em>, Enter <a href="https://canvas.instructure.com/">https://canvas.instructure.com</a></li>
+<li>Authorization endpoint: Enter <code>Output: apiELTIURI*</code>/<a href="https://xu6ajwkxf6.execute-api.us-east-2.amazonaws.com/prod/authorizerProxy">authorizerProxy</a></li>
+<li>Token endpoint: Enter <code>Output: apiELTIURI*</code>/<a href="https://xu6ajwkxf6.execute-api.us-east-2.amazonaws.com/prod/tokenProxy">tokenProxy</a></li>
+<li>UserInfo endpoint: Enter <code>Output: apiELTIURI*</code><a href="https://xu6ajwkxf6.execute-api.us-east-2.amazonaws.com/prod/tokenProxy">/tokenProxy</a></li>
+<li>Jwks<em>uri endpoint: _Since using Canvas in example</em>, Enter https://sso.canvaslms.com/api/lti/security/jwks</li>
+</ol>
+</li>
+</ol>
+<p>*The Issuer and JWKS uri endpoints will be static for all platforms and be dependent on the LMS. Canvas values are provided above.</p>
+<p><img alt="Cognito IDP add" src="../images/configuration/cognito-idp-add.png" /></p>
+<ol>
+<li>
+<p>Add attributes. (User pool attribute → OpenID Connect attribute)</p>
+</li>
+<li>
+<p>custom:LMS:ClientId → aud</p>
+</li>
+<li>custom:LMS:DeploymentId → https://purl.imsglobal.org/spec/lti/claim/deployment_id</li>
+<li>custom:LMS:Endpoint → https://purl.imsglobal.org/spec/lti-ags/claim/endpoint</li>
+<li>custom:LMS:Issuer→ iss</li>
+<li>custom:LMS:TargetLinkUri→ https://purl.imsglobal.org/spec/lti/claim/target_link_uri</li>
+<li>email→ email</li>
+<li>username→ sub</li>
+</ol>
+<p><img alt="Cognito IDP attribute mapping" src="../images/configuration/cognito-attribute-mapping.png" /></p>
+<ol>
+<li>
+<p>Add IDP to App client.</p>
+</li>
+<li>
+<p>Navigate to App Integration. Save the <code>Cognito domain</code> for later.</p>
+</li>
+<li>Find your app client and open it. Save the <code>App Client ID</code> for later.</li>
+<li>Edit Hosted UI.</li>
+<li>Select the newly added IDP (<code>Saved: IDP Name</code>) from the Identity Providers list.</li>
+<li>Save changes.</li>
+</ol>
+<p><img alt="Cognito app client" src="../images/configuration/cognito-app-client.jpg" /></p>
+<p><img alt="Cognito app client hosted ui" src="../images/configuration/cognito-app-hosted-ui.jpg" /></p>
+<p><img alt="Cognito app client select IDP" src="../images/configuration/cognito-select-idp.jpg" /></p>
+<p><em>Saved for later steps:</em></p>
+<ul>
+<li><code>Saved: IDP Name</code></li>
+<li><code>Saved: Cognito domain</code></li>
+<li><code>Saved: App Client Id</code> - Different than the LMS <code>Saved: Client Id</code> from “LMS Platform Setup”</li>
+</ul>
+<h2 id="elti-configuration">eLTI Configuration<a class="headerlink" href="#elti-configuration" title="Permanent link">&para;</a></h2>
+<p>Steps to configure the platform and tool inside of eLTI.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+</div>
+<p>Uses Canvas LMS and Amazon Cognito as the example.</p>
+<p><em>Prerequisites:</em></p>
+<ul>
+<li><code>Tool URI</code> - The tool we are enabling LTI for using eLTI.</li>
+<li><code>Output: &lt;keys&gt;</code> - From <a href="../implementing/#getting-started">Getting Started</a> guide</li>
+<li><code>Saved: Client Id</code></li>
+<li><code>Saved: Deployment Id</code></li>
+<li><code>Saved: IDP Name</code></li>
+<li><code>Saved: Cognito domain</code></li>
+<li><code>Saved: App Client Id</code></li>
+</ul>
+<p>The following steps <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/getting-started-step-2.html">manually enter</a> the data in the DynamoDB table. In addition to using the configuration API, you can see one way to automate these entries by referring to the integration test scripts in the code repository <code>enable-lti/test/scripts/setupInteg.ts</code> <a href="https://github.com/aws-samples/enable-lti/blob/main/test/scripts/setupInteg.ts">here</a>.</p>
+<p><strong>Note:</strong> There are two Dynamo DB tables, these objects go into the <strong>Control Plane</strong> table. The Control Plane table utilizes <a href="https://aws.amazon.com/blogs/compute/creating-a-single-table-design-with-amazon-dynamodb/">single-table</a> design.</p>
+<p>Create the following entries in the <code>Output: tablesELTIControlPlaneTable*</code></p>
+<ol>
+<li>
+<p>Create the LMS platform object.</p>
+</li>
+<li>
+<p>Replace with the actual saved values:</p>
+<ol>
+<li><code>&lt;Saved: Client Id&gt;</code> with <code>Saved: Client Id</code> - <strong>Replace both entries</strong></li>
+</ol>
+</li>
+</ol>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1">{
+</span><span id="__span-0-2">    &quot;PK&quot;: &quot;PLATFORM#&lt;Saved: Client Id&gt;#https://canvas.instructure.com#&quot;,
+</span><span id="__span-0-3">    &quot;accessTokenUrl&quot;: &quot;https://sso.canvaslms.com/login/oauth2/token&quot;,
+</span><span id="__span-0-4">    &quot;authLoginUrl&quot;: &quot;https://sso.canvaslms.com/api/lti/authorize&quot;,
+</span><span id="__span-0-5">    &quot;authTokenUrl&quot;: &quot;https://sso.canvaslms.com/api/lti/authorize_redirect&quot;,
+</span><span id="__span-0-6">    &quot;clientId&quot;: &quot;&lt;Saved: Client Id&gt;&quot;,
+</span><span id="__span-0-7">    &quot;iss&quot;: &quot;https://canvas.instructure.com&quot;,
+</span><span id="__span-0-8">    &quot;keySetUrl&quot;: &quot;https://sso.canvaslms.com/api/lti/security/jwks&quot;
+</span><span id="__span-0-9">}
+</span></code></pre></div></td></tr></table></div>
+<ol>
+<li>
+<p>Create the LMS platform object with deployment id.</p>
+</li>
+<li>
+<p>Replace with the actual saved values.</p>
+<ol>
+<li><code>&lt;Saved: Client Id&gt;</code> with <code>Saved: Client Id</code> - <strong>Replace both entries</strong></li>
+<li><code>&lt;Saved: Deployment Id&gt;</code> with <code>Saved: Deployment Id</code></li>
+</ol>
+</li>
+</ol>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-1-1">{
+</span><span id="__span-1-2">    &quot;PK&quot;: &quot;PLATFORM#&lt;Saved: Client Id&gt;#https://canvas.instructure.com#&lt;Saved: Deployment Id&gt;&quot;,
+</span><span id="__span-1-3">    &quot;accessTokenUrl&quot;: &quot;https://sso.canvaslms.com/login/oauth2/token&quot;,
+</span><span id="__span-1-4">    &quot;authLoginUrl&quot;: &quot;https://sso.canvaslms.com/api/lti/authorize&quot;,
+</span><span id="__span-1-5">    &quot;authTokenUrl&quot;: &quot;https://sso.canvaslms.com/api/lti/authorize_redirect&quot;,
+</span><span id="__span-1-6">    &quot;clientId&quot;: &quot;&lt;Saved: Client Id&gt;&quot;,
+</span><span id="__span-1-7">    &quot;iss&quot;: &quot;https://canvas.instructure.com&quot;,
+</span><span id="__span-1-8">    &quot;keySetUrl&quot;: &quot;https://sso.canvaslms.com/api/lti/security/jwks&quot;
+</span><span id="__span-1-9">}
+</span></code></pre></div></td></tr></table></div>
+<ol>
+<li>Create the LMS tool entry.</li>
+<li>If using Tool OIDC IDP replace with the actual saved values.<ol>
+<li><code>&lt;Saved: Client Id&gt;</code> with <code>Saved: Client Id</code></li>
+<li><code>&lt;Saved: App Client Id&gt;</code> with <code>Saved: App Client Id</code></li>
+<li><code>&lt;Saved: Cognito domain&gt;</code> with <code>Saved: Cognito domain</code></li>
+<li><code>&lt;Saved: IDP Name&gt;</code> with <code>Saved: IDP Name</code></li>
+<li><code>&lt;Tool Name&gt;</code> with text name of tool.</li>
+<li><code>&lt;Tool URI&gt;</code> with <code>Tool URI</code>
+   <div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1">{
+</span><span id="__span-2-2">    &quot;PK&quot;: &quot;TOOL#&lt;Saved: Client Id&gt;#https://canvas.instructure.com&quot;,
+</span><span id="__span-2-3">    &quot;data&quot;: {
+</span><span id="__span-2-4">        &quot;LTIResourceLinks&quot;: [],
+</span><span id="__span-2-5">        &quot;OIDC&quot;: {
+</span><span id="__span-2-6">            &quot;clientId&quot;: &quot;&lt;Saved: App Client Id&gt;&quot;,
+</span><span id="__span-2-7">            &quot;domain&quot;: &quot;&lt;Saved: Cognito domain&gt;/&quot;,
+</span><span id="__span-2-8">            &quot;idpName&quot;: &quot;&lt;Saved: IDP Name&gt;&quot;
+</span><span id="__span-2-9">        }
+</span><span id="__span-2-10">    },
+</span><span id="__span-2-11">    &quot;id&quot;: &quot;&lt;Tool Name&gt;&quot;,
+</span><span id="__span-2-12">    &quot;url&quot;: &quot;&lt;Tool URI&gt;&quot;
+</span><span id="__span-2-13">}
+</span></code></pre></div></td></tr></table></div></li>
+</ol>
+</li>
+<li>If NOT using a Tool OIDC replace with the actual saved values.<ol>
+<li><code>&lt;Saved: Client Id&gt;</code> with <code>Saved: Client Id</code></li>
+<li><code>&lt;Tool Name&gt;</code> with text name of tool.</li>
+<li><code>&lt;Tool URI&gt;</code> with <code>Tool URI</code>
+   <div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-3-1">{
+</span><span id="__span-3-2">    &quot;PK&quot;: &quot;TOOL#&lt;Saved: Client Id&gt;#https://canvas.instructure.com&quot;,
+</span><span id="__span-3-3">    &quot;data&quot;: {
+</span><span id="__span-3-4">        &quot;LTIResourceLinks&quot;: []
+</span><span id="__span-3-5">    },
+</span><span id="__span-3-6">    &quot;id&quot;: &quot;&lt;Tool Name&gt;&quot;,
+</span><span id="__span-3-7">    &quot;url&quot;: &quot;&lt;Tool URI&gt;&quot;
+</span><span id="__span-3-8">}
+</span></code></pre></div></td></tr></table></div></li>
+</ol>
+</li>
+</ol>
+<div class="admonition success">
+<p class="admonition-title">Done</p>
+<p>eLTI is now configured with the needed platform and tool settings.</p>
+<p>Go to the LMS to test if the flow is properly configured.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../implementing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Implementing">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Implementing
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["header.autohide", "navigation.sections", "navigation.expand", "navigation.footer", "navigation.top", "navigation.instant", "navigation.indexes", "navigation.tracking", "content.code.annotate", "content.code.copy", "toc.follow", "toc.integrate", "announce.dismiss"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      
+    
+  </body>
+</html>
