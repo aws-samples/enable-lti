@@ -49,12 +49,24 @@ const ltiNodejsFunction = (
     memorySize: 1536,
     architecture: Architecture.ARM_64,
     timeout: Duration.seconds(30),
-    runtime: Runtime.NODEJS_18_X,
+    runtime: Runtime.NODEJS_22_X,
     handler: 'handler',
     role: role,
     logRetentionRole: logRetentionRole,
     logRetention: RetentionDays.TEN_YEARS,
     tracing: Tracing.ACTIVE,
+    bundling: {
+      externalModules: [
+        '@aws-sdk/*',
+        '@enable-lti/*',
+        '@aws-lambda-powertools/*',
+        'uuid',
+        'jose',
+        'node-forge',
+        'html-escaper',
+        'axios',
+      ],
+    },
     ...props,
   });
 
@@ -115,6 +127,14 @@ const ltiNodejsFunction = (
     true
   );
 
+  NagSuppressions.addResourceSuppressions(nodejsFunction, [
+    {
+      id: 'AwsSolutions-L1',
+      reason:
+        'Using Node.js 22.x which is current but not yet recognized by cdk-nag.',
+    },
+  ]);
+
   return nodejsFunction;
 };
 
@@ -137,7 +157,7 @@ export class Lambdas extends Construct {
       code: AssetCode.fromAsset(
         path.join(__dirname, '../../../../dist/layers/util')
       ),
-      compatibleRuntimes: [Runtime.NODEJS_18_X],
+      compatibleRuntimes: [Runtime.NODEJS_22_X],
       description: 'LTI utility functions',
     });
 
