@@ -52,6 +52,6 @@
     "ts-node": "^10.9.2"
   },
   "dependencies": {
-    "typescript": "^4.9.5"
+    "typescript": "^5.9.3"
   }
 }
