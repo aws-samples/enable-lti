@@ -213,6 +213,6 @@ describe('jsonParseClaim', () => {
   it('failure in json parsing', () => {
     expect(() => {
       LTIJwtPayload.prototype.jsonParseClaim('{"key:3}', 'dummy');
-    }).toThrowError('Unexpected end of JSON input');
+    }).toThrow();
   });
 });

@@ -229,7 +229,7 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "5bc602ecde93c947efe5899ae355f999986a1acbe610b1c0b9c468d738857555.zip",
+          "S3Key": "2819175352ad1ce0dae768e83fc328fb70fb5f10b4a8ff0ccbcb791f02b0716d.zip",
         },
         "Handler": "index.handler",
         "Role": {
@@ -238,7 +238,7 @@ exports[`Snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -453,6 +453,7 @@ exports[`Snapshot 1`] = `
         "apiELTIApitokenProxy8E31FDAF",
       ],
       "Metadata": {
+        "aws:cdk:do-not-refactor": true,
         "cdk_nag": {
           "rules_to_suppress": [
             {
@@ -2841,6 +2842,7 @@ exports[`Snapshot 1`] = `
         "apiELTIConfigApitoolC6EAD11B",
       ],
       "Metadata": {
+        "aws:cdk:do-not-refactor": true,
         "cdk_nag": {
           "rules_to_suppress": [
             {
@@ -3672,6 +3674,16 @@ exports[`Snapshot 1`] = `
         "lambdasauthorizerProxyRoleDefaultPolicy285BFA17",
         "lambdasauthorizerProxyRole5A1F7C54",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Using Node.js 22.x which is current but not yet recognized by cdk-nag.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Architectures": [
           "arm64",
@@ -3680,11 +3692,10 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "74b908304f4e0a5ec3a98ec31698ed19455a454862158f3c165d7ecb9b79a4fc.zip",
+          "S3Key": "34fbdea6fed07b8615c7a56ddb9dc3cf7e0c6dc1988ad6bbb9b01467b94a25d1.zip",
         },
         "Environment": {
           "Variables": {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
             "DATA_PLANE_TABLE_NAME": {
               "Ref": "tablesdataPlaneTable57BF29C7",
             },
@@ -3709,7 +3720,7 @@ exports[`Snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Timeout": 30,
         "TracingConfig": {
           "Mode": "Active",
@@ -3939,8 +3950,6 @@ exports[`Snapshot 1`] = `
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -3952,17 +3961,25 @@ exports[`Snapshot 1`] = `
                 "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "tablesdataPlaneTable57BF29C7",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Ref": "AWS::NoValue",
-                },
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablesdataPlaneTable57BF29C7",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
               ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablesdataPlaneTable57BF29C7",
+                  "Arn",
+                ],
+              },
             },
           ],
           "Version": "2012-10-17",
@@ -3982,6 +3999,16 @@ exports[`Snapshot 1`] = `
         "lambdasdeepLinkingProxyRoleDefaultPolicyD95D557A",
         "lambdasdeepLinkingProxyRole73AD3815",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Using Node.js 22.x which is current but not yet recognized by cdk-nag.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Architectures": [
           "arm64",
@@ -3990,11 +4017,10 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "4af490b9b40a8e894f6d124cac393a1cc4945e02a58c0dbd809bb1e67e17d1d3.zip",
+          "S3Key": "716fbbee452b548f22d95ffad46d4575c08362e8b74a40b7add67ff9f5cdee69.zip",
         },
         "Environment": {
           "Variables": {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
             "CONTROL_PLANE_TABLE_NAME": {
               "Ref": "tablescontrolPlaneTable49F703D0",
             },
@@ -4022,7 +4048,7 @@ exports[`Snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Timeout": 30,
         "TracingConfig": {
           "Mode": "Active",
@@ -4252,8 +4278,6 @@ exports[`Snapshot 1`] = `
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -4261,23 +4285,29 @@ exports[`Snapshot 1`] = `
                 "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "tablescontrolPlaneTable49F703D0",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Ref": "AWS::NoValue",
-                },
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablescontrolPlaneTable49F703D0",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
               ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablescontrolPlaneTable49F703D0",
+                  "Arn",
+                ],
+              },
             },
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -4289,17 +4319,25 @@ exports[`Snapshot 1`] = `
                 "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "tablesdataPlaneTable57BF29C7",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Ref": "AWS::NoValue",
-                },
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablesdataPlaneTable57BF29C7",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
               ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablesdataPlaneTable57BF29C7",
+                  "Arn",
+                ],
+              },
             },
             {
               "Action": [
@@ -4330,13 +4368,13 @@ exports[`Snapshot 1`] = `
     "lambdaslayerUtilF24D5864": {
       "Properties": {
         "CompatibleRuntimes": [
-          "nodejs18.x",
+          "nodejs22.x",
         ],
         "Content": {
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "79742d0e58094c70c4b381d1163e511923f2bdf8f0e50df3f300a4b2a2d1a9bf.zip",
+          "S3Key": "e240c9c5732df22f95fce16a72ef69a36d62f6f12556cdf8b262970685c84be8.zip",
         },
         "Description": "LTI utility functions",
       },
@@ -4348,6 +4386,16 @@ exports[`Snapshot 1`] = `
         "lambdasltiJwksRoleDefaultPolicy4676E133",
         "lambdasltiJwksRole046B1089",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Using Node.js 22.x which is current but not yet recognized by cdk-nag.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Architectures": [
           "arm64",
@@ -4356,11 +4404,10 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "1dc9dda02dafaa1ea7a25c482aed441f824586a458c17926f50da947d795a71b.zip",
+          "S3Key": "d0114583f0694dcf43e28b1bed5a9773e0c637ea61197ac4f079451f0a80be9d.zip",
         },
         "Environment": {
           "Variables": {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
             "CONTROL_PLANE_TABLE_NAME": {
               "Ref": "tablescontrolPlaneTable49F703D0",
             },
@@ -4385,7 +4432,7 @@ exports[`Snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Timeout": 30,
         "TracingConfig": {
           "Mode": "Active",
@@ -4615,8 +4662,6 @@ exports[`Snapshot 1`] = `
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -4628,17 +4673,25 @@ exports[`Snapshot 1`] = `
                 "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "tablescontrolPlaneTable49F703D0",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Ref": "AWS::NoValue",
-                },
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablescontrolPlaneTable49F703D0",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
               ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablescontrolPlaneTable49F703D0",
+                  "Arn",
+                ],
+              },
             },
             {
               "Action": [
@@ -4672,6 +4725,16 @@ exports[`Snapshot 1`] = `
         "lambdasltiLaunchRoleDefaultPolicy09ACD7A4",
         "lambdasltiLaunchRole34FBA536",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Using Node.js 22.x which is current but not yet recognized by cdk-nag.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Architectures": [
           "arm64",
@@ -4680,11 +4743,10 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "5dd6cf9255b8dff51b5d70d0a49eea04308fa8c171d6a82cd68c803654557188.zip",
+          "S3Key": "48f1f9c628508c6e54cbb6081b277868b2c80616d18e3ea4524e354eec8a10e3.zip",
         },
         "Environment": {
           "Variables": {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
             "CONTROL_PLANE_TABLE_NAME": {
               "Ref": "tablescontrolPlaneTable49F703D0",
             },
@@ -4712,7 +4774,7 @@ exports[`Snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Timeout": 30,
         "TracingConfig": {
           "Mode": "Active",
@@ -4942,8 +5004,6 @@ exports[`Snapshot 1`] = `
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -4955,23 +5015,29 @@ exports[`Snapshot 1`] = `
                 "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "tablescontrolPlaneTable49F703D0",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Ref": "AWS::NoValue",
-                },
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablescontrolPlaneTable49F703D0",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
               ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablescontrolPlaneTable49F703D0",
+                  "Arn",
+                ],
+              },
             },
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -4983,17 +5049,25 @@ exports[`Snapshot 1`] = `
                 "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "tablesdataPlaneTable57BF29C7",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Ref": "AWS::NoValue",
-                },
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablesdataPlaneTable57BF29C7",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
               ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablesdataPlaneTable57BF29C7",
+                  "Arn",
+                ],
+              },
             },
             {
               "Action": [
@@ -5027,6 +5101,16 @@ exports[`Snapshot 1`] = `
         "lambdasltiOidcRoleDefaultPolicyFC31BF66",
         "lambdasltiOidcRole4647658A",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Using Node.js 22.x which is current but not yet recognized by cdk-nag.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Architectures": [
           "arm64",
@@ -5035,11 +5119,10 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "dcd0186107b67261c739aae6ec1fd58c0514b15e9c5e98180bb720e95b99fa6c.zip",
+          "S3Key": "6cc1f15269ca6e85881c3e998a38b1f76092a9c49c1c0b22b002cccefc577465.zip",
         },
         "Environment": {
           "Variables": {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
             "CONTROL_PLANE_TABLE_NAME": {
               "Ref": "tablescontrolPlaneTable49F703D0",
             },
@@ -5065,7 +5148,7 @@ exports[`Snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Timeout": 30,
         "TracingConfig": {
           "Mode": "Active",
@@ -5329,8 +5412,6 @@ exports[`Snapshot 1`] = `
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -5338,23 +5419,29 @@ exports[`Snapshot 1`] = `
                 "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "tablescontrolPlaneTable49F703D0",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Ref": "AWS::NoValue",
-                },
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablescontrolPlaneTable49F703D0",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
               ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablescontrolPlaneTable49F703D0",
+                  "Arn",
+                ],
+              },
             },
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -5366,17 +5453,25 @@ exports[`Snapshot 1`] = `
                 "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "tablesdataPlaneTable57BF29C7",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Ref": "AWS::NoValue",
-                },
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablesdataPlaneTable57BF29C7",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
               ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablesdataPlaneTable57BF29C7",
+                  "Arn",
+                ],
+              },
             },
           ],
           "Version": "2012-10-17",
@@ -5396,6 +5491,16 @@ exports[`Snapshot 1`] = `
         "lambdasltiPlatformRegisterRoleDefaultPolicy49692446",
         "lambdasltiPlatformRegisterRoleF4E57286",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Using Node.js 22.x which is current but not yet recognized by cdk-nag.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Architectures": [
           "arm64",
@@ -5404,11 +5509,10 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "63b55cff1d9d124f36f5261698b27dbe5b7a3a66815f810dc9edde0b3966df60.zip",
+          "S3Key": "300ee32064f976f8f6e4807e7d11028a57f08db031c62df1f151fce0611faf46.zip",
         },
         "Environment": {
           "Variables": {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
             "CONTROL_PLANE_TABLE_NAME": {
               "Ref": "tablescontrolPlaneTable49F703D0",
             },
@@ -5430,7 +5534,7 @@ exports[`Snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Timeout": 30,
         "TracingConfig": {
           "Mode": "Active",
@@ -5639,17 +5743,12 @@ exports[`Snapshot 1`] = `
                 "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "tablescontrolPlaneTable49F703D0",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Ref": "AWS::NoValue",
-                },
-              ],
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablescontrolPlaneTable49F703D0",
+                  "Arn",
+                ],
+              },
             },
           ],
           "Version": "2012-10-17",
@@ -5696,6 +5795,16 @@ exports[`Snapshot 1`] = `
         "lambdasltiToolConfigRoleDefaultPolicy1FA19060",
         "lambdasltiToolConfigRoleF95D8DE7",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Using Node.js 22.x which is current but not yet recognized by cdk-nag.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Architectures": [
           "arm64",
@@ -5704,11 +5813,10 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "2d557415c085e586a58201b458ffb7845100835ce9290594b3d454cc7c0b20e9.zip",
+          "S3Key": "332357fc0f57916aad3e024cff55ac19e439b1b8d1c5b51b9aea9af97d1a630b.zip",
         },
         "Environment": {
           "Variables": {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
             "CONTROL_PLANE_TABLE_NAME": {
               "Ref": "tablescontrolPlaneTable49F703D0",
             },
@@ -5730,7 +5838,7 @@ exports[`Snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Timeout": 30,
         "TracingConfig": {
           "Mode": "Active",
@@ -5939,17 +6047,12 @@ exports[`Snapshot 1`] = `
                 "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "tablescontrolPlaneTable49F703D0",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Ref": "AWS::NoValue",
-                },
-              ],
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablescontrolPlaneTable49F703D0",
+                  "Arn",
+                ],
+              },
             },
           ],
           "Version": "2012-10-17",
@@ -5996,6 +6099,16 @@ exports[`Snapshot 1`] = `
         "lambdasrosterRetrievalRoleDefaultPolicy9852C37C",
         "lambdasrosterRetrievalRole525ACB0F",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Using Node.js 22.x which is current but not yet recognized by cdk-nag.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Architectures": [
           "arm64",
@@ -6004,11 +6117,10 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "765122533ff56e4962667b858dae8b79b0e4fbbe82a114655e343363dea86b03.zip",
+          "S3Key": "d3f24df5811104768b3161bbcf73385ca6a63205671bb7f7dad12d583496b21d.zip",
         },
         "Environment": {
           "Variables": {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
             "CONTROL_PLANE_TABLE_NAME": {
               "Ref": "tablescontrolPlaneTable49F703D0",
             },
@@ -6036,7 +6148,7 @@ exports[`Snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Timeout": 30,
         "TracingConfig": {
           "Mode": "Active",
@@ -6266,8 +6378,6 @@ exports[`Snapshot 1`] = `
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -6279,17 +6389,25 @@ exports[`Snapshot 1`] = `
                 "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "tablescontrolPlaneTable49F703D0",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Ref": "AWS::NoValue",
-                },
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablescontrolPlaneTable49F703D0",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
               ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablescontrolPlaneTable49F703D0",
+                  "Arn",
+                ],
+              },
             },
             {
               "Action": [
@@ -6323,6 +6441,16 @@ exports[`Snapshot 1`] = `
         "lambdasscoreSubmissionRoleDefaultPolicy9C9198AC",
         "lambdasscoreSubmissionRoleCE1A9D7C",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Using Node.js 22.x which is current but not yet recognized by cdk-nag.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Architectures": [
           "arm64",
@@ -6331,11 +6459,10 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "0f666f3a6d14fb77d2ac6b8cb4e532acb61e053a0ee6b773de9c32bd62f24d23.zip",
+          "S3Key": "5834cc67c4ef65c8e96b1157f6fc1f6914a3e123206db39fee47468950de2d88.zip",
         },
         "Environment": {
           "Variables": {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
             "CONTROL_PLANE_TABLE_NAME": {
               "Ref": "tablescontrolPlaneTable49F703D0",
             },
@@ -6363,7 +6490,7 @@ exports[`Snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Timeout": 30,
         "TracingConfig": {
           "Mode": "Active",
@@ -6593,8 +6720,6 @@ exports[`Snapshot 1`] = `
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -6602,23 +6727,29 @@ exports[`Snapshot 1`] = `
                 "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "tablescontrolPlaneTable49F703D0",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Ref": "AWS::NoValue",
-                },
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablescontrolPlaneTable49F703D0",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
               ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablescontrolPlaneTable49F703D0",
+                  "Arn",
+                ],
+              },
             },
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -6630,17 +6761,25 @@ exports[`Snapshot 1`] = `
                 "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "tablesdataPlaneTable57BF29C7",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Ref": "AWS::NoValue",
-                },
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablesdataPlaneTable57BF29C7",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
               ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablesdataPlaneTable57BF29C7",
+                  "Arn",
+                ],
+              },
             },
             {
               "Action": [
@@ -6674,6 +6813,16 @@ exports[`Snapshot 1`] = `
         "lambdastokenProxyRoleDefaultPolicyB9910994",
         "lambdastokenProxyRole47CD04F8",
       ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-L1",
+              "reason": "Using Node.js 22.x which is current but not yet recognized by cdk-nag.",
+            },
+          ],
+        },
+      },
       "Properties": {
         "Architectures": [
           "arm64",
@@ -6682,11 +6831,10 @@ exports[`Snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "066abb11f09a260e21ccdca7728ff6a7c80e9f38c957b650562ec941b7e440ee.zip",
+          "S3Key": "1a4e3d28e4c6c0826daebddf19cb53a96f652ff219374d32af36ae8ab77bfb17.zip",
         },
         "Environment": {
           "Variables": {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
             "DATA_PLANE_TABLE_NAME": {
               "Ref": "tablesdataPlaneTable57BF29C7",
             },
@@ -6711,7 +6859,7 @@ exports[`Snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Timeout": 30,
         "TracingConfig": {
           "Mode": "Active",
@@ -6941,8 +7089,6 @@ exports[`Snapshot 1`] = `
             {
               "Action": [
                 "dynamodb:BatchGetItem",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
                 "dynamodb:Query",
                 "dynamodb:GetItem",
                 "dynamodb:Scan",
@@ -6954,17 +7100,25 @@ exports[`Snapshot 1`] = `
                 "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "tablesdataPlaneTable57BF29C7",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Ref": "AWS::NoValue",
-                },
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablesdataPlaneTable57BF29C7",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
               ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "tablesdataPlaneTable57BF29C7",
+                  "Arn",
+                ],
+              },
             },
           ],
           "Version": "2012-10-17",
