@@ -11,7 +11,7 @@
     "aws-cdk-lib": "^2.241.0",
     "cdk-nag": "^2.37.55",
     "constructs": "^10.5.1",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.27.3",
     "jszip": "^3.10.1",
     "source-map-support": "^0.5.21",
     "ts-node": "^10.9.2"
