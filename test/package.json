@@ -23,6 +23,6 @@
   },
   "devDependencies": {
     "@types/jest": "^29.2.3",
-    "@types/aws-lambda": "8.10.102"
+    "@types/aws-lambda": "8.10.161"
   }
 }
