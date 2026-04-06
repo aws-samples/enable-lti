@@ -22,7 +22,7 @@
     "eslint:fix": "eslint ./src/**/**.ts --fix"
   },
   "devDependencies": {
-    "@types/jest": "^29.2.3",
+    "@types/jest": "^30.0.0",
     "@types/aws-lambda": "8.10.102"
   }
 }
